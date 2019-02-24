@@ -1,0 +1,9 @@
+{
+	"nativescript-geolocation": {
+		"C:\\GeolocationNativescriptVue\\node_modules\\nativescript-geolocation\\platforms\\android\\include.gradle": "b4197a7b5556ea5de03f08097c27f72ec4d64c76",
+		"C:\\GeolocationNativescriptVue\\node_modules\\nativescript-geolocation\\platforms\\android\\nativescript_geolocation.aar": "ce9bd3d06cdeb15fbe666e4fcf1afa53a0ec878b"
+	},
+	"tns-core-modules-widgets": {
+		"C:\\GeolocationNativescriptVue\\node_modules\\tns-core-modules-widgets\\platforms\\android\\widgets-release.aar": "7a062e96fe7b542638c6a6570de1531521a7307b"
+	}
+}

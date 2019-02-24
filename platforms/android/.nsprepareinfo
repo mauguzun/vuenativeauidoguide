@@ -1,0 +1,18 @@
+{
+	"nativePlatformStatus": "3",
+	"appFilesHashes": {
+		"C:\\GeolocationNativescriptVue\\app\\fonts\\.gitkeep": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+		"C:\\GeolocationNativescriptVue\\app\\components\\HelloWorld.vue": "6b8a54a1c7e395930f5d345439f06de342f9696f",
+		"C:\\GeolocationNativescriptVue\\app\\components\\backgroundServices.js": "ad7cba4253df07e35a1062664eb9c239d5415621",
+		"C:\\GeolocationNativescriptVue\\app\\main.js": "6d3f927fd994f2d6ab275209d392d89a32907c25",
+		"C:\\GeolocationNativescriptVue\\app\\package.json": "e36f4008ca56ecdfa46c87945ac8672e78be9e02",
+		"C:\\GeolocationNativescriptVue\\app\\styles.scss": "e1ecb72b81d17d52ac50ca356ea42d0ade424633",
+		"C:\\GeolocationNativescriptVue\\app\\assets\\images\\NativeScript-Vue.png": "31f09bdba72293198ee2e2a83c4fe5aa5744bc3d"
+	},
+	"release": false,
+	"bundle": true,
+	"changesRequireBuild": false,
+	"time": "Sun Feb 24 2019 14:56:23 GMT+0200 (Eastern European Standard Time)",
+	"changesRequireBuildTime": "Sun Feb 24 2019 13:32:55 GMT+0200 (Eastern European Standard Time)",
+	"projectFileHash": "70c33dc70b063c95f15521b600f8220820299f665617ee1bb6e2432d3fd78de5"
+}

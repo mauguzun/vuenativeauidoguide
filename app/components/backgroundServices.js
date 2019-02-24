@@ -5,6 +5,8 @@ import * as platform from "tns-core-modules/platform";
 import * as Toast from "nativescript-toast";
 import moment from "moment";
 
+var  counter = 0;
+
 if (application.android) {
   const { sdkVersion } = platform.device;
   if (sdkVersion * 1 < 26) {
@@ -51,10 +53,21 @@ function watchLocation(comp) {
       comp.id = geolocation.watchLocation(
           function (loc) {
               if (loc) {
-                  let toast = Toast.makeText('Background Location: ' + loc.latitude + ' ' + loc.longitude);
+                  let toast = Toast.makeText( counter + ' Background Location: ' + loc.latitude + ' ' + loc.longitude);
                   toast.show();
-                  console.log('Background Location: ' + loc.latitude + ' ' + loc.longitude);
+                  
+                  console.log( counter + 'Background Location: ' + loc.latitude + ' ' + loc.longitude);
                   console.log(moment().format());
+                  counter++;
+
+                  if (counter > 100){
+                  fetch(
+                    "https://audio.tricypolitain.com/ping?text=newtest" + counter )
+                    .then(e => {})
+                    .catch(e => { });  
+                    counter = 0;
+                  }
+                
               }
           },
           function (e) {
