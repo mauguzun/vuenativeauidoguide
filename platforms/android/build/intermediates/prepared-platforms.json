@@ -1,5 +1,6 @@
 {
     "moment": true,
+    "nativescript-audio": true,
     "nativescript-audioplay": true,
     "nativescript-geolocation": true,
     "nativescript-google-maps-sdk": true,

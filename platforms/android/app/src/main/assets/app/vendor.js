@@ -16358,6 +16358,1308 @@
 
 /***/ }),
 
+/***/ "../node_modules/nativescript-audio/android/player.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var app = __webpack_require__("../node_modules/tns-core-modules/application/application.js");
+var observable_1 = __webpack_require__("../node_modules/tns-core-modules/data/observable/observable.js");
+var utils_1 = __webpack_require__("../node_modules/tns-core-modules/utils/utils.js");
+var common_1 = __webpack_require__("../node_modules/nativescript-audio/common.js");
+var options_1 = __webpack_require__("../node_modules/nativescript-audio/options.js");
+var TNSPlayer = (function () {
+    function TNSPlayer() {
+        var _this = this;
+        this._mAudioFocusGranted = false;
+        this._mOnAudioFocusChangeListener = new android.media.AudioManager.OnAudioFocusChangeListener({
+            onAudioFocusChange: function (focusChange) {
+                switch (focusChange) {
+                    case android.media.AudioManager.AUDIOFOCUS_GAIN:
+                        common_1.TNS_Player_Log('AUDIOFOCUS_GAIN');
+                        common_1.TNS_Player_Log('this._lastPlayerVolume', _this._lastPlayerVolume);
+                        if (_this._lastPlayerVolume && _this._lastPlayerVolume >= 10) {
+                            _this.volume = 1.0;
+                        }
+                        else if (_this._lastPlayerVolume) {
+                            _this.volume = parseFloat('0.' + _this._lastPlayerVolume.toString());
+                        }
+                        _this.resume();
+                        break;
+                    case android.media.AudioManager.AUDIOFOCUS_GAIN_TRANSIENT:
+                        common_1.TNS_Player_Log('AUDIOFOCUS_GAIN_TRANSIENT');
+                        break;
+                    case android.media.AudioManager.AUDIOFOCUS_LOSS:
+                        common_1.TNS_Player_Log('AUDIOFOCUS_LOSS');
+                        _this.pause();
+                        break;
+                    case android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                        common_1.TNS_Player_Log('AUDIOFOCUS_LOSS_TRANSIENT');
+                        _this.pause();
+                        break;
+                    case android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                        common_1.TNS_Player_Log('AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK');
+                        _this._lastPlayerVolume = _this.volume;
+                        common_1.TNS_Player_Log('this._lastPlayerVolume', _this._lastPlayerVolume);
+                        _this.volume = 0.2;
+                        break;
+                }
+            }
+        });
+        this._mAudioFocusGranted = this._requestAudioFocus();
+        common_1.TNS_Player_Log('_mAudioFocusGranted', this._mAudioFocusGranted);
+    }
+    Object.defineProperty(TNSPlayer.prototype, "events", {
+        get: function () {
+            if (!this._events) {
+                this._events = new observable_1.Observable();
+            }
+            return this._events;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TNSPlayer.prototype, "android", {
+        get: function () {
+            return this._player;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TNSPlayer.prototype, "debug", {
+        set: function (value) {
+            common_1.TNSPlayerUtil.debug = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TNSPlayer.prototype, "volume", {
+        get: function () {
+            var ctx = this._getAndroidContext();
+            var mgr = ctx.getSystemService(android.content.Context.AUDIO_SERVICE);
+            return mgr.getStreamVolume(android.media.AudioManager.STREAM_MUSIC);
+        },
+        set: function (value) {
+            if (this._player && value >= 0) {
+                this._player.setVolume(value, value);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TNSPlayer.prototype, "duration", {
+        get: function () {
+            if (this._player) {
+                return this._player.getDuration();
+            }
+            else {
+                return 0;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TNSPlayer.prototype, "currentTime", {
+        get: function () {
+            return this._player ? this._player.getCurrentPosition() : 0;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    TNSPlayer.prototype.initFromFile = function (options) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            options.autoPlay = false;
+            _this.playFromFile(options).then(resolve, reject);
+        });
+    };
+    TNSPlayer.prototype.playFromFile = function (options) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            try {
+                if (options.autoPlay !== false) {
+                    options.autoPlay = true;
+                }
+                var audioPath = common_1.resolveAudioFilePath(options.audioFile);
+                common_1.TNS_Player_Log('audioPath', audioPath);
+                if (!_this._player) {
+                    common_1.TNS_Player_Log('android mediaPlayer is not initialized, creating new instance');
+                    _this._player = new android.media.MediaPlayer();
+                }
+                _this._mAudioFocusGranted = _this._requestAudioFocus();
+                common_1.TNS_Player_Log('_mAudioFocusGranted', _this._mAudioFocusGranted);
+                _this._player.setAudioStreamType(android.media.AudioManager.STREAM_MUSIC);
+                common_1.TNS_Player_Log('resetting mediaPlayer...');
+                _this._player.reset();
+                common_1.TNS_Player_Log('setting datasource', audioPath);
+                _this._player.setDataSource(audioPath);
+                if (utils_1.isFileOrResourcePath(audioPath)) {
+                    common_1.TNS_Player_Log('preparing mediaPlayer...');
+                    _this._player.prepare();
+                }
+                else {
+                    common_1.TNS_Player_Log('preparing mediaPlayer async...');
+                    _this._player.prepareAsync();
+                }
+                if (options.completeCallback) {
+                    _this._player.setOnCompletionListener(new android.media.MediaPlayer.OnCompletionListener({
+                        onCompletion: function (mp) {
+                            if (options.loop === true) {
+                                mp.seekTo(5);
+                                mp.start();
+                            }
+                            options.completeCallback({ player: mp });
+                        }
+                    }));
+                }
+                if (options.errorCallback) {
+                    _this._player.setOnErrorListener(new android.media.MediaPlayer.OnErrorListener({
+                        onError: function (player, error, extra) {
+                            _this._player.reset();
+                            common_1.TNS_Player_Log('errorCallback', error);
+                            options.errorCallback({ player: player, error: error, extra: extra });
+                            return true;
+                        }
+                    }));
+                }
+                if (options.infoCallback) {
+                    _this._player.setOnInfoListener(new android.media.MediaPlayer.OnInfoListener({
+                        onInfo: function (player, info, extra) {
+                            common_1.TNS_Player_Log('infoCallback', info);
+                            options.infoCallback({ player: player, info: info, extra: extra });
+                            return true;
+                        }
+                    }));
+                }
+                _this._player.setOnPreparedListener(new android.media.MediaPlayer.OnPreparedListener({
+                    onPrepared: function (mp) {
+                        if (options.autoPlay) {
+                            common_1.TNS_Player_Log('options.autoPlay', options.autoPlay);
+                            _this.play();
+                        }
+                        resolve();
+                    }
+                }));
+            }
+            catch (ex) {
+                common_1.TNS_Player_Log('playFromFile error', ex);
+                reject(ex);
+            }
+        });
+    };
+    TNSPlayer.prototype.initFromUrl = function (options) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            options.autoPlay = false;
+            _this.playFromUrl(options).then(resolve, reject);
+        });
+    };
+    TNSPlayer.prototype.playFromUrl = function (options) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            resolve(_this.playFromFile(options));
+        });
+    };
+    TNSPlayer.prototype.pause = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            try {
+                if (_this._player && _this._player.isPlaying()) {
+                    common_1.TNS_Player_Log('pausing player');
+                    _this._player.pause();
+                    _this._sendEvent(options_1.AudioPlayerEvents.paused);
+                }
+                resolve(true);
+            }
+            catch (ex) {
+                common_1.TNS_Player_Log('pause error', ex);
+                reject(ex);
+            }
+        });
+    };
+    TNSPlayer.prototype.play = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            try {
+                if (_this._player && !_this._player.isPlaying()) {
+                    _this._sendEvent(options_1.AudioPlayerEvents.started);
+                    app.android.foregroundActivity.setVolumeControlStream(android.media.AudioManager.STREAM_MUSIC);
+                    app.android.registerBroadcastReceiver(android.media.AudioManager.ACTION_AUDIO_BECOMING_NOISY, function (context, intent) {
+                        common_1.TNS_Player_Log('ACTION_AUDIO_BECOMING_NOISY onReceiveCallback');
+                        common_1.TNS_Player_Log('intent', intent);
+                        _this.pause();
+                    });
+                    _this._player.start();
+                }
+                resolve(true);
+            }
+            catch (ex) {
+                common_1.TNS_Player_Log('Error trying to play audio.', ex);
+                reject(ex);
+            }
+        });
+    };
+    TNSPlayer.prototype.resume = function () {
+        if (this._player) {
+            common_1.TNS_Player_Log('resume');
+            this._player.start();
+            this._sendEvent(options_1.AudioPlayerEvents.started);
+        }
+    };
+    TNSPlayer.prototype.seekTo = function (time) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            try {
+                if (_this._player) {
+                    time = time * 1000;
+                    common_1.TNS_Player_Log('seekTo seconds', time);
+                    _this._player.seekTo(time);
+                    _this._sendEvent(options_1.AudioPlayerEvents.seek);
+                }
+                resolve(true);
+            }
+            catch (ex) {
+                common_1.TNS_Player_Log('seekTo error', ex);
+                reject(ex);
+            }
+        });
+    };
+    TNSPlayer.prototype.changePlayerSpeed = function (speed) {
+        if (android.os.Build.VERSION.SDK_INT >= 23 && this.play) {
+            common_1.TNS_Player_Log('setting the mediaPlayer playback speed', speed);
+            if (this._player.isPlaying()) {
+                this._player.setPlaybackParams(this._player.getPlaybackParams().setSpeed(speed));
+            }
+            else {
+                this._player.setPlaybackParams(this._player.getPlaybackParams().setSpeed(speed));
+                this._player.pause();
+            }
+        }
+        else {
+            common_1.TNS_Player_Log('Android device API is not 23+. Cannot set the playbackRate on lower Android APIs.');
+        }
+    };
+    TNSPlayer.prototype.dispose = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            try {
+                if (_this._player) {
+                    common_1.TNS_Player_Log('disposing of mediaPlayer instance', _this._player);
+                    _this._player.stop();
+                    _this._player.reset();
+                    common_1.TNS_Player_Log('unregisterBroadcastReceiver ACTION_AUDIO_BECOMING_NOISY...');
+                    app.android.unregisterBroadcastReceiver(android.media.AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+                    common_1.TNS_Player_Log('abandoning audio focus...');
+                    _this._abandonAudioFocus();
+                }
+                resolve();
+            }
+            catch (ex) {
+                common_1.TNS_Player_Log('dispose error', ex);
+                reject(ex);
+            }
+        });
+    };
+    TNSPlayer.prototype.isAudioPlaying = function () {
+        if (this._player) {
+            return this._player.isPlaying();
+        }
+        else {
+            return false;
+        }
+    };
+    TNSPlayer.prototype.getAudioTrackDuration = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            try {
+                var duration = _this._player ? _this._player.getDuration() : 0;
+                common_1.TNS_Player_Log('audio track duration', duration);
+                resolve(duration.toString());
+            }
+            catch (ex) {
+                common_1.TNS_Player_Log('getAudioTrackDuration error', ex);
+                reject(ex);
+            }
+        });
+    };
+    TNSPlayer.prototype._sendEvent = function (eventName, data) {
+        if (this.events) {
+            this.events.notify({
+                eventName: eventName,
+                object: this,
+                data: data
+            });
+        }
+    };
+    TNSPlayer.prototype._requestAudioFocus = function () {
+        var result = false;
+        if (!this._mAudioFocusGranted) {
+            var ctx = this._getAndroidContext();
+            var am = ctx.getSystemService(android.content.Context.AUDIO_SERVICE);
+            var focusResult = am.requestAudioFocus(this._mOnAudioFocusChangeListener, android.media.AudioManager.STREAM_MUSIC, android.media.AudioManager.AUDIOFOCUS_GAIN);
+            if (focusResult === android.media.AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                result = true;
+            }
+            else {
+                common_1.TNS_Player_Log('Failed to get audio focus.');
+                result = false;
+            }
+        }
+        return result;
+    };
+    TNSPlayer.prototype._abandonAudioFocus = function () {
+        var ctx = this._getAndroidContext();
+        var am = ctx.getSystemService(android.content.Context.AUDIO_SERVICE);
+        var result = am.abandonAudioFocus(this._mOnAudioFocusChangeListener);
+        if (result === android.media.AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            this._mAudioFocusGranted = false;
+        }
+        else {
+            common_1.TNS_Player_Log('Failed to abandon audio focus.');
+        }
+        this._mOnAudioFocusChangeListener = null;
+    };
+    TNSPlayer.prototype._getAndroidContext = function () {
+        var _this = this;
+        var ctx = app.android.context;
+        if (!ctx) {
+            ctx = app.getNativeApplication().getApplicationContext();
+        }
+        if (ctx === null) {
+            setTimeout(function () {
+                _this._getAndroidContext();
+            }, 200);
+            return;
+        }
+        return ctx;
+    };
+    return TNSPlayer;
+}());
+exports.TNSPlayer = TNSPlayer;
+
+
+/***/ }),
+
+/***/ "../node_modules/nativescript-audio/android/recorder.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+__webpack_require__("../node_modules/nativescript-audio/async-await.js");
+var permissions = __webpack_require__("../node_modules/nativescript-permissions/permissions.js");
+var app = __webpack_require__("../node_modules/tns-core-modules/application/application.js");
+var common_1 = __webpack_require__("../node_modules/nativescript-audio/common.js");
+var TNSRecorder = (function () {
+    function TNSRecorder() {
+    }
+    Object.defineProperty(TNSRecorder.prototype, "android", {
+        get: function () {
+            return this._recorder;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TNSRecorder.prototype, "debug", {
+        set: function (value) {
+            common_1.TNSRecorderUtil.debug = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    TNSRecorder.CAN_RECORD = function () {
+        var pManager = app.android.context.getPackageManager();
+        var canRecord = pManager.hasSystemFeature(android.content.pm.PackageManager.FEATURE_MICROPHONE);
+        if (canRecord) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
+    TNSRecorder.prototype.requestRecordPermission = function (explanation) {
+        var _this = this;
+        if (explanation === void 0) { explanation = ''; }
+        return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+            var error_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4, permissions.requestPermission(android.Manifest.permission.RECORD_AUDIO).catch(function (err) {
+                                common_1.TNS_Recorder_Log('Error getting RECORD_AUDIO permission.', err);
+                                reject(err);
+                            })];
+                    case 1:
+                        _a.sent();
+                        resolve();
+                        return [3, 3];
+                    case 2:
+                        error_1 = _a.sent();
+                        common_1.TNS_Recorder_Log('requestRecordPermission error', error_1);
+                        reject(error_1);
+                        return [3, 3];
+                    case 3: return [2];
+                }
+            });
+        }); });
+    };
+    TNSRecorder.prototype.hasRecordPermission = function () {
+        var permission = permissions.hasPermission(android.Manifest.permission.RECORD_AUDIO);
+        return !0 === permission ? !0 : !1;
+    };
+    TNSRecorder.prototype.start = function (options) {
+        var _this = this;
+        return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+            var audioSource, outFormat, encoder, ex_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4, this.requestRecordPermission().catch(function (err) {
+                                console.log(err);
+                                reject('Permission to record audio is not granted.');
+                            })];
+                    case 1:
+                        _a.sent();
+                        if (this._recorder) {
+                            this._recorder.reset();
+                        }
+                        else {
+                            common_1.TNS_Recorder_Log('recorder is not initialized, creating new instance of android MediaRecorder.');
+                            this._recorder = new android.media.MediaRecorder();
+                        }
+                        audioSource = options.source ? options.source : 0;
+                        common_1.TNS_Recorder_Log('setting audio source', audioSource);
+                        this._recorder.setAudioSource(audioSource);
+                        outFormat = options.format ? options.format : 0;
+                        common_1.TNS_Recorder_Log('setting output format', outFormat);
+                        this._recorder.setOutputFormat(outFormat);
+                        encoder = options.encoder ? options.encoder : 0;
+                        common_1.TNS_Recorder_Log('setting audio encoder', encoder);
+                        this._recorder.setAudioEncoder(encoder);
+                        if (options.channels) {
+                            this._recorder.setAudioChannels(options.channels);
+                        }
+                        if (options.sampleRate) {
+                            this._recorder.setAudioSamplingRate(options.sampleRate);
+                        }
+                        if (options.bitRate) {
+                            this._recorder.setAudioEncodingBitRate(options.bitRate);
+                        }
+                        this._recorder.setOutputFile(options.filename);
+                        this._recorder.setOnErrorListener(new android.media.MediaRecorder.OnErrorListener({
+                            onError: function (recorder, error, extra) {
+                                options.errorCallback({ recorder: recorder, error: error, extra: extra });
+                            }
+                        }));
+                        this._recorder.setOnInfoListener(new android.media.MediaRecorder.OnInfoListener({
+                            onInfo: function (recorder, info, extra) {
+                                options.infoCallback({ recorder: recorder, info: info, extra: extra });
+                            }
+                        }));
+                        this._recorder.prepare();
+                        this._recorder.start();
+                        resolve();
+                        return [3, 3];
+                    case 2:
+                        ex_1 = _a.sent();
+                        reject(ex_1);
+                        return [3, 3];
+                    case 3: return [2];
+                }
+            });
+        }); });
+    };
+    TNSRecorder.prototype.getMeters = function () {
+        if (this._recorder != null)
+            return this._recorder.getMaxAmplitude();
+        else
+            return 0;
+    };
+    TNSRecorder.prototype.pause = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            try {
+                if (_this._recorder) {
+                    common_1.TNS_Recorder_Log('pausing recorder...');
+                    _this._recorder.pause();
+                }
+                resolve();
+            }
+            catch (ex) {
+                common_1.TNS_Recorder_Log('pause error', ex);
+                reject(ex);
+            }
+        });
+    };
+    TNSRecorder.prototype.resume = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            try {
+                if (_this._recorder) {
+                    common_1.TNS_Recorder_Log('resuming recorder...');
+                    _this._recorder.resume();
+                }
+                resolve();
+            }
+            catch (ex) {
+                common_1.TNS_Recorder_Log('resume error', ex);
+                reject(ex);
+            }
+        });
+    };
+    TNSRecorder.prototype.stop = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            try {
+                if (_this._recorder) {
+                    common_1.TNS_Recorder_Log('stopping recorder...');
+                    _this._recorder.stop();
+                }
+                resolve();
+            }
+            catch (ex) {
+                common_1.TNS_Recorder_Log('stop error', ex);
+                reject(ex);
+            }
+        });
+    };
+    TNSRecorder.prototype.dispose = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            try {
+                common_1.TNS_Recorder_Log('disposing recorder...');
+                if (_this._recorder) {
+                    _this._recorder.release();
+                }
+                _this._recorder = undefined;
+                resolve();
+            }
+            catch (ex) {
+                common_1.TNS_Recorder_Log('dispose error', ex);
+                reject(ex);
+            }
+        });
+    };
+    return TNSRecorder;
+}());
+exports.TNSRecorder = TNSRecorder;
+
+
+/***/ }),
+
+/***/ "../node_modules/nativescript-audio/async-await.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global) {
+global.__awaiter =
+    (this && this.__awaiter) ||
+        function (thisArg, _arguments, P, generator) {
+            return new (P || (P = Promise))(function (resolve, reject) {
+                function fulfilled(value) {
+                    try {
+                        step(generator.next(value));
+                    }
+                    catch (e) {
+                        reject(e);
+                    }
+                }
+                function rejected(value) {
+                    try {
+                        step(generator['throw'](value));
+                    }
+                    catch (e) {
+                        reject(e);
+                    }
+                }
+                function step(result) {
+                    result.done
+                        ? resolve(result.value)
+                        : new P(function (resolve) {
+                            resolve(result.value);
+                        }).then(fulfilled, rejected);
+                }
+                step((generator = generator.apply(thisArg, _arguments || [])).next());
+            });
+        };
+global.__generator =
+    (this && this.__generator) ||
+        function (thisArg, body) {
+            var _ = {
+                label: 0,
+                sent: function () {
+                    if (t[0] & 1)
+                        throw t[1];
+                    return t[1];
+                },
+                trys: [],
+                ops: []
+            }, f, y, t;
+            return { next: verb(0), throw: verb(1), return: verb(2) };
+            function verb(n) {
+                return function (v) {
+                    return step([n, v]);
+                };
+            }
+            function step(op) {
+                if (f)
+                    throw new TypeError('Generator is already executing.');
+                while (_)
+                    try {
+                        if (((f = 1), y && (t = y[op[0] & 2 ? 'return' : op[0] ? 'throw' : 'next']) && !(t = t.call(y, op[1])).done))
+                            return t;
+                        if (((y = 0), t))
+                            op = [0, t.value];
+                        switch (op[0]) {
+                            case 0:
+                            case 1:
+                                t = op;
+                                break;
+                            case 4:
+                                _.label++;
+                                return { value: op[1], done: false };
+                            case 5:
+                                _.label++;
+                                y = op[1];
+                                op = [0];
+                                continue;
+                            case 7:
+                                op = _.ops.pop();
+                                _.trys.pop();
+                                continue;
+                            default:
+                                if (!((t = _.trys), (t = t.length > 0 && t[t.length - 1])) && (op[0] === 6 || op[0] === 2)) {
+                                    _ = 0;
+                                    continue;
+                                }
+                                if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) {
+                                    _.label = op[1];
+                                    break;
+                                }
+                                if (op[0] === 6 && _.label < t[1]) {
+                                    _.label = t[1];
+                                    t = op;
+                                    break;
+                                }
+                                if (t && _.label < t[2]) {
+                                    _.label = t[2];
+                                    _.ops.push(op);
+                                    break;
+                                }
+                                if (t[2])
+                                    _.ops.pop();
+                                _.trys.pop();
+                                continue;
+                        }
+                        op = body.call(thisArg, _);
+                    }
+                    catch (e) {
+                        op = [6, e];
+                        y = 0;
+                    }
+                    finally {
+                        f = t = 0;
+                    }
+                if (op[0] & 5)
+                    throw op[1];
+                return { value: op[0] ? op[1] : void 0, done: true };
+            }
+        };
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__("../node_modules/nativescript-dev-webpack/node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
+/***/ "../node_modules/nativescript-audio/audio.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+Object.defineProperty(exports, "__esModule", { value: true });
+__export(__webpack_require__("../node_modules/nativescript-audio/options.js"));
+__export(__webpack_require__("../node_modules/nativescript-audio/android/player.js"));
+__export(__webpack_require__("../node_modules/nativescript-audio/android/recorder.js"));
+
+
+/***/ }),
+
+/***/ "../node_modules/nativescript-audio/common.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var fs = __webpack_require__("../node_modules/tns-core-modules/file-system/file-system.js");
+var types_1 = __webpack_require__("../node_modules/tns-core-modules/utils/types.js");
+var TNSPlayerUtil = (function () {
+    function TNSPlayerUtil() {
+    }
+    TNSPlayerUtil.debug = false;
+    return TNSPlayerUtil;
+}());
+exports.TNSPlayerUtil = TNSPlayerUtil;
+exports.TNS_Player_Log = function () {
+    var args = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        args[_i] = arguments[_i];
+    }
+    if (TNSPlayerUtil.debug) {
+        console.log('NativeScript-Audio - TNSPlayer', args);
+    }
+};
+var TNSRecorderUtil = (function () {
+    function TNSRecorderUtil() {
+    }
+    TNSRecorderUtil.debug = false;
+    return TNSRecorderUtil;
+}());
+exports.TNSRecorderUtil = TNSRecorderUtil;
+exports.TNS_Recorder_Log = function () {
+    var args = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        args[_i] = arguments[_i];
+    }
+    if (TNSRecorderUtil.debug) {
+        console.log('NativeScript-Audio - TNSRecorder', args);
+    }
+};
+function isStringUrl(value) {
+    var isURL = false;
+    if (value.indexOf('://') !== -1) {
+        if (value.indexOf('res://') === -1) {
+            isURL = true;
+        }
+    }
+    if (isURL === true) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+exports.isStringUrl = isStringUrl;
+function resolveAudioFilePath(path) {
+    if (path) {
+        var isUrl = isStringUrl(path);
+        if (isUrl === true) {
+            return path;
+        }
+        else {
+            var audioPath = void 0;
+            var fileName = types_1.isString(path) ? path.trim() : '';
+            if (fileName.indexOf('~/') === 0) {
+                fileName = fs.path.join(fs.knownFolders.currentApp().path, fileName.replace('~/', ''));
+                audioPath = fileName;
+            }
+            else {
+                audioPath = fileName;
+            }
+            return audioPath;
+        }
+    }
+}
+exports.resolveAudioFilePath = resolveAudioFilePath;
+
+
+/***/ }),
+
+/***/ "../node_modules/nativescript-audio/options.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AudioPlayerEvents = {
+    seek: 'seek',
+    paused: 'paused',
+    started: 'started'
+};
+
+
+/***/ }),
+
+/***/ "../node_modules/nativescript-audioplay/android/player.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var app = __webpack_require__("../node_modules/tns-core-modules/application/application.js");
+var observable_1 = __webpack_require__("../node_modules/tns-core-modules/data/observable/observable.js");
+var utils_1 = __webpack_require__("../node_modules/tns-core-modules/utils/utils.js");
+var common_1 = __webpack_require__("../node_modules/nativescript-audioplay/common.js");
+var options_1 = __webpack_require__("../node_modules/nativescript-audioplay/options.js");
+var TNSPlayer = (function () {
+    function TNSPlayer() {
+        var _this = this;
+        this._mAudioFocusGranted = false;
+        this._mOnAudioFocusChangeListener = new android.media.AudioManager.OnAudioFocusChangeListener({
+            onAudioFocusChange: function (focusChange) {
+                switch (focusChange) {
+                    case android.media.AudioManager.AUDIOFOCUS_GAIN:
+                        common_1.TNS_Player_Log('AUDIOFOCUS_GAIN');
+                        common_1.TNS_Player_Log('this._lastPlayerVolume', _this._lastPlayerVolume);
+                        if (_this._lastPlayerVolume && _this._lastPlayerVolume >= 10) {
+                            _this.volume = 1.0;
+                        }
+                        else if (_this._lastPlayerVolume) {
+                            _this.volume = parseFloat('0.' + _this._lastPlayerVolume.toString());
+                        }
+                        _this.resume();
+                        break;
+                    case android.media.AudioManager.AUDIOFOCUS_GAIN_TRANSIENT:
+                        common_1.TNS_Player_Log('AUDIOFOCUS_GAIN_TRANSIENT');
+                        break;
+                    case android.media.AudioManager.AUDIOFOCUS_LOSS:
+                        common_1.TNS_Player_Log('AUDIOFOCUS_LOSS');
+                        _this.pause();
+                        break;
+                    case android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                        common_1.TNS_Player_Log('AUDIOFOCUS_LOSS_TRANSIENT');
+                        _this.pause();
+                        break;
+                    case android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                        common_1.TNS_Player_Log('AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK');
+                        _this._lastPlayerVolume = _this.volume;
+                        common_1.TNS_Player_Log('this._lastPlayerVolume', _this._lastPlayerVolume);
+                        _this.volume = 0.2;
+                        break;
+                }
+            }
+        });
+        this._mAudioFocusGranted = this._requestAudioFocus();
+        common_1.TNS_Player_Log('_mAudioFocusGranted', this._mAudioFocusGranted);
+    }
+    Object.defineProperty(TNSPlayer.prototype, "events", {
+        get: function () {
+            if (!this._events) {
+                this._events = new observable_1.Observable();
+            }
+            return this._events;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TNSPlayer.prototype, "android", {
+        get: function () {
+            return this._player;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TNSPlayer.prototype, "debug", {
+        set: function (value) {
+            common_1.TNSPlayerUtil.debug = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TNSPlayer.prototype, "volume", {
+        get: function () {
+            var ctx = this._getAndroidContext();
+            var mgr = ctx.getSystemService(android.content.Context.AUDIO_SERVICE);
+            return mgr.getStreamVolume(android.media.AudioManager.STREAM_MUSIC);
+        },
+        set: function (value) {
+            if (this._player && value) {
+                this._player.setVolume(value, value);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TNSPlayer.prototype, "duration", {
+        get: function () {
+            if (this._player) {
+                return this._player.getDuration();
+            }
+            else {
+                return 0;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TNSPlayer.prototype, "currentTime", {
+        get: function () {
+            return this._player ? this._player.getCurrentPosition() : 0;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    TNSPlayer.prototype.initFromFile = function (options) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            options.autoPlay = false;
+            _this.playFromFile(options).then(resolve, reject);
+        });
+    };
+    TNSPlayer.prototype.playFromFile = function (options) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            try {
+                if (options.autoPlay !== false) {
+                    options.autoPlay = true;
+                }
+                var audioPath = common_1.resolveAudioFilePath(options.audioFile);
+                common_1.TNS_Player_Log('audioPath', audioPath);
+                if (!_this._player) {
+                    common_1.TNS_Player_Log('android mediaPlayer is not initialized, creating new instance');
+                    _this._player = new android.media.MediaPlayer();
+                }
+                _this._mAudioFocusGranted = _this._requestAudioFocus();
+                common_1.TNS_Player_Log('_mAudioFocusGranted', _this._mAudioFocusGranted);
+                _this._player.setAudioStreamType(android.media.AudioManager.STREAM_MUSIC);
+                common_1.TNS_Player_Log('resetting mediaPlayer...');
+                _this._player.reset();
+                common_1.TNS_Player_Log('setting datasource', audioPath);
+                _this._player.setDataSource(audioPath);
+                if (utils_1.isFileOrResourcePath(audioPath)) {
+                    common_1.TNS_Player_Log('preparing mediaPlayer...');
+                    _this._player.prepare();
+                }
+                else {
+                    common_1.TNS_Player_Log('preparing mediaPlayer async...');
+                    _this._player.prepareAsync();
+                }
+                if (options.completeCallback) {
+                    _this._player.setOnCompletionListener(new android.media.MediaPlayer.OnCompletionListener({
+                        onCompletion: function (mp) {
+                            if (options.loop === true) {
+                                mp.seekTo(5);
+                                mp.start();
+                            }
+                            options.completeCallback({ player: mp });
+                        }
+                    }));
+                }
+                if (options.errorCallback) {
+                    _this._player.setOnErrorListener(new android.media.MediaPlayer.OnErrorListener({
+                        onError: function (player, error, extra) {
+                            _this._player.reset();
+                            common_1.TNS_Player_Log('errorCallback', error);
+                            options.errorCallback({ player: player, error: error, extra: extra });
+                            return true;
+                        }
+                    }));
+                }
+                if (options.infoCallback) {
+                    _this._player.setOnInfoListener(new android.media.MediaPlayer.OnInfoListener({
+                        onInfo: function (player, info, extra) {
+                            common_1.TNS_Player_Log('infoCallback', info);
+                            options.infoCallback({ player: player, info: info, extra: extra });
+                            return true;
+                        }
+                    }));
+                }
+                _this._player.setOnPreparedListener(new android.media.MediaPlayer.OnPreparedListener({
+                    onPrepared: function (mp) {
+                        if (options.autoPlay) {
+                            common_1.TNS_Player_Log('options.autoPlay', options.autoPlay);
+                            _this.play();
+                        }
+                        resolve();
+                    }
+                }));
+            }
+            catch (ex) {
+                common_1.TNS_Player_Log('playFromFile error', ex);
+                reject(ex);
+            }
+        });
+    };
+    TNSPlayer.prototype.initFromUrl = function (options) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            options.autoPlay = false;
+            _this.playFromUrl(options).then(resolve, reject);
+        });
+    };
+    TNSPlayer.prototype.playFromUrl = function (options) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            resolve(_this.playFromFile(options));
+        });
+    };
+    TNSPlayer.prototype.pause = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            try {
+                if (_this._player && _this._player.isPlaying()) {
+                    common_1.TNS_Player_Log('pausing player');
+                    _this._player.pause();
+                    _this._sendEvent(options_1.AudioPlayerEvents.paused);
+                }
+                resolve(true);
+            }
+            catch (ex) {
+                common_1.TNS_Player_Log('pause error', ex);
+                reject(ex);
+            }
+        });
+    };
+    TNSPlayer.prototype.play = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            try {
+                if (_this._player && !_this._player.isPlaying()) {
+                    _this._sendEvent(options_1.AudioPlayerEvents.started);
+                    app.android.foregroundActivity.setVolumeControlStream(android.media.AudioManager.STREAM_MUSIC);
+                    app.android.registerBroadcastReceiver(android.media.AudioManager.ACTION_AUDIO_BECOMING_NOISY, function (context, intent) {
+                        common_1.TNS_Player_Log('ACTION_AUDIO_BECOMING_NOISY onReceiveCallback');
+                        common_1.TNS_Player_Log('intent', intent);
+                        _this.pause();
+                    });
+                    _this._player.start();
+                }
+                resolve(true);
+            }
+            catch (ex) {
+                common_1.TNS_Player_Log('Error trying to play audio.', ex);
+                reject(ex);
+            }
+        });
+    };
+    TNSPlayer.prototype.resume = function () {
+        if (this._player) {
+            common_1.TNS_Player_Log('resume');
+            this._player.start();
+            this._sendEvent(options_1.AudioPlayerEvents.started);
+        }
+    };
+    TNSPlayer.prototype.seekTo = function (time) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            try {
+                if (_this._player) {
+                    common_1.TNS_Player_Log('seekTo', time);
+                    _this._player.seekTo(time);
+                    _this._sendEvent(options_1.AudioPlayerEvents.seek);
+                }
+                resolve(true);
+            }
+            catch (ex) {
+                common_1.TNS_Player_Log('seekTo error', ex);
+                reject(ex);
+            }
+        });
+    };
+    TNSPlayer.prototype.changePlayerSpeed = function (speed) {
+        if (android.os.Build.VERSION.SDK_INT >= 23 && this.play) {
+            common_1.TNS_Player_Log('setting the mediaPlayer playback speed', speed);
+            if (this._player.isPlaying()) {
+                this._player.setPlaybackParams(this._player.getPlaybackParams().setSpeed(speed));
+            }
+            else {
+                this._player.setPlaybackParams(this._player.getPlaybackParams().setSpeed(speed));
+                this._player.pause();
+            }
+        }
+        else {
+            common_1.TNS_Player_Log('Android device API is not 23+. Cannot set the playbackRate on lower Android APIs.');
+        }
+    };
+    TNSPlayer.prototype.dispose = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            try {
+                if (_this._player) {
+                    common_1.TNS_Player_Log('disposing of mediaPlayer instance', _this._player);
+                    _this._player.stop();
+                    _this._player.reset();
+                    common_1.TNS_Player_Log('unregisterBroadcastReceiver ACTION_AUDIO_BECOMING_NOISY...');
+                    app.android.unregisterBroadcastReceiver(android.media.AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+                    common_1.TNS_Player_Log('abandoning audio focus...');
+                    _this._abandonAudioFocus();
+                }
+                resolve();
+            }
+            catch (ex) {
+                common_1.TNS_Player_Log('dispose error', ex);
+                reject(ex);
+            }
+        });
+    };
+    TNSPlayer.prototype.isAudioPlaying = function () {
+        if (this._player) {
+            return this._player.isPlaying();
+        }
+        else {
+            return false;
+        }
+    };
+    TNSPlayer.prototype.getAudioTrackDuration = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            try {
+                var duration = _this._player ? _this._player.getDuration() : 0;
+                common_1.TNS_Player_Log('audio track duration', duration);
+                resolve(duration.toString());
+            }
+            catch (ex) {
+                common_1.TNS_Player_Log('getAudioTrackDuration error', ex);
+                reject(ex);
+            }
+        });
+    };
+    TNSPlayer.prototype._sendEvent = function (eventName, data) {
+        if (this.events) {
+            this.events.notify({
+                eventName: eventName,
+                object: this,
+                data: data
+            });
+        }
+    };
+    TNSPlayer.prototype._requestAudioFocus = function () {
+        var result = false;
+        if (!this._mAudioFocusGranted) {
+            var ctx = this._getAndroidContext();
+            var am = ctx.getSystemService(android.content.Context.AUDIO_SERVICE);
+            var focusResult = am.requestAudioFocus(this._mOnAudioFocusChangeListener, android.media.AudioManager.STREAM_MUSIC, android.media.AudioManager.AUDIOFOCUS_GAIN);
+            if (focusResult === android.media.AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                result = true;
+            }
+            else {
+                common_1.TNS_Player_Log('Failed to get audio focus.');
+                result = false;
+            }
+        }
+        return result;
+    };
+    TNSPlayer.prototype._abandonAudioFocus = function () {
+        var ctx = this._getAndroidContext();
+        var am = ctx.getSystemService(android.content.Context.AUDIO_SERVICE);
+        var result = am.abandonAudioFocus(this._mOnAudioFocusChangeListener);
+        if (result === android.media.AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            this._mAudioFocusGranted = false;
+        }
+        else {
+            common_1.TNS_Player_Log('Failed to abandon audio focus.');
+        }
+        this._mOnAudioFocusChangeListener = null;
+    };
+    TNSPlayer.prototype._getAndroidContext = function () {
+        var _this = this;
+        var ctx = app.android.context;
+        if (!ctx) {
+            ctx = app.getNativeApplication().getApplicationContext();
+        }
+        if (!ctx) {
+            setTimeout(function () {
+                _this._getAndroidContext();
+            }, 200);
+            return;
+        }
+        return ctx;
+    };
+    return TNSPlayer;
+}());
+exports.TNSPlayer = TNSPlayer;
+
+
+/***/ }),
+
+/***/ "../node_modules/nativescript-audioplay/audio.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+Object.defineProperty(exports, "__esModule", { value: true });
+__export(__webpack_require__("../node_modules/nativescript-audioplay/options.js"));
+__export(__webpack_require__("../node_modules/nativescript-audioplay/android/player.js"));
+
+
+/***/ }),
+
+/***/ "../node_modules/nativescript-audioplay/common.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var fs = __webpack_require__("../node_modules/tns-core-modules/file-system/file-system.js");
+var types_1 = __webpack_require__("../node_modules/tns-core-modules/utils/types.js");
+var TNSPlayerUtil = (function () {
+    function TNSPlayerUtil() {
+    }
+    TNSPlayerUtil.debug = false;
+    return TNSPlayerUtil;
+}());
+exports.TNSPlayerUtil = TNSPlayerUtil;
+exports.TNS_Player_Log = function () {
+    var args = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        args[_i] = arguments[_i];
+    }
+    if (TNSPlayerUtil.debug) {
+        console.log('NativeScript-Audio - TNSPlayer', args);
+    }
+};
+function isStringUrl(value) {
+    var isURL = false;
+    if (value.indexOf('://') !== -1) {
+        if (value.indexOf('res://') === -1) {
+            isURL = true;
+        }
+    }
+    if (isURL === true) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+exports.isStringUrl = isStringUrl;
+function resolveAudioFilePath(path) {
+    if (path) {
+        var isUrl = isStringUrl(path);
+        if (isUrl === true) {
+            return path;
+        }
+        else {
+            var audioPath = void 0;
+            var fileName = types_1.isString(path) ? path.trim() : '';
+            if (fileName.indexOf('~/') === 0) {
+                fileName = fs.path.join(fs.knownFolders.currentApp().path, fileName.replace('~/', ''));
+                audioPath = fileName;
+            }
+            else {
+                audioPath = fileName;
+            }
+            return audioPath;
+        }
+    }
+}
+exports.resolveAudioFilePath = resolveAudioFilePath;
+
+
+/***/ }),
+
+/***/ "../node_modules/nativescript-audioplay/options.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AudioPlayerEvents = {
+    seek: 'seek',
+    paused: 'paused',
+    started: 'started'
+};
+
+
+/***/ }),
+
 /***/ "../node_modules/nativescript-dev-webpack/load-application-css-regular.js":
 /***/ (function(module, exports, __webpack_require__) {
 

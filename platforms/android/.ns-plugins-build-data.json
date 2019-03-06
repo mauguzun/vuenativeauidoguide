@@ -17,7 +17,16 @@
 		"C:\\GeolocationNativescriptVue\\node_modules\\nativescript-ui-sidedrawer\\platforms\\android\\TNSSideDrawer-release.aar": "346e3d4bc4cab015628573955926854fda0f8f98"
 	},
 	"nativescript-ui-core": {
-		"C:\\GeolocationNativescriptVue\\node_modules\\nativescript-ui-core\\platforms\\android\\typings\\core.d.ts": "57a0606617eef3c732c1a7f32480b1e166ad27ce",
-		"C:\\GeolocationNativescriptVue\\node_modules\\nativescript-ui-core\\platforms\\android\\TNSCore-release.aar": "7e9c7f089e6c8aeea48b19e54e4bb1ff62b70eed"
+		"C:\\GeolocationNativescriptVue\\node_modules\\nativescript-ui-core\\platforms\\android\\TNSCore-release.aar": "7e9c7f089e6c8aeea48b19e54e4bb1ff62b70eed",
+		"C:\\GeolocationNativescriptVue\\node_modules\\nativescript-ui-core\\platforms\\android\\typings\\core.d.ts": "57a0606617eef3c732c1a7f32480b1e166ad27ce"
+	},
+	"nativescript-audio": {
+		"C:\\GeolocationNativescriptVue\\node_modules\\nativescript-audio\\platforms\\android\\nativescript_audio.aar": "61e5eeabb23d578ccc5e4bca8871da98f168e965",
+		"C:\\GeolocationNativescriptVue\\node_modules\\nativescript-audio\\platforms\\android\\AndroidManifest.xml": "00004bc4c425b6dbe747ad3cb9ff274f22a0ddb5"
+	},
+	"nativescript-ui-listview": {
+		"C:\\GeolocationNativescriptVue\\node_modules\\nativescript-ui-listview\\platforms\\android\\typings\\listview.d.ts": "e5cb786b04a720aa5f9069bdc019f91a5fd2769a",
+		"C:\\GeolocationNativescriptVue\\node_modules\\nativescript-ui-listview\\platforms\\android\\include.gradle": "455b6fc1ccdd84405dfdbaf9171410e91b54b242",
+		"C:\\GeolocationNativescriptVue\\node_modules\\nativescript-ui-listview\\platforms\\android\\TNSListView-release.aar": "5c59b2f481bc4983adf3d1dd9de280444a120d3a"
 	}
 }

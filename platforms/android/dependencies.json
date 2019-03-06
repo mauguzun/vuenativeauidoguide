@@ -1,5 +1,9 @@
 [
     {
+        "name": "nativescript-audio",
+        "directory": "..\\..\\node_modules\\nativescript-audio"
+    },
+    {
         "name": "nativescript-audioplay",
         "directory": "..\\..\\node_modules\\nativescript-audioplay"
     },
