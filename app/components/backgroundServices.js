@@ -191,57 +191,36 @@ const BackgroundAudio = {
   },
 
   play() {
-    const sound =
-      "https://notificationsounds.com/soundfiles/4e4b5fbbbb602b6d35bea8460aa8f8e5/file-sounds-1096-light.mp3";
+    
+    this.clear();
 
-    let player = new audioplayer.TNSPlayer();
+    this.player = new audioplayer.TNSPlayer();
+
+    console.log("zzz" + this._point.mp3);
+    
+
     let playerOptions = {
       audioFile: this._point.mp3,
       loop: false,
-      completeCallback: function() {
+      completeCallback() {
         console.log("finished playing");
       },
-      errorCallback: function(errorObject) {
+      errorCallback(errorObject) {
         console.log(JSON.stringify(errorObject));
       },
-      infoCallback: function(args) {
+      infoCallback(args) {
         console.log(JSON.stringify(args));
       }
     };
 
-    player
+    this.player
       .playFromUrl(playerOptions)
-      .then(res => {
+      .then(function(res) {
         console.log(res);
       })
-      .catch(err => {
+      .catch(function(err) {
         console.log("something went wrong...", err);
       });
-    // alert("in da play");
-
-    // this.player = new audioplayer.TNSPlayer();
-    // let playerOptions = {
-    //   audioFile: "https://notificationsounds.com/soundfiles/4e4b5fbbbb602b6d35bea8460aa8f8e5/file-sounds-1096-light.mp3",
-    //   loop: false,
-    //   completeCallback() {
-    //     console.log("finished playing");
-    //   },
-    //   errorCallback(errorObject) {
-    //     console.log(JSON.stringify(errorObject));
-    //   },
-    //   infoCallback(args) {
-    //     console.log(JSON.stringify(args));
-    //   }
-    // };
-
-    // this.player
-    //   .playFromUrl(playerOptions)
-    //   .then(function(res) {
-    //     console.log(res);
-    //   })
-    //   .catch(function(err) {
-    //     console.log("something went wrong...", err);
-    //   });
 
     // this.interval = setInterval(() => {
     //   this.player.getAudioTrackDuration().then(duration => {

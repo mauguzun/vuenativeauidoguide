@@ -33,10 +33,15 @@ export default {
   props: ["translate"],
   mounted() {
     apiCall("cities", { lang: appSettings.getString("lang", "en") })
+       .catch(e=>{
+         console.log(e);
+       })
       .then(res => {
-        return res.json();
+
+        return res.json();  
       })
       .then(res => {
+          
         if (res.action == true) {
           this.cities = res.code;
           this.indexCity = this.cities.findIndex(

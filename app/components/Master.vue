@@ -297,6 +297,9 @@ export default {
         this.map.view.latitude = this.points[x].lat;
         this.map.view.longitude = this.points[x].lng;
       }
+      if(this.debug){
+        this.startBackgroundTap();
+      }
     },
 
     MAP_setCurrentLocation(lat, lng) {
