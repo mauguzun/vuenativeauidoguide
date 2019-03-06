@@ -1,5 +1,9 @@
 [
     {
+        "name": "nativescript-audioplay",
+        "directory": "..\\..\\node_modules\\nativescript-audioplay"
+    },
+    {
         "name": "nativescript-geolocation",
         "directory": "..\\..\\node_modules\\nativescript-geolocation"
     },

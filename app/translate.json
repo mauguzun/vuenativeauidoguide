@@ -1,0 +1,46 @@
+{
+  "en": {
+    "menu": {
+      "settings": "settings",
+      "map": "view map",
+      "about": "about"
+    },
+    "labels": {
+      "lang": "Choose lang",
+      "city": "Choose city"
+    }
+  },
+  "lv": {
+    "menu": {
+      "settings": "lv settings",
+      "map": "lv view map",
+      "about": "lv about"
+    },
+    "labels": {
+      "lang": "lv Choose lang",
+      "city": "lv Choose city"
+    }
+  },
+  "ru": {
+    "menu": {
+      "settings": "nastroiki",
+      "map": "vie map",
+      "about": "about"
+    },
+    "labels": {
+      "lang": "ru Choose lang",
+      "city": "ru Choose city"
+    }
+  },
+  "fr": {
+    "menu": {
+      "settings": "la settings",
+      "map": "le map",
+      "about": "la about"
+    },
+    "labels": {
+      "lang": "fr Choose lang",
+      "city": "fr Choose city"
+    }
+  }
+}

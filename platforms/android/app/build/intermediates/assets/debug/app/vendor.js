@@ -16358,6 +16358,482 @@
 
 /***/ }),
 
+/***/ "../node_modules/nativescript-audioplay/android/player.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var app = __webpack_require__("../node_modules/tns-core-modules/application/application.js");
+var observable_1 = __webpack_require__("../node_modules/tns-core-modules/data/observable/observable.js");
+var utils_1 = __webpack_require__("../node_modules/tns-core-modules/utils/utils.js");
+var common_1 = __webpack_require__("../node_modules/nativescript-audioplay/common.js");
+var options_1 = __webpack_require__("../node_modules/nativescript-audioplay/options.js");
+var TNSPlayer = (function () {
+    function TNSPlayer() {
+        var _this = this;
+        this._mAudioFocusGranted = false;
+        this._mOnAudioFocusChangeListener = new android.media.AudioManager.OnAudioFocusChangeListener({
+            onAudioFocusChange: function (focusChange) {
+                switch (focusChange) {
+                    case android.media.AudioManager.AUDIOFOCUS_GAIN:
+                        common_1.TNS_Player_Log('AUDIOFOCUS_GAIN');
+                        common_1.TNS_Player_Log('this._lastPlayerVolume', _this._lastPlayerVolume);
+                        if (_this._lastPlayerVolume && _this._lastPlayerVolume >= 10) {
+                            _this.volume = 1.0;
+                        }
+                        else if (_this._lastPlayerVolume) {
+                            _this.volume = parseFloat('0.' + _this._lastPlayerVolume.toString());
+                        }
+                        _this.resume();
+                        break;
+                    case android.media.AudioManager.AUDIOFOCUS_GAIN_TRANSIENT:
+                        common_1.TNS_Player_Log('AUDIOFOCUS_GAIN_TRANSIENT');
+                        break;
+                    case android.media.AudioManager.AUDIOFOCUS_LOSS:
+                        common_1.TNS_Player_Log('AUDIOFOCUS_LOSS');
+                        _this.pause();
+                        break;
+                    case android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                        common_1.TNS_Player_Log('AUDIOFOCUS_LOSS_TRANSIENT');
+                        _this.pause();
+                        break;
+                    case android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                        common_1.TNS_Player_Log('AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK');
+                        _this._lastPlayerVolume = _this.volume;
+                        common_1.TNS_Player_Log('this._lastPlayerVolume', _this._lastPlayerVolume);
+                        _this.volume = 0.2;
+                        break;
+                }
+            }
+        });
+        this._mAudioFocusGranted = this._requestAudioFocus();
+        common_1.TNS_Player_Log('_mAudioFocusGranted', this._mAudioFocusGranted);
+    }
+    Object.defineProperty(TNSPlayer.prototype, "events", {
+        get: function () {
+            if (!this._events) {
+                this._events = new observable_1.Observable();
+            }
+            return this._events;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TNSPlayer.prototype, "android", {
+        get: function () {
+            return this._player;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TNSPlayer.prototype, "debug", {
+        set: function (value) {
+            common_1.TNSPlayerUtil.debug = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TNSPlayer.prototype, "volume", {
+        get: function () {
+            var ctx = this._getAndroidContext();
+            var mgr = ctx.getSystemService(android.content.Context.AUDIO_SERVICE);
+            return mgr.getStreamVolume(android.media.AudioManager.STREAM_MUSIC);
+        },
+        set: function (value) {
+            if (this._player && value) {
+                this._player.setVolume(value, value);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TNSPlayer.prototype, "duration", {
+        get: function () {
+            if (this._player) {
+                return this._player.getDuration();
+            }
+            else {
+                return 0;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TNSPlayer.prototype, "currentTime", {
+        get: function () {
+            return this._player ? this._player.getCurrentPosition() : 0;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    TNSPlayer.prototype.initFromFile = function (options) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            options.autoPlay = false;
+            _this.playFromFile(options).then(resolve, reject);
+        });
+    };
+    TNSPlayer.prototype.playFromFile = function (options) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            try {
+                if (options.autoPlay !== false) {
+                    options.autoPlay = true;
+                }
+                var audioPath = common_1.resolveAudioFilePath(options.audioFile);
+                common_1.TNS_Player_Log('audioPath', audioPath);
+                if (!_this._player) {
+                    common_1.TNS_Player_Log('android mediaPlayer is not initialized, creating new instance');
+                    _this._player = new android.media.MediaPlayer();
+                }
+                _this._mAudioFocusGranted = _this._requestAudioFocus();
+                common_1.TNS_Player_Log('_mAudioFocusGranted', _this._mAudioFocusGranted);
+                _this._player.setAudioStreamType(android.media.AudioManager.STREAM_MUSIC);
+                common_1.TNS_Player_Log('resetting mediaPlayer...');
+                _this._player.reset();
+                common_1.TNS_Player_Log('setting datasource', audioPath);
+                _this._player.setDataSource(audioPath);
+                if (utils_1.isFileOrResourcePath(audioPath)) {
+                    common_1.TNS_Player_Log('preparing mediaPlayer...');
+                    _this._player.prepare();
+                }
+                else {
+                    common_1.TNS_Player_Log('preparing mediaPlayer async...');
+                    _this._player.prepareAsync();
+                }
+                if (options.completeCallback) {
+                    _this._player.setOnCompletionListener(new android.media.MediaPlayer.OnCompletionListener({
+                        onCompletion: function (mp) {
+                            if (options.loop === true) {
+                                mp.seekTo(5);
+                                mp.start();
+                            }
+                            options.completeCallback({ player: mp });
+                        }
+                    }));
+                }
+                if (options.errorCallback) {
+                    _this._player.setOnErrorListener(new android.media.MediaPlayer.OnErrorListener({
+                        onError: function (player, error, extra) {
+                            _this._player.reset();
+                            common_1.TNS_Player_Log('errorCallback', error);
+                            options.errorCallback({ player: player, error: error, extra: extra });
+                            return true;
+                        }
+                    }));
+                }
+                if (options.infoCallback) {
+                    _this._player.setOnInfoListener(new android.media.MediaPlayer.OnInfoListener({
+                        onInfo: function (player, info, extra) {
+                            common_1.TNS_Player_Log('infoCallback', info);
+                            options.infoCallback({ player: player, info: info, extra: extra });
+                            return true;
+                        }
+                    }));
+                }
+                _this._player.setOnPreparedListener(new android.media.MediaPlayer.OnPreparedListener({
+                    onPrepared: function (mp) {
+                        if (options.autoPlay) {
+                            common_1.TNS_Player_Log('options.autoPlay', options.autoPlay);
+                            _this.play();
+                        }
+                        resolve();
+                    }
+                }));
+            }
+            catch (ex) {
+                common_1.TNS_Player_Log('playFromFile error', ex);
+                reject(ex);
+            }
+        });
+    };
+    TNSPlayer.prototype.initFromUrl = function (options) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            options.autoPlay = false;
+            _this.playFromUrl(options).then(resolve, reject);
+        });
+    };
+    TNSPlayer.prototype.playFromUrl = function (options) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            resolve(_this.playFromFile(options));
+        });
+    };
+    TNSPlayer.prototype.pause = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            try {
+                if (_this._player && _this._player.isPlaying()) {
+                    common_1.TNS_Player_Log('pausing player');
+                    _this._player.pause();
+                    _this._sendEvent(options_1.AudioPlayerEvents.paused);
+                }
+                resolve(true);
+            }
+            catch (ex) {
+                common_1.TNS_Player_Log('pause error', ex);
+                reject(ex);
+            }
+        });
+    };
+    TNSPlayer.prototype.play = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            try {
+                if (_this._player && !_this._player.isPlaying()) {
+                    _this._sendEvent(options_1.AudioPlayerEvents.started);
+                    app.android.foregroundActivity.setVolumeControlStream(android.media.AudioManager.STREAM_MUSIC);
+                    app.android.registerBroadcastReceiver(android.media.AudioManager.ACTION_AUDIO_BECOMING_NOISY, function (context, intent) {
+                        common_1.TNS_Player_Log('ACTION_AUDIO_BECOMING_NOISY onReceiveCallback');
+                        common_1.TNS_Player_Log('intent', intent);
+                        _this.pause();
+                    });
+                    _this._player.start();
+                }
+                resolve(true);
+            }
+            catch (ex) {
+                common_1.TNS_Player_Log('Error trying to play audio.', ex);
+                reject(ex);
+            }
+        });
+    };
+    TNSPlayer.prototype.resume = function () {
+        if (this._player) {
+            common_1.TNS_Player_Log('resume');
+            this._player.start();
+            this._sendEvent(options_1.AudioPlayerEvents.started);
+        }
+    };
+    TNSPlayer.prototype.seekTo = function (time) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            try {
+                if (_this._player) {
+                    common_1.TNS_Player_Log('seekTo', time);
+                    _this._player.seekTo(time);
+                    _this._sendEvent(options_1.AudioPlayerEvents.seek);
+                }
+                resolve(true);
+            }
+            catch (ex) {
+                common_1.TNS_Player_Log('seekTo error', ex);
+                reject(ex);
+            }
+        });
+    };
+    TNSPlayer.prototype.changePlayerSpeed = function (speed) {
+        if (android.os.Build.VERSION.SDK_INT >= 23 && this.play) {
+            common_1.TNS_Player_Log('setting the mediaPlayer playback speed', speed);
+            if (this._player.isPlaying()) {
+                this._player.setPlaybackParams(this._player.getPlaybackParams().setSpeed(speed));
+            }
+            else {
+                this._player.setPlaybackParams(this._player.getPlaybackParams().setSpeed(speed));
+                this._player.pause();
+            }
+        }
+        else {
+            common_1.TNS_Player_Log('Android device API is not 23+. Cannot set the playbackRate on lower Android APIs.');
+        }
+    };
+    TNSPlayer.prototype.dispose = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            try {
+                if (_this._player) {
+                    common_1.TNS_Player_Log('disposing of mediaPlayer instance', _this._player);
+                    _this._player.stop();
+                    _this._player.reset();
+                    common_1.TNS_Player_Log('unregisterBroadcastReceiver ACTION_AUDIO_BECOMING_NOISY...');
+                    app.android.unregisterBroadcastReceiver(android.media.AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+                    common_1.TNS_Player_Log('abandoning audio focus...');
+                    _this._abandonAudioFocus();
+                }
+                resolve();
+            }
+            catch (ex) {
+                common_1.TNS_Player_Log('dispose error', ex);
+                reject(ex);
+            }
+        });
+    };
+    TNSPlayer.prototype.isAudioPlaying = function () {
+        if (this._player) {
+            return this._player.isPlaying();
+        }
+        else {
+            return false;
+        }
+    };
+    TNSPlayer.prototype.getAudioTrackDuration = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            try {
+                var duration = _this._player ? _this._player.getDuration() : 0;
+                common_1.TNS_Player_Log('audio track duration', duration);
+                resolve(duration.toString());
+            }
+            catch (ex) {
+                common_1.TNS_Player_Log('getAudioTrackDuration error', ex);
+                reject(ex);
+            }
+        });
+    };
+    TNSPlayer.prototype._sendEvent = function (eventName, data) {
+        if (this.events) {
+            this.events.notify({
+                eventName: eventName,
+                object: this,
+                data: data
+            });
+        }
+    };
+    TNSPlayer.prototype._requestAudioFocus = function () {
+        var result = false;
+        if (!this._mAudioFocusGranted) {
+            var ctx = this._getAndroidContext();
+            var am = ctx.getSystemService(android.content.Context.AUDIO_SERVICE);
+            var focusResult = am.requestAudioFocus(this._mOnAudioFocusChangeListener, android.media.AudioManager.STREAM_MUSIC, android.media.AudioManager.AUDIOFOCUS_GAIN);
+            if (focusResult === android.media.AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                result = true;
+            }
+            else {
+                common_1.TNS_Player_Log('Failed to get audio focus.');
+                result = false;
+            }
+        }
+        return result;
+    };
+    TNSPlayer.prototype._abandonAudioFocus = function () {
+        var ctx = this._getAndroidContext();
+        var am = ctx.getSystemService(android.content.Context.AUDIO_SERVICE);
+        var result = am.abandonAudioFocus(this._mOnAudioFocusChangeListener);
+        if (result === android.media.AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            this._mAudioFocusGranted = false;
+        }
+        else {
+            common_1.TNS_Player_Log('Failed to abandon audio focus.');
+        }
+        this._mOnAudioFocusChangeListener = null;
+    };
+    TNSPlayer.prototype._getAndroidContext = function () {
+        var _this = this;
+        var ctx = app.android.context;
+        if (!ctx) {
+            ctx = app.getNativeApplication().getApplicationContext();
+        }
+        if (!ctx) {
+            setTimeout(function () {
+                _this._getAndroidContext();
+            }, 200);
+            return;
+        }
+        return ctx;
+    };
+    return TNSPlayer;
+}());
+exports.TNSPlayer = TNSPlayer;
+
+
+/***/ }),
+
+/***/ "../node_modules/nativescript-audioplay/audio.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+Object.defineProperty(exports, "__esModule", { value: true });
+__export(__webpack_require__("../node_modules/nativescript-audioplay/options.js"));
+__export(__webpack_require__("../node_modules/nativescript-audioplay/android/player.js"));
+
+
+/***/ }),
+
+/***/ "../node_modules/nativescript-audioplay/common.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var fs = __webpack_require__("../node_modules/tns-core-modules/file-system/file-system.js");
+var types_1 = __webpack_require__("../node_modules/tns-core-modules/utils/types.js");
+var TNSPlayerUtil = (function () {
+    function TNSPlayerUtil() {
+    }
+    TNSPlayerUtil.debug = false;
+    return TNSPlayerUtil;
+}());
+exports.TNSPlayerUtil = TNSPlayerUtil;
+exports.TNS_Player_Log = function () {
+    var args = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        args[_i] = arguments[_i];
+    }
+    if (TNSPlayerUtil.debug) {
+        console.log('NativeScript-Audio - TNSPlayer', args);
+    }
+};
+function isStringUrl(value) {
+    var isURL = false;
+    if (value.indexOf('://') !== -1) {
+        if (value.indexOf('res://') === -1) {
+            isURL = true;
+        }
+    }
+    if (isURL === true) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+exports.isStringUrl = isStringUrl;
+function resolveAudioFilePath(path) {
+    if (path) {
+        var isUrl = isStringUrl(path);
+        if (isUrl === true) {
+            return path;
+        }
+        else {
+            var audioPath = void 0;
+            var fileName = types_1.isString(path) ? path.trim() : '';
+            if (fileName.indexOf('~/') === 0) {
+                fileName = fs.path.join(fs.knownFolders.currentApp().path, fileName.replace('~/', ''));
+                audioPath = fileName;
+            }
+            else {
+                audioPath = fileName;
+            }
+            return audioPath;
+        }
+    }
+}
+exports.resolveAudioFilePath = resolveAudioFilePath;
+
+
+/***/ }),
+
+/***/ "../node_modules/nativescript-audioplay/options.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AudioPlayerEvents = {
+    seek: 'seek',
+    paused: 'paused',
+    started: 'started'
+};
+
+
+/***/ }),
+
 /***/ "../node_modules/nativescript-dev-webpack/load-application-css-regular.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -30327,6 +30803,112 @@ Vue.default = Vue;
 module.exports = Vue;
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__("../node_modules/nativescript-dev-webpack/node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
+/***/ "../node_modules/tns-core-modules/application-settings/application-settings-common.js":
+/***/ (function(module, exports) {
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.checkKey = function (key) {
+    if (typeof key !== "string") {
+        throw new Error("key: '" + key + "' must be a string");
+    }
+};
+exports.ensureValidValue = function (value, valueType) {
+    if (typeof value !== valueType) {
+        throw new Error("value: '" + value + "' must be a " + valueType);
+    }
+};
+//# sourceMappingURL=application-settings-common.js.map
+
+/***/ }),
+
+/***/ "../node_modules/tns-core-modules/application-settings/application-settings.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var common = __webpack_require__("../node_modules/tns-core-modules/application-settings/application-settings-common.js");
+var application_1 = __webpack_require__("../node_modules/tns-core-modules/application/application.js");
+var sharedPreferences;
+function ensureSharedPreferences() {
+    if (!sharedPreferences) {
+        sharedPreferences = application_1.getNativeApplication().getApplicationContext().getSharedPreferences("prefs.db", 0);
+    }
+}
+function verify(key) {
+    common.checkKey(key);
+    ensureSharedPreferences();
+}
+function hasKey(key) {
+    verify(key);
+    return sharedPreferences.contains(key);
+}
+exports.hasKey = hasKey;
+function getBoolean(key, defaultValue) {
+    verify(key);
+    if (hasKey(key)) {
+        return sharedPreferences.getBoolean(key, false);
+    }
+    return defaultValue;
+}
+exports.getBoolean = getBoolean;
+function getString(key, defaultValue) {
+    verify(key);
+    if (hasKey(key)) {
+        return sharedPreferences.getString(key, "");
+    }
+    return defaultValue;
+}
+exports.getString = getString;
+function getNumber(key, defaultValue) {
+    verify(key);
+    if (hasKey(key)) {
+        return sharedPreferences.getFloat(key, float(0.0));
+    }
+    return defaultValue;
+}
+exports.getNumber = getNumber;
+function setBoolean(key, value) {
+    verify(key);
+    common.ensureValidValue(value, "boolean");
+    var editor = sharedPreferences.edit();
+    editor.putBoolean(key, value);
+    editor.apply();
+}
+exports.setBoolean = setBoolean;
+function setString(key, value) {
+    verify(key);
+    common.ensureValidValue(value, "string");
+    var editor = sharedPreferences.edit();
+    editor.putString(key, value);
+    editor.apply();
+}
+exports.setString = setString;
+function setNumber(key, value) {
+    verify(key);
+    common.ensureValidValue(value, "number");
+    var editor = sharedPreferences.edit();
+    editor.putFloat(key, float(value));
+    editor.apply();
+}
+exports.setNumber = setNumber;
+function remove(key) {
+    verify(key);
+    var editor = sharedPreferences.edit();
+    editor.remove(key);
+    editor.apply();
+}
+exports.remove = remove;
+function clear() {
+    ensureSharedPreferences();
+    sharedPreferences.edit().clear().apply();
+}
+exports.clear = clear;
+exports.flush = function () {
+    return sharedPreferences.edit().commit();
+};
+//# sourceMappingURL=application-settings.android.js.map
 
 /***/ }),
 

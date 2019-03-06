@@ -1,5 +1,6 @@
 {
     "moment": true,
+    "nativescript-audioplay": true,
     "nativescript-geolocation": true,
     "nativescript-theme-core": true,
     "nativescript-toast": true,

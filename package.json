@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "moment": "^2.22.2",
+    "nativescript-audioplay": "^1.0.1",
     "nativescript-geolocation": "4.2.6",
     "nativescript-theme-core": "^1.0.4",
     "nativescript-toast": "^1.4.6",

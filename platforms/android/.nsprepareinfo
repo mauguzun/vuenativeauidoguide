@@ -2,17 +2,19 @@
 	"nativePlatformStatus": "3",
 	"appFilesHashes": {
 		"C:\\GeolocationNativescriptVue\\app\\fonts\\.gitkeep": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
-		"C:\\GeolocationNativescriptVue\\app\\components\\HelloWorld.vue": "6b8a54a1c7e395930f5d345439f06de342f9696f",
-		"C:\\GeolocationNativescriptVue\\app\\components\\backgroundServices.js": "ad7cba4253df07e35a1062664eb9c239d5415621",
-		"C:\\GeolocationNativescriptVue\\app\\main.js": "6d3f927fd994f2d6ab275209d392d89a32907c25",
+		"C:\\GeolocationNativescriptVue\\app\\assets\\images\\NativeScript-Vue.png": "31f09bdba72293198ee2e2a83c4fe5aa5744bc3d",
+		"C:\\GeolocationNativescriptVue\\app\\components\\backgroundServices.js": "b056743c82da290560698e97acbabd6bb77be77f",
+		"C:\\GeolocationNativescriptVue\\app\\components\\Master.vue": "a788d6df05bfdddf2646c9aeed339c7a140c6ce8",
+		"C:\\GeolocationNativescriptVue\\app\\components\\beep.js": "08dc36c987980096af5114fc98ba55f33ca0f29b",
+		"C:\\GeolocationNativescriptVue\\app\\styles.scss": "866f5f15f8c5e98655a3848246a544e966ab6077",
 		"C:\\GeolocationNativescriptVue\\app\\package.json": "e36f4008ca56ecdfa46c87945ac8672e78be9e02",
-		"C:\\GeolocationNativescriptVue\\app\\styles.scss": "e1ecb72b81d17d52ac50ca356ea42d0ade424633",
-		"C:\\GeolocationNativescriptVue\\app\\assets\\images\\NativeScript-Vue.png": "31f09bdba72293198ee2e2a83c4fe5aa5744bc3d"
+		"C:\\GeolocationNativescriptVue\\app\\translate.json": "ca1e02643b722fdb82fbb43c7cc26ced7ddb1e73",
+		"C:\\GeolocationNativescriptVue\\app\\main.js": "f41e332d937c633d565ff06b8910bbf7bae65971"
 	},
 	"release": false,
 	"bundle": true,
 	"changesRequireBuild": false,
-	"time": "Sun Feb 24 2019 14:56:23 GMT+0200 (Eastern European Standard Time)",
-	"changesRequireBuildTime": "Sun Feb 24 2019 13:32:55 GMT+0200 (Eastern European Standard Time)",
-	"projectFileHash": "70c33dc70b063c95f15521b600f8220820299f665617ee1bb6e2432d3fd78de5"
+	"time": "Wed Mar 06 2019 15:30:02 GMT+0200 (Eastern European Standard Time)",
+	"changesRequireBuildTime": "Sun Feb 24 2019 17:37:38 GMT+0200 (Eastern European Standard Time)",
+	"projectFileHash": "80c051a989830ddcbc265c11a3bcf30234b1ea3882a95716de97c192871c525c"
 }

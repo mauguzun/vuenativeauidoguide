@@ -438,14 +438,14 @@ webpackContext.id = "../node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var nativescript_geolocation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../node_modules/nativescript-geolocation/geolocation.js");
-/* harmony import */ var nativescript_geolocation__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(nativescript_geolocation__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var tns_core_modules_platform__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("../node_modules/tns-core-modules/platform/platform.js");
-/* harmony import */ var tns_core_modules_platform__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(tns_core_modules_platform__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var ui_enums__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("../node_modules/tns-core-modules/ui/enums/enums.js");
-/* harmony import */ var ui_enums__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(ui_enums__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var tns_core_modules_application__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("../node_modules/tns-core-modules/application/application.js");
-/* harmony import */ var tns_core_modules_application__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(tns_core_modules_application__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var tns_core_modules_application__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../node_modules/tns-core-modules/application/application.js");
+/* harmony import */ var tns_core_modules_application__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(tns_core_modules_application__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("../node_modules/nativescript-geolocation/geolocation.js");
+/* harmony import */ var nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var tns_core_modules_platform__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("../node_modules/tns-core-modules/platform/platform.js");
+/* harmony import */ var tns_core_modules_platform__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tns_core_modules_platform__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var ui_enums__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("../node_modules/tns-core-modules/ui/enums/enums.js");
+/* harmony import */ var ui_enums__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(ui_enums__WEBPACK_IMPORTED_MODULE_3__);
 //
 //
 //
@@ -470,6 +470,31 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+const appSettings = __webpack_require__("../node_modules/tns-core-modules/application-settings/application-settings.js");
+
+
+
+
 
 
 
@@ -478,14 +503,17 @@ const utils = __webpack_require__("../node_modules/tns-core-modules/utils/utils.
 
 let locationService = __webpack_require__("./components/backgroundServices.js");
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-  data () {
+
+  data() {
     return {
       model: {
         locations: []
       },
+      counter:  appSettings.getNumber("cou", 0),
       watchId: null,
-      BGids: [],
+      BGids: []
     };
   },
   methods: {
@@ -495,137 +523,167 @@ let locationService = __webpack_require__("./components/backgroundServices.js");
     buttonGetLocationTap,
     buttonStartTap,
     buttonStopTap,
-    buttonClearTap
+    buttonClearTap,
+    makeThis,
+    
   }
 });
 
+function makeThis(){
+  return this;
+}
+
 function startBackgroundTap() {
-  if (tns_core_modules_application__WEBPACK_IMPORTED_MODULE_3__["android"]) {
-    const { sdkVersion } = tns_core_modules_platform__WEBPACK_IMPORTED_MODULE_1__["device"];
+  if (tns_core_modules_application__WEBPACK_IMPORTED_MODULE_0__["android"]) {
+    const { sdkVersion } = tns_core_modules_platform__WEBPACK_IMPORTED_MODULE_2__["device"];
     const context = utils.ad.getApplicationContext();
     if (sdkVersion * 1 < 26) {
-      const intent = new android.content.Intent(context, com.ciriscr.geotest.location.BackgroundService.class);
+      const intent = new android.content.Intent(
+        context,
+        com.ciriscr.geotest.location.BackgroundService.class
+      );
       console.log("startService");
       context.startService(intent);
     } else {
-      const component = new android.content.ComponentName(context, com.ciriscr.geotest.location.BackgroundService26.class);
+      const component = new android.content.ComponentName(
+        context,
+        com.ciriscr.geotest.location.BackgroundService26.class
+      );
       const builder = new android.app.job.JobInfo.Builder(1, component);
       builder.setRequiredNetworkType(android.app.job.JobInfo.NETWORK_TYPE_ANY);
       builder.setPeriodic(15 * 60 * 1000);
-      const jobScheduler = context.getSystemService(android.content.Context.JOB_SCHEDULER_SERVICE);
+      const jobScheduler = context.getSystemService(
+        android.content.Context.JOB_SCHEDULER_SERVICE
+      );
       const service = jobScheduler.schedule(builder.build());
       this.BGids.push(service);
       console.log(`Job Scheduled: ${jobScheduler.schedule(builder.build())}`);
     }
   }
-    /*if (application.android) {
-        let context = utils.ad.getApplicationContext();
-        let intent = new android.content.Intent(context, com.nativescript.location.BackgroundService.class);
-        context.startService(intent);
-    }*/
+  /*if (application.android) {
+          let context = utils.ad.getApplicationContext();
+          let intent = new android.content.Intent(context, com.nativescript.location.BackgroundService.class);
+          context.startService(intent);
+      }*/
 }
 
 function stopBackgroundTap() {
-  if (tns_core_modules_application__WEBPACK_IMPORTED_MODULE_3__["android"]) {
-    const { sdkVersion } = tns_core_modules_platform__WEBPACK_IMPORTED_MODULE_1__["device"];
+  if (tns_core_modules_application__WEBPACK_IMPORTED_MODULE_0__["android"]) {
+    const { sdkVersion } = tns_core_modules_platform__WEBPACK_IMPORTED_MODULE_2__["device"];
     const context = utils.ad.getApplicationContext();
     if (sdkVersion * 1 < 26) {
-      const intent = new android.content.Intent(context, com.ciriscr.geotest.location.BackgroundService.class);
+      const intent = new android.content.Intent(
+        context,
+        com.ciriscr.geotest.location.BackgroundService.class
+      );
       console.log("stopService");
       context.stopService(intent);
     } else {
       if (this.BGids.length > 0) {
-        const jobScheduler = context.getSystemService(android.content.Context.JOB_SCHEDULER_SERVICE);
+        const jobScheduler = context.getSystemService(
+          android.content.Context.JOB_SCHEDULER_SERVICE
+        );
         const service = this.BGids.pop();
         jobScheduler.cancel(service);
         console.log(`Job Canceled: ${service}`);
       }
     }
   }
-    /*if (application.android) {
-        let context = utils.ad.getApplicationContext();
-        let intent = new android.content.Intent(context, com.nativescript.location.BackgroundService.class);
-        context.stopService(intent);
-    }*/
+  /*if (application.android) {
+          let context = utils.ad.getApplicationContext();
+          let intent = new android.content.Intent(context, com.nativescript.location.BackgroundService.class);
+          context.stopService(intent);
+      }*/
 }
 
 function enableLocationTap() {
-    nativescript_geolocation__WEBPACK_IMPORTED_MODULE_0__["isEnabled"]().then(function (isEnabled) {
+  nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1__["isEnabled"]().then(
+    function(isEnabled) {
       console.log(isEnabled);
-        if (!isEnabled) {
-            nativescript_geolocation__WEBPACK_IMPORTED_MODULE_0__["enableLocationRequest"]().then(function () {
-            }, function (e) {
-                console.log("Error: " + (e.message || e));
-            });
-        }
-    }, function (e) {
-        console.log("Error: " + (e.message || e));
-    });
+      if (!isEnabled) {
+        nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1__["enableLocationRequest"]().then(
+          function() {},
+          function(e) {
+            console.log("Error: " + (e.message || e));
+          }
+        );
+      }
+    },
+    function(e) {
+      console.log("Error: " + (e.message || e));
+    }
+  );
 }
+
+
 
 function buttonGetLocationTap() {
   const comp = this;
-  nativescript_geolocation__WEBPACK_IMPORTED_MODULE_0__["isEnabled"]().then((isEnabled) => {
+  nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1__["isEnabled"]().then(isEnabled => {
     if (isEnabled) {
-      let location = nativescript_geolocation__WEBPACK_IMPORTED_MODULE_0__["getCurrentLocation"]({
-          desiredAccuracy: ui_enums__WEBPACK_IMPORTED_MODULE_2__["Accuracy"].high,
+      let location = nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1__["getCurrentLocation"]({
+          desiredAccuracy: ui_enums__WEBPACK_IMPORTED_MODULE_3__["Accuracy"].high,
           maximumAge: 5000,
           timeout: 10000,
           iosAllowsBackgroundLocationUpdates: true,
           updateDistance: 0.1,
-          timeout: 20000,
-      })
-          .then(function (loc) {
-              if (!!loc) {
-                  comp.model.locations.push(loc);
-              }
-          }, function (e) {
-              console.log("Error: " + (e.message || e));
-          });
+          timeout: 20000
+        })
+        .then(
+          function(loc) {
+            if (!!loc) {
+              comp.model.locations.push(loc);
+            }
+          },
+          function(e) {
+            console.log("Error: " + (e.message || e));
+          }
+        );
     }
-  })
+  });
 }
 
 function buttonStartTap() {
-    try {
-        const comp = this;
-        nativescript_geolocation__WEBPACK_IMPORTED_MODULE_0__["isEnabled"]().then((isEnabled) => {
-          if (isEnabled) {
-            comp.watchId = nativescript_geolocation__WEBPACK_IMPORTED_MODULE_0__["watchLocation"](
-                function (loc) {
-                  console.log(loc);
-                    if (loc) {
-                        comp.model.locations.push(loc);
-                    }
-                },
-                function (e) {
-                    console.log("Error: " + e.message);
-                },
-                {
-                  desiredAccuracy: ui_enums__WEBPACK_IMPORTED_MODULE_2__["Accuracy"].high,
-                  maximumAge: 5000,
-                  timeout: 20000,
-                  updateDistance: 1,
-                  updateTime: 3000,
-                  iosAllowsBackgroundLocationUpdates: true,
-                  iosPausesLocationUpdatesAutomatically: false
-                });
+  try {
+    const comp = this;
+    nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1__["isEnabled"]().then(isEnabled => {
+      if (isEnabled) {
+        comp.watchId = nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1__["watchLocation"](
+          function(loc) {
+            console.log(loc);
+            if (loc) {
+              comp.model.locations.push(loc);
+            }
+          },
+          function(e) {
+            console.log("Error: " + e.message);
+          },
+          {
+            desiredAccuracy: ui_enums__WEBPACK_IMPORTED_MODULE_3__["Accuracy"].high,
+            maximumAge: 5000,
+            timeout: 20000,
+            updateDistance: 1,
+            updateTime: 3000,
+            iosAllowsBackgroundLocationUpdates: true,
+            iosPausesLocationUpdatesAutomatically: false
           }
-        })
-    } catch (ex) {
-        console.log("Error: " + ex.message);
-    }
+        );
+      }
+    });
+  } catch (ex) {
+    console.log("Error: " + ex.message);
+  }
 }
 
 function buttonStopTap() {
-    if (this.watchId != null) {
-        nativescript_geolocation__WEBPACK_IMPORTED_MODULE_0__["clearWatch"](this.watchId);
-        this.watchId = null;
-    }
+  if (this.watchId != null) {
+    nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1__["clearWatch"](this.watchId);
+    this.watchId = null;
+  }
 }
 
 function buttonClearTap() {
-    this.model.locations.splice(0, this.model.locations.length);
+  this.model.locations.splice(0, this.model.locations.length);
 }
 
 
@@ -655,7 +713,7 @@ var render = function() {
             { attrs: { row: "0", columns: "*, *, *, *" } },
             [
               _c("Button", {
-                attrs: { text: "Enable Location", col: "0", textWrap: "true" },
+                attrs: { text: _vm.counter, col: "0", textWrap: "true" },
                 on: { tap: _vm.enableLocationTap }
               }),
               _c("Button", {
@@ -880,70 +938,138 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+const appSettings = __webpack_require__("../node_modules/tns-core-modules/application-settings/application-settings.js");
+
+    
+ 
+
+  
+const audio = __webpack_require__("../node_modules/nativescript-audioplay/audio.js");
+console.log("start one more time ??? wtf ");
+
+var counter = 0;
+
+
+
 if (tns_core_modules_application__WEBPACK_IMPORTED_MODULE_2__["android"]) {
   const { sdkVersion } = tns_core_modules_platform__WEBPACK_IMPORTED_MODULE_3__["device"];
   if (sdkVersion * 1 < 26) {
-    android.app.Service.extend("com.ciriscr.geotest.location.BackgroundService", {
-      onStartCommand: function (intent, flags, startId) {
+    android.app.Service.extend(
+      "com.ciriscr.geotest.location.BackgroundService",
+      {
+        onStartCommand: function(intent, flags, startId) {
           this.super.onStartCommand(intent, flags, startId);
           return android.app.Service.START_STICKY;
-      },
-      onCreate: function () {
+        },
+        onCreate: function() {
           watchLocation(this);
-      },
-      onBind: function (intent) {
+        },
+        onBind: function(intent) {
           console.log("on Bind Services");
-      },
-      onUnbind: function (intent) {
-          console.log('UnBind Service');
-      },
-      onDestroy: function () {
-          console.log('service onDestroy');
+        },
+        onUnbind: function(intent) {
+          console.log("UnBind Service");
+        },
+        onDestroy: function() {
+          console.log("service onDestroy");
           nativescript_geolocation__WEBPACK_IMPORTED_MODULE_0__["clearWatch"](this.id);
+        }
       }
-    });
+    );
   } else {
-    android.app.job.JobService.extend("com.ciriscr.geotest.location.BackgroundService26", {
-      onStartJob(params) {
-        console.log("Starting job...");
-        watchLocation(this);
-        this.jobFinished(params, true);
-        return false;
-      },
+    android.app.job.JobService.extend(
+      "com.ciriscr.geotest.location.BackgroundService26",
+      {
+        onStartJob(params) {
+          console.log("Starting job...");
+          watchLocation(this);
+          this.jobFinished(params, true);
+          return false;
+        },
 
-      onStopJob() {
-        console.log("Stopping job ...");
-        return true;
-      },
-    });
+        onStopJob() {
+          console.log("Stopping job ...");
+          return true;
+        }
+      }
+    );
   }
+}
 
+function beep() {
+  let player = new audio.TNSPlayer();
+  let playerOptions = {
+    audioFile:
+      "https://notificationsounds.com/soundfiles/4e4b5fbbbb602b6d35bea8460aa8f8e5/file-sounds-1096-light.mp3",
+    loop: false,
+    completeCallback: function() {
+      console.log("finished playing");
+    },
+    errorCallback: function(errorObject) {
+      console.log(JSON.stringify(errorObject));
+    },
+    infoCallback: function(args) {
+      console.log(JSON.stringify(args));
+    }
+  };
+
+  player
+    .playFromUrl(playerOptions)
+    .then(function(res) {
+      console.log(res);
+    })
+    .catch(function(err) {
+      console.log("something went wrong...", err);
+    });
 }
 
 function watchLocation(comp) {
   console.log("Watch location");
-  nativescript_geolocation__WEBPACK_IMPORTED_MODULE_0__["enableLocationRequest"]().then(function () {
+  nativescript_geolocation__WEBPACK_IMPORTED_MODULE_0__["enableLocationRequest"]().then(
+    function() {
       comp.id = nativescript_geolocation__WEBPACK_IMPORTED_MODULE_0__["watchLocation"](
-          function (loc) {
-              if (loc) {
-                  let toast = nativescript_toast__WEBPACK_IMPORTED_MODULE_4__["makeText"]('Background Location: ' + loc.latitude + ' ' + loc.longitude);
-                  toast.show();
-                  console.log('Background Location: ' + loc.latitude + ' ' + loc.longitude);
-                  console.log(moment__WEBPACK_IMPORTED_MODULE_5___default()().format());
-              }
-          },
-          function (e) {
-              console.log("Background watchLocation error: " + (e.message || e));
-          },
-          {
-              desiredAccuracy: tns_core_modules_ui_enums__WEBPACK_IMPORTED_MODULE_1__["Accuracy"].high,
-              updateDistance: 0.1,
-              updateTime: 3000,
-              minimumUpdateTime: 100
-          });
-  }, function (e) {
-      console.log("Background enableLocationRequest error: " + (e.message || e));
-  });
+        function(loc) {
+          if (loc) {
+            let toast = nativescript_toast__WEBPACK_IMPORTED_MODULE_4__["makeText"](counter + " counter ");
+            toast.setDuration(1000 * 30);
+            toast.show();
+
+            console.log(
+              counter +
+                "Background Location: " +
+                loc.latitude +
+                " " +
+                loc.longitude
+            );
+            console.log(moment__WEBPACK_IMPORTED_MODULE_5___default()().format());
+            counter++;
+
+            fetch("https://audio.tricypolitain.com/ping?text=newtest" + counter)
+              .then(e => {})
+              .catch(e => {});
+           
+            let cc = appSettings.getNumber("cou", 0);
+            appSettings.getNumber("cou", 0);
+            // beep();
+          }
+        },
+        function(e) {
+          console.log("Background watchLocation error: " + (e.message || e));
+        },
+        {
+          desiredAccuracy: tns_core_modules_ui_enums__WEBPACK_IMPORTED_MODULE_1__["Accuracy"].high,
+          updateDistance: 0.1,
+          updateTime: 1000 * 30,
+          minimumUpdateTime: 1000 * 30
+        }
+      );
+    },
+    function(e) {
+      console.log(
+        "Background enableLocationRequest error: " + (e.message || e)
+      );
+    }
+  );
 }
 
 
@@ -978,16 +1104,18 @@ __webpack_require__("../node_modules/tns-core-modules/ui/frame/activity.js");
 
 
 
-
+  
+  
 // Prints Vue logs when --env.production is *NOT* set while building
-nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.config.silent = ("development" === 'production');
+// Vue.config.silent = (TNS_ENV === 'production');
+nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.config.silent = true;
+
+
 
 new nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a({
-
-  render: h => h('frame',[h(_components_HelloWorld__WEBPACK_IMPORTED_MODULE_1__["default"])]),
-
-
+  render: h => h("frame", [h(_components_HelloWorld__WEBPACK_IMPORTED_MODULE_1__["default"])])
 }).$start();
+
 
     
         
