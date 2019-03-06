@@ -16358,482 +16358,6 @@
 
 /***/ }),
 
-/***/ "../node_modules/nativescript-audioplay/android/player.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var app = __webpack_require__("../node_modules/tns-core-modules/application/application.js");
-var observable_1 = __webpack_require__("../node_modules/tns-core-modules/data/observable/observable.js");
-var utils_1 = __webpack_require__("../node_modules/tns-core-modules/utils/utils.js");
-var common_1 = __webpack_require__("../node_modules/nativescript-audioplay/common.js");
-var options_1 = __webpack_require__("../node_modules/nativescript-audioplay/options.js");
-var TNSPlayer = (function () {
-    function TNSPlayer() {
-        var _this = this;
-        this._mAudioFocusGranted = false;
-        this._mOnAudioFocusChangeListener = new android.media.AudioManager.OnAudioFocusChangeListener({
-            onAudioFocusChange: function (focusChange) {
-                switch (focusChange) {
-                    case android.media.AudioManager.AUDIOFOCUS_GAIN:
-                        common_1.TNS_Player_Log('AUDIOFOCUS_GAIN');
-                        common_1.TNS_Player_Log('this._lastPlayerVolume', _this._lastPlayerVolume);
-                        if (_this._lastPlayerVolume && _this._lastPlayerVolume >= 10) {
-                            _this.volume = 1.0;
-                        }
-                        else if (_this._lastPlayerVolume) {
-                            _this.volume = parseFloat('0.' + _this._lastPlayerVolume.toString());
-                        }
-                        _this.resume();
-                        break;
-                    case android.media.AudioManager.AUDIOFOCUS_GAIN_TRANSIENT:
-                        common_1.TNS_Player_Log('AUDIOFOCUS_GAIN_TRANSIENT');
-                        break;
-                    case android.media.AudioManager.AUDIOFOCUS_LOSS:
-                        common_1.TNS_Player_Log('AUDIOFOCUS_LOSS');
-                        _this.pause();
-                        break;
-                    case android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                        common_1.TNS_Player_Log('AUDIOFOCUS_LOSS_TRANSIENT');
-                        _this.pause();
-                        break;
-                    case android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                        common_1.TNS_Player_Log('AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK');
-                        _this._lastPlayerVolume = _this.volume;
-                        common_1.TNS_Player_Log('this._lastPlayerVolume', _this._lastPlayerVolume);
-                        _this.volume = 0.2;
-                        break;
-                }
-            }
-        });
-        this._mAudioFocusGranted = this._requestAudioFocus();
-        common_1.TNS_Player_Log('_mAudioFocusGranted', this._mAudioFocusGranted);
-    }
-    Object.defineProperty(TNSPlayer.prototype, "events", {
-        get: function () {
-            if (!this._events) {
-                this._events = new observable_1.Observable();
-            }
-            return this._events;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(TNSPlayer.prototype, "android", {
-        get: function () {
-            return this._player;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(TNSPlayer.prototype, "debug", {
-        set: function (value) {
-            common_1.TNSPlayerUtil.debug = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(TNSPlayer.prototype, "volume", {
-        get: function () {
-            var ctx = this._getAndroidContext();
-            var mgr = ctx.getSystemService(android.content.Context.AUDIO_SERVICE);
-            return mgr.getStreamVolume(android.media.AudioManager.STREAM_MUSIC);
-        },
-        set: function (value) {
-            if (this._player && value) {
-                this._player.setVolume(value, value);
-            }
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(TNSPlayer.prototype, "duration", {
-        get: function () {
-            if (this._player) {
-                return this._player.getDuration();
-            }
-            else {
-                return 0;
-            }
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(TNSPlayer.prototype, "currentTime", {
-        get: function () {
-            return this._player ? this._player.getCurrentPosition() : 0;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    TNSPlayer.prototype.initFromFile = function (options) {
-        var _this = this;
-        return new Promise(function (resolve, reject) {
-            options.autoPlay = false;
-            _this.playFromFile(options).then(resolve, reject);
-        });
-    };
-    TNSPlayer.prototype.playFromFile = function (options) {
-        var _this = this;
-        return new Promise(function (resolve, reject) {
-            try {
-                if (options.autoPlay !== false) {
-                    options.autoPlay = true;
-                }
-                var audioPath = common_1.resolveAudioFilePath(options.audioFile);
-                common_1.TNS_Player_Log('audioPath', audioPath);
-                if (!_this._player) {
-                    common_1.TNS_Player_Log('android mediaPlayer is not initialized, creating new instance');
-                    _this._player = new android.media.MediaPlayer();
-                }
-                _this._mAudioFocusGranted = _this._requestAudioFocus();
-                common_1.TNS_Player_Log('_mAudioFocusGranted', _this._mAudioFocusGranted);
-                _this._player.setAudioStreamType(android.media.AudioManager.STREAM_MUSIC);
-                common_1.TNS_Player_Log('resetting mediaPlayer...');
-                _this._player.reset();
-                common_1.TNS_Player_Log('setting datasource', audioPath);
-                _this._player.setDataSource(audioPath);
-                if (utils_1.isFileOrResourcePath(audioPath)) {
-                    common_1.TNS_Player_Log('preparing mediaPlayer...');
-                    _this._player.prepare();
-                }
-                else {
-                    common_1.TNS_Player_Log('preparing mediaPlayer async...');
-                    _this._player.prepareAsync();
-                }
-                if (options.completeCallback) {
-                    _this._player.setOnCompletionListener(new android.media.MediaPlayer.OnCompletionListener({
-                        onCompletion: function (mp) {
-                            if (options.loop === true) {
-                                mp.seekTo(5);
-                                mp.start();
-                            }
-                            options.completeCallback({ player: mp });
-                        }
-                    }));
-                }
-                if (options.errorCallback) {
-                    _this._player.setOnErrorListener(new android.media.MediaPlayer.OnErrorListener({
-                        onError: function (player, error, extra) {
-                            _this._player.reset();
-                            common_1.TNS_Player_Log('errorCallback', error);
-                            options.errorCallback({ player: player, error: error, extra: extra });
-                            return true;
-                        }
-                    }));
-                }
-                if (options.infoCallback) {
-                    _this._player.setOnInfoListener(new android.media.MediaPlayer.OnInfoListener({
-                        onInfo: function (player, info, extra) {
-                            common_1.TNS_Player_Log('infoCallback', info);
-                            options.infoCallback({ player: player, info: info, extra: extra });
-                            return true;
-                        }
-                    }));
-                }
-                _this._player.setOnPreparedListener(new android.media.MediaPlayer.OnPreparedListener({
-                    onPrepared: function (mp) {
-                        if (options.autoPlay) {
-                            common_1.TNS_Player_Log('options.autoPlay', options.autoPlay);
-                            _this.play();
-                        }
-                        resolve();
-                    }
-                }));
-            }
-            catch (ex) {
-                common_1.TNS_Player_Log('playFromFile error', ex);
-                reject(ex);
-            }
-        });
-    };
-    TNSPlayer.prototype.initFromUrl = function (options) {
-        var _this = this;
-        return new Promise(function (resolve, reject) {
-            options.autoPlay = false;
-            _this.playFromUrl(options).then(resolve, reject);
-        });
-    };
-    TNSPlayer.prototype.playFromUrl = function (options) {
-        var _this = this;
-        return new Promise(function (resolve, reject) {
-            resolve(_this.playFromFile(options));
-        });
-    };
-    TNSPlayer.prototype.pause = function () {
-        var _this = this;
-        return new Promise(function (resolve, reject) {
-            try {
-                if (_this._player && _this._player.isPlaying()) {
-                    common_1.TNS_Player_Log('pausing player');
-                    _this._player.pause();
-                    _this._sendEvent(options_1.AudioPlayerEvents.paused);
-                }
-                resolve(true);
-            }
-            catch (ex) {
-                common_1.TNS_Player_Log('pause error', ex);
-                reject(ex);
-            }
-        });
-    };
-    TNSPlayer.prototype.play = function () {
-        var _this = this;
-        return new Promise(function (resolve, reject) {
-            try {
-                if (_this._player && !_this._player.isPlaying()) {
-                    _this._sendEvent(options_1.AudioPlayerEvents.started);
-                    app.android.foregroundActivity.setVolumeControlStream(android.media.AudioManager.STREAM_MUSIC);
-                    app.android.registerBroadcastReceiver(android.media.AudioManager.ACTION_AUDIO_BECOMING_NOISY, function (context, intent) {
-                        common_1.TNS_Player_Log('ACTION_AUDIO_BECOMING_NOISY onReceiveCallback');
-                        common_1.TNS_Player_Log('intent', intent);
-                        _this.pause();
-                    });
-                    _this._player.start();
-                }
-                resolve(true);
-            }
-            catch (ex) {
-                common_1.TNS_Player_Log('Error trying to play audio.', ex);
-                reject(ex);
-            }
-        });
-    };
-    TNSPlayer.prototype.resume = function () {
-        if (this._player) {
-            common_1.TNS_Player_Log('resume');
-            this._player.start();
-            this._sendEvent(options_1.AudioPlayerEvents.started);
-        }
-    };
-    TNSPlayer.prototype.seekTo = function (time) {
-        var _this = this;
-        return new Promise(function (resolve, reject) {
-            try {
-                if (_this._player) {
-                    common_1.TNS_Player_Log('seekTo', time);
-                    _this._player.seekTo(time);
-                    _this._sendEvent(options_1.AudioPlayerEvents.seek);
-                }
-                resolve(true);
-            }
-            catch (ex) {
-                common_1.TNS_Player_Log('seekTo error', ex);
-                reject(ex);
-            }
-        });
-    };
-    TNSPlayer.prototype.changePlayerSpeed = function (speed) {
-        if (android.os.Build.VERSION.SDK_INT >= 23 && this.play) {
-            common_1.TNS_Player_Log('setting the mediaPlayer playback speed', speed);
-            if (this._player.isPlaying()) {
-                this._player.setPlaybackParams(this._player.getPlaybackParams().setSpeed(speed));
-            }
-            else {
-                this._player.setPlaybackParams(this._player.getPlaybackParams().setSpeed(speed));
-                this._player.pause();
-            }
-        }
-        else {
-            common_1.TNS_Player_Log('Android device API is not 23+. Cannot set the playbackRate on lower Android APIs.');
-        }
-    };
-    TNSPlayer.prototype.dispose = function () {
-        var _this = this;
-        return new Promise(function (resolve, reject) {
-            try {
-                if (_this._player) {
-                    common_1.TNS_Player_Log('disposing of mediaPlayer instance', _this._player);
-                    _this._player.stop();
-                    _this._player.reset();
-                    common_1.TNS_Player_Log('unregisterBroadcastReceiver ACTION_AUDIO_BECOMING_NOISY...');
-                    app.android.unregisterBroadcastReceiver(android.media.AudioManager.ACTION_AUDIO_BECOMING_NOISY);
-                    common_1.TNS_Player_Log('abandoning audio focus...');
-                    _this._abandonAudioFocus();
-                }
-                resolve();
-            }
-            catch (ex) {
-                common_1.TNS_Player_Log('dispose error', ex);
-                reject(ex);
-            }
-        });
-    };
-    TNSPlayer.prototype.isAudioPlaying = function () {
-        if (this._player) {
-            return this._player.isPlaying();
-        }
-        else {
-            return false;
-        }
-    };
-    TNSPlayer.prototype.getAudioTrackDuration = function () {
-        var _this = this;
-        return new Promise(function (resolve, reject) {
-            try {
-                var duration = _this._player ? _this._player.getDuration() : 0;
-                common_1.TNS_Player_Log('audio track duration', duration);
-                resolve(duration.toString());
-            }
-            catch (ex) {
-                common_1.TNS_Player_Log('getAudioTrackDuration error', ex);
-                reject(ex);
-            }
-        });
-    };
-    TNSPlayer.prototype._sendEvent = function (eventName, data) {
-        if (this.events) {
-            this.events.notify({
-                eventName: eventName,
-                object: this,
-                data: data
-            });
-        }
-    };
-    TNSPlayer.prototype._requestAudioFocus = function () {
-        var result = false;
-        if (!this._mAudioFocusGranted) {
-            var ctx = this._getAndroidContext();
-            var am = ctx.getSystemService(android.content.Context.AUDIO_SERVICE);
-            var focusResult = am.requestAudioFocus(this._mOnAudioFocusChangeListener, android.media.AudioManager.STREAM_MUSIC, android.media.AudioManager.AUDIOFOCUS_GAIN);
-            if (focusResult === android.media.AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-                result = true;
-            }
-            else {
-                common_1.TNS_Player_Log('Failed to get audio focus.');
-                result = false;
-            }
-        }
-        return result;
-    };
-    TNSPlayer.prototype._abandonAudioFocus = function () {
-        var ctx = this._getAndroidContext();
-        var am = ctx.getSystemService(android.content.Context.AUDIO_SERVICE);
-        var result = am.abandonAudioFocus(this._mOnAudioFocusChangeListener);
-        if (result === android.media.AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-            this._mAudioFocusGranted = false;
-        }
-        else {
-            common_1.TNS_Player_Log('Failed to abandon audio focus.');
-        }
-        this._mOnAudioFocusChangeListener = null;
-    };
-    TNSPlayer.prototype._getAndroidContext = function () {
-        var _this = this;
-        var ctx = app.android.context;
-        if (!ctx) {
-            ctx = app.getNativeApplication().getApplicationContext();
-        }
-        if (!ctx) {
-            setTimeout(function () {
-                _this._getAndroidContext();
-            }, 200);
-            return;
-        }
-        return ctx;
-    };
-    return TNSPlayer;
-}());
-exports.TNSPlayer = TNSPlayer;
-
-
-/***/ }),
-
-/***/ "../node_modules/nativescript-audioplay/audio.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-function __export(m) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
-Object.defineProperty(exports, "__esModule", { value: true });
-__export(__webpack_require__("../node_modules/nativescript-audioplay/options.js"));
-__export(__webpack_require__("../node_modules/nativescript-audioplay/android/player.js"));
-
-
-/***/ }),
-
-/***/ "../node_modules/nativescript-audioplay/common.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var fs = __webpack_require__("../node_modules/tns-core-modules/file-system/file-system.js");
-var types_1 = __webpack_require__("../node_modules/tns-core-modules/utils/types.js");
-var TNSPlayerUtil = (function () {
-    function TNSPlayerUtil() {
-    }
-    TNSPlayerUtil.debug = false;
-    return TNSPlayerUtil;
-}());
-exports.TNSPlayerUtil = TNSPlayerUtil;
-exports.TNS_Player_Log = function () {
-    var args = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i] = arguments[_i];
-    }
-    if (TNSPlayerUtil.debug) {
-        console.log('NativeScript-Audio - TNSPlayer', args);
-    }
-};
-function isStringUrl(value) {
-    var isURL = false;
-    if (value.indexOf('://') !== -1) {
-        if (value.indexOf('res://') === -1) {
-            isURL = true;
-        }
-    }
-    if (isURL === true) {
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-exports.isStringUrl = isStringUrl;
-function resolveAudioFilePath(path) {
-    if (path) {
-        var isUrl = isStringUrl(path);
-        if (isUrl === true) {
-            return path;
-        }
-        else {
-            var audioPath = void 0;
-            var fileName = types_1.isString(path) ? path.trim() : '';
-            if (fileName.indexOf('~/') === 0) {
-                fileName = fs.path.join(fs.knownFolders.currentApp().path, fileName.replace('~/', ''));
-                audioPath = fileName;
-            }
-            else {
-                audioPath = fileName;
-            }
-            return audioPath;
-        }
-    }
-}
-exports.resolveAudioFilePath = resolveAudioFilePath;
-
-
-/***/ }),
-
-/***/ "../node_modules/nativescript-audioplay/options.js":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.AudioPlayerEvents = {
-    seek: 'seek',
-    paused: 'paused',
-    started: 'started'
-};
-
-
-/***/ }),
-
 /***/ "../node_modules/nativescript-dev-webpack/load-application-css-regular.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17266,6 +16790,1809 @@ exports.setCustomLocationManager = setCustomLocationManager;
 
 /***/ }),
 
+/***/ "../node_modules/nativescript-google-maps-sdk/map-view-common.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var map_view_1 = __webpack_require__("../node_modules/nativescript-google-maps-sdk/map-view.js");
+exports.StyleBase = map_view_1.Style;
+var view_1 = __webpack_require__("../node_modules/tns-core-modules/ui/core/view/view.js");
+var image_1 = __webpack_require__("../node_modules/tns-core-modules/ui/image/image.js");
+var layout_base_1 = __webpack_require__("../node_modules/tns-core-modules/ui/layouts/layout-base.js");
+var properties_1 = __webpack_require__("../node_modules/tns-core-modules/ui/core/properties/properties.js");
+var color_1 = __webpack_require__("../node_modules/tns-core-modules/color/color.js");
+var builder_1 = __webpack_require__("../node_modules/tns-core-modules/ui/builder/builder.js");
+var view_base_1 = __webpack_require__("../node_modules/tns-core-modules/ui/core/view-base/view-base.js");
+var proxy_view_container_1 = __webpack_require__("../node_modules/tns-core-modules/ui/proxy-view-container/proxy-view-container.js");
+var stack_layout_1 = __webpack_require__("../node_modules/tns-core-modules/ui/layouts/stack-layout/stack-layout.js");
+function onInfoWindowTemplatesChanged(mapView) {
+    var _infoWindowTemplates = new Array();
+    if (mapView.infoWindowTemplates && typeof mapView.infoWindowTemplates === "string") {
+        _infoWindowTemplates = _infoWindowTemplates.concat(builder_1.parseMultipleTemplates(mapView.infoWindowTemplates));
+    }
+    else if (mapView.infoWindowTemplates) {
+        _infoWindowTemplates = _infoWindowTemplates.concat(mapView.infoWindowTemplates);
+    }
+    mapView._infoWindowTemplates = _infoWindowTemplates;
+}
+function onMapPropertyChanged(mapView) {
+    if (!mapView.processingCameraEvent)
+        mapView.updateCamera();
+}
+function onSetMinZoomMaxZoom(mapView) {
+    mapView.setMinZoomMaxZoom();
+}
+function onPaddingPropertyChanged(mapView) {
+    mapView.updatePadding();
+}
+function paddingValueConverter(value) {
+    if (!Array.isArray(value)) {
+        value = String(value).split(',');
+    }
+    value = value.map(function (v) { return parseInt(v, 10); });
+    if (value.length >= 4) {
+        return value;
+    }
+    else if (value.length === 3) {
+        return [value[0], value[1], value[2], value[2]];
+    }
+    else if (value.length === 2) {
+        return [value[0], value[0], value[1], value[1]];
+    }
+    else if (value.length === 1) {
+        return [value[0], value[0], value[0], value[0]];
+    }
+    else {
+        return [0, 0, 0, 0];
+    }
+}
+function onDescendantsLoaded(view, callback) {
+    if (!view)
+        return callback();
+    var loadingCount = 1;
+    var loadedCount = 0;
+    var watchLoaded = function (view, event) {
+        var onLoaded = function () {
+            view.off(event, onLoaded);
+            loadedCount++;
+            if (view instanceof image_1.Image && view.isLoading) {
+                loadingCount++;
+                watchLoaded(view, 'isLoadingChange');
+                if (view.nativeView.onAttachedToWindow) {
+                    view.nativeView.onAttachedToWindow();
+                }
+            }
+            if (loadedCount === loadingCount)
+                callback();
+        };
+        view.on(event, onLoaded);
+    };
+    view_base_1.eachDescendant(view, function (descendant) {
+        loadingCount++;
+        watchLoaded(descendant, view_1.View.loadedEvent);
+        return true;
+    });
+    watchLoaded(view, view_1.View.loadedEvent);
+}
+var knownTemplates;
+(function (knownTemplates) {
+    knownTemplates.infoWindowTemplate = "infoWindowTemplate";
+})(knownTemplates = exports.knownTemplates || (exports.knownTemplates = {}));
+var knownMultiTemplates;
+(function (knownMultiTemplates) {
+    knownMultiTemplates.infoWindowTemplates = "infoWindowTemplates";
+})(knownMultiTemplates = exports.knownMultiTemplates || (exports.knownMultiTemplates = {}));
+function getColorHue(color) {
+    if (typeof color === 'number') {
+        while (color < 0) {
+            color += 360;
+        }
+        return color % 360;
+    }
+    if (typeof color === 'string')
+        color = new color_1.Color(color);
+    if (!(color instanceof color_1.Color))
+        return color;
+    var min, max, delta, hue;
+    var r = Math.max(0, Math.min(1, color.r / 255));
+    var g = Math.max(0, Math.min(1, color.g / 255));
+    var b = Math.max(0, Math.min(1, color.b / 255));
+    min = Math.min(r, g, b);
+    max = Math.max(r, g, b);
+    delta = max - min;
+    if (delta == 0) {
+        hue = 0;
+    }
+    else if (r == max) {
+        hue = (g - b) / delta;
+    }
+    else if (g == max) {
+        hue = 2 + (b - r) / delta;
+    }
+    else {
+        hue = 4 + (r - g) / delta;
+    }
+    hue = ((hue * 60) + 360) % 360;
+    return hue;
+}
+exports.getColorHue = getColorHue;
+var MapViewBase = (function (_super) {
+    __extends(MapViewBase, _super);
+    function MapViewBase() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this._markers = new Array();
+        _this._shapes = new Array();
+        _this._defaultInfoWindowTemplate = {
+            key: "",
+            createView: function () {
+                if (_this.infoWindowTemplate) {
+                    return builder_1.parse(_this.infoWindowTemplate, _this);
+                }
+                return undefined;
+            }
+        };
+        _this._infoWindowTemplates = new Array();
+        return _this;
+    }
+    Object.defineProperty(MapViewBase.prototype, "gMap", {
+        get: function () {
+            return this._gMap;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(MapViewBase.prototype, "processingCameraEvent", {
+        get: function () {
+            return this._processingCameraEvent;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    MapViewBase.prototype._getMarkerInfoWindowContent = function (marker) {
+        var view;
+        if (marker && marker._infoWindowView) {
+            view = marker._infoWindowView;
+            return view;
+        }
+        var template = this._getInfoWindowTemplate(marker);
+        if (template)
+            view = template.createView();
+        if (!view)
+            return null;
+        if (!(view instanceof layout_base_1.LayoutBase) ||
+            view instanceof proxy_view_container_1.ProxyViewContainer) {
+            var sp = new stack_layout_1.StackLayout();
+            sp.addChild(view);
+            view = sp;
+        }
+        marker._infoWindowView = view;
+        view.bindingContext = marker;
+        onDescendantsLoaded(view, function () {
+            marker.hideInfoWindow();
+            marker.showInfoWindow();
+        });
+        this._addView(view);
+        view.onLoaded();
+        return view;
+    };
+    MapViewBase.prototype._unloadInfoWindowContent = function (marker) {
+        if (marker._infoWindowView) {
+            marker._infoWindowView.onUnloaded();
+            marker._infoWindowView = null;
+        }
+    };
+    MapViewBase.prototype._getInfoWindowTemplate = function (marker) {
+        if (marker) {
+            var templateKey = marker.infoWindowTemplate;
+            for (var i = 0, length_1 = this._infoWindowTemplates.length; i < length_1; i++) {
+                if (this._infoWindowTemplates[i].key === templateKey) {
+                    return this._infoWindowTemplates[i];
+                }
+            }
+        }
+        return this._defaultInfoWindowTemplate;
+    };
+    MapViewBase.prototype.removeAllPolylines = function () {
+        var _this = this;
+        this._shapes.forEach(function (shape) {
+            if (shape.shape === 'polyline') {
+                _this.removeShape(shape);
+            }
+        });
+    };
+    MapViewBase.prototype.removeAllPolygons = function () {
+        var _this = this;
+        this._shapes.forEach(function (shape) {
+            if (shape.shape === 'polygon') {
+                _this.removeShape(shape);
+            }
+        });
+    };
+    MapViewBase.prototype.removeAllCircles = function () {
+        var _this = this;
+        this._shapes.forEach(function (shape) {
+            if (shape.shape === 'circle') {
+                _this.removeShape(shape);
+            }
+        });
+    };
+    MapViewBase.prototype.notifyMapReady = function () {
+        this.notify({ eventName: MapViewBase.mapReadyEvent, object: this, gMap: this.gMap });
+    };
+    MapViewBase.prototype.notifyMarkerEvent = function (eventName, marker) {
+        var args = { eventName: eventName, object: this, marker: marker };
+        this.notify(args);
+    };
+    MapViewBase.prototype.notifyShapeEvent = function (eventName, shape) {
+        var args = { eventName: eventName, object: this, shape: shape };
+        this.notify(args);
+    };
+    MapViewBase.prototype.notifyMarkerTapped = function (marker) {
+        this.notifyMarkerEvent(MapViewBase.markerSelectEvent, marker);
+    };
+    MapViewBase.prototype.notifyMarkerInfoWindowTapped = function (marker) {
+        this.notifyMarkerEvent(MapViewBase.markerInfoWindowTappedEvent, marker);
+    };
+    MapViewBase.prototype.notifyShapeTapped = function (shape) {
+        this.notifyShapeEvent(MapViewBase.shapeSelectEvent, shape);
+    };
+    MapViewBase.prototype.notifyMarkerBeginDragging = function (marker) {
+        this.notifyMarkerEvent(MapViewBase.markerBeginDraggingEvent, marker);
+    };
+    MapViewBase.prototype.notifyMarkerEndDragging = function (marker) {
+        this.notifyMarkerEvent(MapViewBase.markerEndDraggingEvent, marker);
+    };
+    MapViewBase.prototype.notifyMarkerDrag = function (marker) {
+        this.notifyMarkerEvent(MapViewBase.markerDragEvent, marker);
+    };
+    MapViewBase.prototype.notifyPositionEvent = function (eventName, position) {
+        var args = { eventName: eventName, object: this, position: position };
+        this.notify(args);
+    };
+    MapViewBase.prototype.notifyCameraEvent = function (eventName, camera) {
+        var args = { eventName: eventName, object: this, camera: camera };
+        this.notify(args);
+    };
+    MapViewBase.prototype.notifyMyLocationTapped = function () {
+        this.notify({ eventName: MapViewBase.myLocationTappedEvent, object: this });
+    };
+    MapViewBase.mapReadyEvent = "mapReady";
+    MapViewBase.markerSelectEvent = "markerSelect";
+    MapViewBase.markerInfoWindowTappedEvent = "markerInfoWindowTapped";
+    MapViewBase.shapeSelectEvent = "shapeSelect";
+    MapViewBase.markerBeginDraggingEvent = "markerBeginDragging";
+    MapViewBase.markerEndDraggingEvent = "markerEndDragging";
+    MapViewBase.markerDragEvent = "markerDrag";
+    MapViewBase.coordinateTappedEvent = "coordinateTapped";
+    MapViewBase.coordinateLongPressEvent = "coordinateLongPress";
+    MapViewBase.cameraChangedEvent = "cameraChanged";
+    MapViewBase.cameraMoveEvent = "cameraMove";
+    MapViewBase.myLocationTappedEvent = "myLocationTapped";
+    return MapViewBase;
+}(view_1.View));
+exports.MapViewBase = MapViewBase;
+exports.infoWindowTemplateProperty = new properties_1.Property({ name: "infoWindowTemplate" });
+exports.infoWindowTemplateProperty.register(MapViewBase);
+exports.infoWindowTemplatesProperty = new properties_1.Property({ name: "infoWindowTemplates", valueChanged: onInfoWindowTemplatesChanged });
+exports.infoWindowTemplatesProperty.register(MapViewBase);
+exports.latitudeProperty = new properties_1.Property({ name: 'latitude', defaultValue: 0, valueChanged: onMapPropertyChanged });
+exports.latitudeProperty.register(MapViewBase);
+exports.longitudeProperty = new properties_1.Property({ name: 'longitude', defaultValue: 0, valueChanged: onMapPropertyChanged });
+exports.longitudeProperty.register(MapViewBase);
+exports.bearingProperty = new properties_1.Property({ name: 'bearing', defaultValue: 0, valueChanged: onMapPropertyChanged });
+exports.bearingProperty.register(MapViewBase);
+exports.zoomProperty = new properties_1.Property({ name: 'zoom', defaultValue: 0, valueChanged: onMapPropertyChanged });
+exports.zoomProperty.register(MapViewBase);
+exports.minZoomProperty = new properties_1.Property({ name: 'minZoom', defaultValue: 0, valueChanged: onSetMinZoomMaxZoom });
+exports.minZoomProperty.register(MapViewBase);
+exports.maxZoomProperty = new properties_1.Property({ name: 'maxZoom', defaultValue: 22, valueChanged: onSetMinZoomMaxZoom });
+exports.maxZoomProperty.register(MapViewBase);
+exports.tiltProperty = new properties_1.Property({ name: 'tilt', defaultValue: 0, valueChanged: onMapPropertyChanged });
+exports.tiltProperty.register(MapViewBase);
+exports.paddingProperty = new properties_1.Property({ name: 'padding', valueChanged: onPaddingPropertyChanged, valueConverter: paddingValueConverter });
+exports.paddingProperty.register(MapViewBase);
+exports.mapAnimationsEnabledProperty = new properties_1.Property({ name: 'mapAnimationsEnabled', defaultValue: true });
+exports.mapAnimationsEnabledProperty.register(MapViewBase);
+var UISettingsBase = (function () {
+    function UISettingsBase() {
+    }
+    return UISettingsBase;
+}());
+exports.UISettingsBase = UISettingsBase;
+var ProjectionBase = (function () {
+    function ProjectionBase() {
+    }
+    return ProjectionBase;
+}());
+exports.ProjectionBase = ProjectionBase;
+var VisibleRegionBase = (function () {
+    function VisibleRegionBase() {
+    }
+    return VisibleRegionBase;
+}());
+exports.VisibleRegionBase = VisibleRegionBase;
+var PositionBase = (function () {
+    function PositionBase() {
+    }
+    return PositionBase;
+}());
+exports.PositionBase = PositionBase;
+var BoundsBase = (function () {
+    function BoundsBase() {
+    }
+    return BoundsBase;
+}());
+exports.BoundsBase = BoundsBase;
+var MarkerBase = (function () {
+    function MarkerBase() {
+    }
+    return MarkerBase;
+}());
+exports.MarkerBase = MarkerBase;
+var ShapeBase = (function () {
+    function ShapeBase() {
+    }
+    return ShapeBase;
+}());
+exports.ShapeBase = ShapeBase;
+var PolylineBase = (function (_super) {
+    __extends(PolylineBase, _super);
+    function PolylineBase() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.shape = 'polyline';
+        return _this;
+    }
+    PolylineBase.prototype.addPoint = function (point) {
+        this._points.push(point);
+        this.reloadPoints();
+    };
+    PolylineBase.prototype.addPoints = function (points) {
+        this._points = this._points.concat(points);
+        this.reloadPoints();
+    };
+    PolylineBase.prototype.removePoint = function (point) {
+        var index = this._points.indexOf(point);
+        if (index > -1) {
+            this._points.splice(index, 1);
+            this.reloadPoints();
+        }
+    };
+    PolylineBase.prototype.removeAllPoints = function () {
+        this._points.length = 0;
+        this.reloadPoints();
+    };
+    PolylineBase.prototype.getPoints = function () {
+        return this._points.slice();
+    };
+    return PolylineBase;
+}(ShapeBase));
+exports.PolylineBase = PolylineBase;
+var PolygonBase = (function (_super) {
+    __extends(PolygonBase, _super);
+    function PolygonBase() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.shape = 'polygon';
+        return _this;
+    }
+    PolygonBase.prototype.addPoint = function (point) {
+        this._points.push(point);
+        this.reloadPoints();
+    };
+    PolygonBase.prototype.addPoints = function (points) {
+        this._points = this._points.concat(points);
+        this.reloadPoints();
+    };
+    PolygonBase.prototype.removePoint = function (point) {
+        var index = this._points.indexOf(point);
+        if (index > -1) {
+            this._points.splice(index, 1);
+            this.reloadPoints();
+        }
+    };
+    PolygonBase.prototype.removeAllPoints = function () {
+        this._points.length = 0;
+        this.reloadPoints();
+    };
+    PolygonBase.prototype.getPoints = function () {
+        return this._points.slice();
+    };
+    PolygonBase.prototype.addHole = function (hole) {
+        this._holes.push(hole);
+        this.reloadHoles();
+    };
+    PolygonBase.prototype.addHoles = function (holes) {
+        this._holes = this._holes.concat(holes);
+        this.reloadHoles();
+    };
+    PolygonBase.prototype.removeHole = function (hole) {
+        var index = this._holes.indexOf(hole);
+        if (index > -1) {
+            this._holes.splice(index, 1);
+            this.reloadHoles();
+        }
+    };
+    PolygonBase.prototype.removeAllHoles = function () {
+        this._holes.length = 0;
+        this.reloadHoles();
+    };
+    PolygonBase.prototype.getHoles = function () {
+        return this._holes.slice();
+    };
+    return PolygonBase;
+}(ShapeBase));
+exports.PolygonBase = PolygonBase;
+var CircleBase = (function (_super) {
+    __extends(CircleBase, _super);
+    function CircleBase() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.shape = 'circle';
+        return _this;
+    }
+    return CircleBase;
+}(ShapeBase));
+exports.CircleBase = CircleBase;
+
+
+/***/ }),
+
+/***/ "../node_modules/nativescript-google-maps-sdk/map-view.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+Object.defineProperty(exports, "__esModule", { value: true });
+var application = __webpack_require__("../node_modules/tns-core-modules/application/application.js");
+var map_view_common_1 = __webpack_require__("../node_modules/nativescript-google-maps-sdk/map-view-common.js");
+var image_1 = __webpack_require__("../node_modules/tns-core-modules/ui/image/image.js");
+var imageSource = __webpack_require__("../node_modules/tns-core-modules/image-source/image-source.js");
+__export(__webpack_require__("../node_modules/nativescript-google-maps-sdk/map-view-common.js"));
+var MapView = (function (_super) {
+    __extends(MapView, _super);
+    function MapView() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this._markers = new Array();
+        return _this;
+    }
+    MapView.prototype.onLoaded = function () {
+        _super.prototype.onLoaded.call(this);
+        application.android.on(application.AndroidApplication.activityPausedEvent, this.onActivityPaused, this);
+        application.android.on(application.AndroidApplication.activityResumedEvent, this.onActivityResumed, this);
+        application.android.on(application.AndroidApplication.saveActivityStateEvent, this.onActivitySaveInstanceState, this);
+        application.android.on(application.AndroidApplication.activityDestroyedEvent, this.onActivityDestroyed, this);
+    };
+    MapView.prototype.onUnloaded = function () {
+        _super.prototype.onUnloaded.call(this);
+        application.android.off(application.AndroidApplication.activityPausedEvent, this.onActivityPaused, this);
+        application.android.off(application.AndroidApplication.activityResumedEvent, this.onActivityResumed, this);
+        application.android.off(application.AndroidApplication.saveActivityStateEvent, this.onActivitySaveInstanceState, this);
+        application.android.off(application.AndroidApplication.activityDestroyedEvent, this.onActivityDestroyed, this);
+    };
+    MapView.prototype.disposeNativeView = function () {
+        if (this.nativeView) {
+            this.nativeView.onDestroy();
+        }
+        if (this._gMap) {
+            this._gMap.setMyLocationEnabled(false);
+            this._gMap.clear();
+        }
+        this._context = undefined;
+        this._gMap = undefined;
+        this._markers = undefined;
+        this._shapes = undefined;
+        _super.prototype.disposeNativeView.call(this);
+    };
+    ;
+    MapView.prototype.onActivityPaused = function (args) {
+        if (!this.nativeView || this._context != args.activity)
+            return;
+        this.nativeView.onPause();
+    };
+    MapView.prototype.onActivityResumed = function (args) {
+        if (!this.nativeView || this._context != args.activity)
+            return;
+        this.nativeView.onResume();
+    };
+    MapView.prototype.onActivitySaveInstanceState = function (args) {
+        if (!this.nativeView || this._context != args.activity)
+            return;
+        this.nativeView.onSaveInstanceState(args.bundle);
+    };
+    MapView.prototype.onActivityDestroyed = function (args) {
+        if (!this.nativeView || this._context != args.activity)
+            return;
+        this.nativeView.onDestroy();
+    };
+    MapView.prototype.createNativeView = function () {
+        var cameraPosition = this._createCameraPosition();
+        var options = new com.google.android.gms.maps.GoogleMapOptions();
+        if (cameraPosition)
+            options = options.camera(cameraPosition);
+        this.nativeView = new com.google.android.gms.maps.MapView(this._context, options);
+        this.nativeView.onCreate(null);
+        this.nativeView.onResume();
+        var that = new WeakRef(this);
+        var mapReadyCallback = new com.google.android.gms.maps.OnMapReadyCallback({
+            onMapReady: function (gMap) {
+                var owner = that.get();
+                owner._gMap = gMap;
+                owner.setMinZoomMaxZoom();
+                owner.updatePadding();
+                if (owner._pendingCameraUpdate) {
+                    owner.updateCamera();
+                }
+                gMap.setOnMapClickListener(new com.google.android.gms.maps.GoogleMap.OnMapClickListener({
+                    onMapClick: function (gmsPoint) {
+                        var position = new Position(gmsPoint);
+                        owner.notifyPositionEvent(map_view_common_1.MapViewBase.coordinateTappedEvent, position);
+                    }
+                }));
+                gMap.setOnMapLongClickListener(new com.google.android.gms.maps.GoogleMap.OnMapLongClickListener({
+                    onMapLongClick: function (gmsPoint) {
+                        var position = new Position(gmsPoint);
+                        owner.notifyPositionEvent(map_view_common_1.MapViewBase.coordinateLongPressEvent, position);
+                    }
+                }));
+                gMap.setOnMarkerClickListener(new com.google.android.gms.maps.GoogleMap.OnMarkerClickListener({
+                    onMarkerClick: function (gmsMarker) {
+                        var marker = owner.findMarker(function (marker) { return marker.android.getId() === gmsMarker.getId(); });
+                        owner.notifyMarkerTapped(marker);
+                        return false;
+                    }
+                }));
+                gMap.setOnInfoWindowClickListener(new com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener({
+                    onInfoWindowClick: function (gmsMarker) {
+                        var marker = owner.findMarker(function (marker) { return marker.android.getId() === gmsMarker.getId(); });
+                        owner.notifyMarkerInfoWindowTapped(marker);
+                        return false;
+                    }
+                }));
+                gMap.setOnMyLocationButtonClickListener(new com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener({
+                    onMyLocationButtonClick: function () {
+                        owner.notifyMyLocationTapped();
+                        return false;
+                    }
+                }));
+                if (gMap.setOnCircleClickListener) {
+                    gMap.setOnCircleClickListener(new com.google.android.gms.maps.GoogleMap.OnCircleClickListener({
+                        onCircleClick: function (gmsCircle) {
+                            var shape = owner.findShape(function (shape) { return shape.android.getId() === gmsCircle.getId(); });
+                            if (shape) {
+                                owner.notifyShapeTapped(shape);
+                            }
+                            return false;
+                        }
+                    }));
+                }
+                if (gMap.setOnPolylineClickListener) {
+                    gMap.setOnPolylineClickListener(new com.google.android.gms.maps.GoogleMap.OnPolylineClickListener({
+                        onPolylineClick: function (gmsPolyline) {
+                            var shape = owner.findShape(function (shape) { return shape.android.getId() === gmsPolyline.getId(); });
+                            if (shape) {
+                                owner.notifyShapeTapped(shape);
+                            }
+                            return false;
+                        }
+                    }));
+                }
+                if (gMap.setOnPolygonClickListener) {
+                    gMap.setOnPolygonClickListener(new com.google.android.gms.maps.GoogleMap.OnPolygonClickListener({
+                        onPolygonClick: function (gmsPolygon) {
+                            var shape = owner.findShape(function (shape) { return shape.android.getId() === gmsPolygon.getId(); });
+                            if (shape) {
+                                owner.notifyShapeTapped(shape);
+                            }
+                            return false;
+                        }
+                    }));
+                }
+                gMap.setOnMarkerDragListener(new com.google.android.gms.maps.GoogleMap.OnMarkerDragListener({
+                    onMarkerDrag: function (gmsMarker) {
+                        var marker = owner.findMarker(function (marker) { return marker.android.getId() === gmsMarker.getId(); });
+                        owner.notifyMarkerDrag(marker);
+                    },
+                    onMarkerDragEnd: function (gmsMarker) {
+                        var marker = owner.findMarker(function (marker) { return marker.android.getId() === gmsMarker.getId(); });
+                        owner.notifyMarkerEndDragging(marker);
+                    },
+                    onMarkerDragStart: function (gmsMarker) {
+                        var marker = owner.findMarker(function (marker) { return marker.android.getId() === gmsMarker.getId(); });
+                        owner.notifyMarkerBeginDragging(marker);
+                    }
+                }));
+                var cameraChangeHandler = function (cameraPosition) {
+                    owner._processingCameraEvent = true;
+                    var cameraChanged = false;
+                    if (owner.latitude != cameraPosition.target.latitude) {
+                        cameraChanged = true;
+                        map_view_common_1.latitudeProperty.nativeValueChange(owner, cameraPosition.target.latitude);
+                    }
+                    if (owner.longitude != cameraPosition.target.longitude) {
+                        cameraChanged = true;
+                        map_view_common_1.longitudeProperty.nativeValueChange(owner, cameraPosition.target.longitude);
+                    }
+                    if (owner.bearing != cameraPosition.bearing) {
+                        cameraChanged = true;
+                        map_view_common_1.bearingProperty.nativeValueChange(owner, cameraPosition.bearing);
+                    }
+                    if (owner.zoom != cameraPosition.zoom) {
+                        cameraChanged = true;
+                        map_view_common_1.zoomProperty.nativeValueChange(owner, cameraPosition.zoom);
+                    }
+                    if (owner.tilt != cameraPosition.tilt) {
+                        cameraChanged = true;
+                        map_view_common_1.tiltProperty.nativeValueChange(owner, cameraPosition.tilt);
+                    }
+                    if (cameraChanged) {
+                        owner.notifyCameraEvent(map_view_common_1.MapViewBase.cameraChangedEvent, {
+                            latitude: cameraPosition.target.latitude,
+                            longitude: cameraPosition.target.longitude,
+                            zoom: cameraPosition.zoom,
+                            bearing: cameraPosition.bearing,
+                            tilt: cameraPosition.tilt
+                        });
+                    }
+                    owner._processingCameraEvent = false;
+                };
+                if (gMap.setOnCameraIdleListener) {
+                    gMap.setOnCameraIdleListener(new com.google.android.gms.maps.GoogleMap.OnCameraIdleListener({
+                        onCameraIdle: function () { return cameraChangeHandler(gMap.getCameraPosition()); }
+                    }));
+                }
+                else if (gMap.setOnCameraChangeListener) {
+                    gMap.setOnCameraChangeListener(new com.google.android.gms.maps.GoogleMap.OnCameraChangeListener({
+                        onCameraChange: cameraChangeHandler
+                    }));
+                }
+                if (gMap.setOnCameraMoveListener) {
+                    gMap.setOnCameraMoveListener(new com.google.android.gms.maps.GoogleMap.OnCameraMoveListener({
+                        onCameraMove: function () {
+                            var cameraPosition = gMap.getCameraPosition();
+                            owner.notifyCameraEvent(map_view_common_1.MapViewBase.cameraMoveEvent, {
+                                latitude: cameraPosition.target.latitude,
+                                longitude: cameraPosition.target.longitude,
+                                zoom: cameraPosition.zoom,
+                                bearing: cameraPosition.bearing,
+                                tilt: cameraPosition.tilt
+                            });
+                        }
+                    }));
+                }
+                gMap.setInfoWindowAdapter(new com.google.android.gms.maps.GoogleMap.InfoWindowAdapter({
+                    getInfoWindow: function (gmsMarker) {
+                        return null;
+                    },
+                    getInfoContents: function (gmsMarker) {
+                        var marker = owner.findMarker(function (marker) { return marker.android.getId() === gmsMarker.getId(); });
+                        var content = owner._getMarkerInfoWindowContent(marker);
+                        return (content) ? content.android : null;
+                    }
+                }));
+                owner.notifyMapReady();
+            }
+        });
+        this.nativeView.getMapAsync(mapReadyCallback);
+        return this.nativeView;
+    };
+    MapView.prototype._createCameraPosition = function () {
+        var cpBuilder = new com.google.android.gms.maps.model.CameraPosition.Builder();
+        var update = false;
+        if (!isNaN(this.latitude) && !isNaN(this.longitude)) {
+            update = true;
+            cpBuilder.target(new com.google.android.gms.maps.model.LatLng(this.latitude, this.longitude));
+        }
+        if (!isNaN(this.bearing)) {
+            update = true;
+            cpBuilder.bearing(this.bearing);
+        }
+        if (!isNaN(this.zoom)) {
+            update = true;
+            cpBuilder.zoom(this.zoom);
+        }
+        if (!isNaN(this.tilt)) {
+            update = true;
+            cpBuilder.tilt(this.tilt);
+        }
+        return (update) ? cpBuilder.build() : null;
+    };
+    MapView.prototype.updateCamera = function () {
+        var cameraPosition = this._createCameraPosition();
+        if (!cameraPosition)
+            return;
+        if (!this.gMap) {
+            this._pendingCameraUpdate = true;
+            return;
+        }
+        this._pendingCameraUpdate = false;
+        var cameraUpdate = com.google.android.gms.maps.CameraUpdateFactory.newCameraPosition(cameraPosition);
+        if (this.mapAnimationsEnabled) {
+            this.gMap.animateCamera(cameraUpdate);
+        }
+        else {
+            this.gMap.moveCamera(cameraUpdate);
+        }
+    };
+    MapView.prototype.setViewport = function (bounds, padding) {
+        var p = padding || 0;
+        var cameraUpdate = com.google.android.gms.maps.CameraUpdateFactory.newLatLngBounds(bounds.android, p);
+        if (!this.gMap) {
+            this._pendingCameraUpdate = true;
+            return;
+        }
+        this._pendingCameraUpdate = false;
+        if (this.mapAnimationsEnabled) {
+            this.gMap.animateCamera(cameraUpdate);
+        }
+        else {
+            this.gMap.moveCamera(cameraUpdate);
+        }
+    };
+    MapView.prototype.updatePadding = function () {
+        if (this.padding && this.gMap) {
+            this.gMap.setPadding(this.padding[2] || 0, this.padding[0] || 0, this.padding[3] || 0, this.padding[1] || 0);
+        }
+    };
+    Object.defineProperty(MapView.prototype, "android", {
+        get: function () {
+            throw new Error('Now use instance.nativeView instead of instance.android');
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(MapView.prototype, "gMap", {
+        get: function () {
+            return this._gMap;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(MapView.prototype, "projection", {
+        get: function () {
+            return (this._gMap) ? new Projection(this._gMap.getProjection()) : null;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(MapView.prototype, "settings", {
+        get: function () {
+            return (this._gMap) ? new UISettings(this._gMap.getUiSettings()) : null;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(MapView.prototype, "myLocationEnabled", {
+        get: function () {
+            return (this._gMap) ? this._gMap.isMyLocationEnabled() : false;
+        },
+        set: function (value) {
+            if (this._gMap)
+                this._gMap.setMyLocationEnabled(value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    MapView.prototype.setMinZoomMaxZoom = function () {
+        if (this.gMap) {
+            this.gMap.setMinZoomPreference(this.minZoom);
+            this.gMap.setMaxZoomPreference(this.maxZoom);
+        }
+    };
+    MapView.prototype.addMarker = function () {
+        var _this = this;
+        var markers = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            markers[_i] = arguments[_i];
+        }
+        markers.forEach(function (marker) {
+            marker.android = _this.gMap.addMarker(marker.android);
+            _this._markers.push(marker);
+        });
+    };
+    MapView.prototype.removeMarker = function () {
+        var _this = this;
+        var markers = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            markers[_i] = arguments[_i];
+        }
+        markers.forEach(function (marker) {
+            _this._unloadInfoWindowContent(marker);
+            marker.android.remove();
+            _this._markers.splice(_this._markers.indexOf(marker), 1);
+        });
+    };
+    MapView.prototype.removeAllMarkers = function () {
+        var _this = this;
+        this._markers.forEach(function (marker) {
+            _this._unloadInfoWindowContent(marker);
+            marker.android.remove();
+        });
+        this._markers = [];
+    };
+    MapView.prototype.findMarker = function (callback) {
+        return this._markers.find(callback);
+    };
+    MapView.prototype.addPolyline = function (shape) {
+        shape.loadPoints();
+        shape.android = this.gMap.addPolyline(shape.android);
+        this._shapes.push(shape);
+    };
+    MapView.prototype.addPolygon = function (shape) {
+        shape.loadPoints();
+        shape.loadHoles();
+        shape.android = this.gMap.addPolygon(shape.android);
+        this._shapes.push(shape);
+    };
+    MapView.prototype.addCircle = function (shape) {
+        shape.android = this.gMap.addCircle(shape.android);
+        this._shapes.push(shape);
+    };
+    MapView.prototype.removeShape = function (shape) {
+        shape.android.remove();
+        this._shapes.splice(this._shapes.indexOf(shape), 1);
+    };
+    MapView.prototype.removeAllShapes = function () {
+        this._shapes.forEach(function (shape) {
+            shape.android.remove();
+        });
+        this._shapes = [];
+    };
+    MapView.prototype.clear = function () {
+        this._markers = [];
+        this._shapes = [];
+        this.gMap.clear();
+    };
+    MapView.prototype.setStyle = function (style) {
+        var styleOptions = new com.google.android.gms.maps.model.MapStyleOptions(JSON.stringify(style));
+        return this.gMap.setMapStyle(styleOptions);
+    };
+    MapView.prototype.findShape = function (callback) {
+        return this._shapes.find(callback);
+    };
+    return MapView;
+}(map_view_common_1.MapViewBase));
+exports.MapView = MapView;
+var UISettings = (function (_super) {
+    __extends(UISettings, _super);
+    function UISettings(android) {
+        var _this = _super.call(this) || this;
+        _this._android = android;
+        return _this;
+    }
+    Object.defineProperty(UISettings.prototype, "android", {
+        get: function () {
+            return this._android;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(UISettings.prototype, "compassEnabled", {
+        get: function () {
+            return this._android.isCompassEnabled();
+        },
+        set: function (value) {
+            this._android.setCompassEnabled(value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(UISettings.prototype, "indoorLevelPickerEnabled", {
+        get: function () {
+            return this._android.isIndoorLevelPickerEnabled();
+        },
+        set: function (value) {
+            this._android.setIndoorLevelPickerEnabled(value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(UISettings.prototype, "mapToolbarEnabled", {
+        get: function () {
+            return this._android.isMapToolbarEnabled();
+        },
+        set: function (value) {
+            this._android.setMapToolbarEnabled(value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(UISettings.prototype, "myLocationButtonEnabled", {
+        get: function () {
+            return this._android.isMyLocationButtonEnabled();
+        },
+        set: function (value) {
+            this._android.setMyLocationButtonEnabled(value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(UISettings.prototype, "rotateGesturesEnabled", {
+        get: function () {
+            return this._android.isRotateGesturesEnabled();
+        },
+        set: function (value) {
+            this._android.setRotateGesturesEnabled(value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(UISettings.prototype, "scrollGesturesEnabled", {
+        get: function () {
+            return this._android.isScrollGesturesEnabled();
+        },
+        set: function (value) {
+            this._android.setScrollGesturesEnabled(value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(UISettings.prototype, "tiltGesturesEnabled", {
+        get: function () {
+            return this._android.isTiltGesturesEnabled();
+        },
+        set: function (value) {
+            this._android.setTiltGesturesEnabled(value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(UISettings.prototype, "zoomControlsEnabled", {
+        get: function () {
+            return this._android.isZoomControlsEnabled();
+        },
+        set: function (value) {
+            this._android.setZoomControlsEnabled(value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(UISettings.prototype, "zoomGesturesEnabled", {
+        get: function () {
+            return this._android.isZoomGesturesEnabled();
+        },
+        set: function (value) {
+            this._android.setZoomGesturesEnabled(value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return UISettings;
+}(map_view_common_1.UISettingsBase));
+exports.UISettings = UISettings;
+var Projection = (function (_super) {
+    __extends(Projection, _super);
+    function Projection(android) {
+        var _this = _super.call(this) || this;
+        _this._android = android;
+        return _this;
+    }
+    Object.defineProperty(Projection.prototype, "android", {
+        get: function () {
+            return this._android;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Projection.prototype, "visibleRegion", {
+        get: function () {
+            return new VisibleRegion(this.android.getVisibleRegion());
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Projection.prototype.fromScreenLocation = function (point) {
+        var latLng = this.android.fromScreenLocation(new android.graphics.Point(point.x, point.y));
+        return new Position(latLng);
+    };
+    Projection.prototype.toScreenLocation = function (position) {
+        var point = this.android.toScreenLocation(position.android);
+        return {
+            x: point.x,
+            y: point.y
+        };
+    };
+    return Projection;
+}(map_view_common_1.ProjectionBase));
+exports.Projection = Projection;
+var VisibleRegion = (function (_super) {
+    __extends(VisibleRegion, _super);
+    function VisibleRegion(android) {
+        var _this = _super.call(this) || this;
+        _this._android = android;
+        return _this;
+    }
+    Object.defineProperty(VisibleRegion.prototype, "android", {
+        get: function () {
+            return this._android;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(VisibleRegion.prototype, "nearLeft", {
+        get: function () {
+            return new Position(this.android.nearLeft);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(VisibleRegion.prototype, "nearRight", {
+        get: function () {
+            return new Position(this.android.nearRight);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(VisibleRegion.prototype, "farLeft", {
+        get: function () {
+            return new Position(this.android.farLeft);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(VisibleRegion.prototype, "farRight", {
+        get: function () {
+            return new Position(this.android.farRight);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(VisibleRegion.prototype, "bounds", {
+        get: function () {
+            return new Bounds(this.android.latLngBounds);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return VisibleRegion;
+}(map_view_common_1.VisibleRegionBase));
+exports.VisibleRegion = VisibleRegion;
+var Position = (function (_super) {
+    __extends(Position, _super);
+    function Position(android) {
+        var _this = _super.call(this) || this;
+        _this._android = android || new com.google.android.gms.maps.model.LatLng(0, 0);
+        return _this;
+    }
+    Object.defineProperty(Position.prototype, "android", {
+        get: function () {
+            return this._android;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Position.prototype, "latitude", {
+        get: function () {
+            return this._android.latitude;
+        },
+        set: function (latitude) {
+            this._android = new com.google.android.gms.maps.model.LatLng(parseFloat("" + latitude), this.longitude);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Position.prototype, "longitude", {
+        get: function () {
+            return this._android.longitude;
+        },
+        set: function (longitude) {
+            this._android = new com.google.android.gms.maps.model.LatLng(this.latitude, parseFloat("" + longitude));
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Position.positionFromLatLng = function (latitude, longitude) {
+        var position = new Position();
+        position.latitude = latitude;
+        position.longitude = longitude;
+        return position;
+    };
+    return Position;
+}(map_view_common_1.PositionBase));
+exports.Position = Position;
+var Bounds = (function (_super) {
+    __extends(Bounds, _super);
+    function Bounds(android) {
+        var _this = _super.call(this) || this;
+        _this._android = android;
+        return _this;
+    }
+    Object.defineProperty(Bounds.prototype, "android", {
+        get: function () {
+            return this._android;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Bounds.prototype, "southwest", {
+        get: function () {
+            return new Position(this.android.southwest);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Bounds.prototype, "northeast", {
+        get: function () {
+            return new Position(this.android.northeast);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Bounds.fromCoordinates = function (southwest, northeast) {
+        return new Bounds(new com.google.android.gms.maps.model.LatLngBounds(southwest.android, northeast.android));
+    };
+    return Bounds;
+}(map_view_common_1.BoundsBase));
+exports.Bounds = Bounds;
+var Marker = (function (_super) {
+    __extends(Marker, _super);
+    function Marker() {
+        var _this = _super.call(this) || this;
+        _this._isMarker = false;
+        _this.android = new com.google.android.gms.maps.model.MarkerOptions();
+        return _this;
+    }
+    Object.defineProperty(Marker.prototype, "position", {
+        get: function () {
+            return new Position(this._android.getPosition());
+        },
+        set: function (value) {
+            if (this._isMarker) {
+                this._android.setPosition(value.android);
+            }
+            else {
+                this._android.position(value.android);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Marker.prototype, "rotation", {
+        get: function () {
+            return this._android.getRotation();
+        },
+        set: function (value) {
+            if (this._isMarker) {
+                this._android.setRotation(value);
+            }
+            else {
+                this._android.rotation(value);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Marker.prototype, "zIndex", {
+        get: function () {
+            return this._android.getZIndex();
+        },
+        set: function (value) {
+            if (this._isMarker) {
+                this._android.setZIndex(value);
+            }
+            else {
+                this._android.zIndex(value);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Marker.prototype, "title", {
+        get: function () {
+            return this._android.getTitle();
+        },
+        set: function (title) {
+            if (this._isMarker) {
+                this._android.setTitle(title);
+            }
+            else {
+                this._android.title(title);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Marker.prototype, "snippet", {
+        get: function () {
+            return this._android.getSnippet();
+        },
+        set: function (snippet) {
+            if (this._isMarker) {
+                this._android.setSnippet(snippet);
+            }
+            else {
+                this._android.snippet(snippet);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Marker.prototype.showInfoWindow = function () {
+        if (this._isMarker) {
+            this.android.showInfoWindow();
+        }
+    };
+    Marker.prototype.isInfoWindowShown = function () {
+        return (this._isMarker) ? this.android.showInfoWindow() : false;
+    };
+    Marker.prototype.hideInfoWindow = function () {
+        if (this._isMarker) {
+            this.android.hideInfoWindow();
+        }
+    };
+    Object.defineProperty(Marker.prototype, "color", {
+        get: function () {
+            return this._color;
+        },
+        set: function (value) {
+            value = map_view_common_1.getColorHue(value);
+            this._color = value;
+            var androidIcon = (value) ? com.google.android.gms.maps.model.BitmapDescriptorFactory.defaultMarker(value) : null;
+            if (this._isMarker) {
+                this._android.setIcon(androidIcon);
+            }
+            else {
+                this._android.icon(androidIcon);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Marker.prototype, "icon", {
+        get: function () {
+            return this._icon;
+        },
+        set: function (value) {
+            if (typeof value === 'string') {
+                var tempIcon = new image_1.Image();
+                tempIcon.imageSource = imageSource.fromResource(String(value));
+                value = tempIcon;
+            }
+            this._icon = value;
+            var androidIcon = (value) ? com.google.android.gms.maps.model.BitmapDescriptorFactory.fromBitmap(value.imageSource.android) : null;
+            if (this._isMarker) {
+                this._android.setIcon(androidIcon);
+            }
+            else {
+                this._android.icon(androidIcon);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Marker.prototype, "alpha", {
+        get: function () {
+            return this._android.getAlpha();
+        },
+        set: function (value) {
+            if (this._isMarker) {
+                this._android.setAlpha(value);
+            }
+            else {
+                this._android.alpha(value);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Marker.prototype, "flat", {
+        get: function () {
+            return this._android.isFlat();
+        },
+        set: function (value) {
+            if (this._isMarker) {
+                this._android.setFlat(value);
+            }
+            else {
+                this._android.flat(value);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Marker.prototype, "anchor", {
+        get: function () {
+            return [this._android.getAnchorU(), this._android.getAnchorV()];
+        },
+        set: function (value) {
+            if (this._isMarker) {
+                this._android.setAnchor(value[0], value[1]);
+            }
+            else {
+                this._android.anchor(value[0], value[1]);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Marker.prototype, "draggable", {
+        get: function () {
+            return this._android.isDraggable();
+        },
+        set: function (value) {
+            if (this._isMarker) {
+                this._android.setDraggable(value);
+            }
+            else {
+                this._android.draggable(value);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Marker.prototype, "visible", {
+        get: function () {
+            return this._android.isVisible();
+        },
+        set: function (value) {
+            if (this._isMarker) {
+                this._android.setVisible(value);
+            }
+            else {
+                this._android.visible(value);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Marker.prototype, "android", {
+        get: function () {
+            return this._android;
+        },
+        set: function (android) {
+            this._android = android;
+            this._isMarker = android.getClass().getName() === Marker.CLASS;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Marker.CLASS = 'com.google.android.gms.maps.model.Marker';
+    return Marker;
+}(map_view_common_1.MarkerBase));
+exports.Marker = Marker;
+var Polyline = (function (_super) {
+    __extends(Polyline, _super);
+    function Polyline() {
+        var _this = _super.call(this) || this;
+        _this._isReal = false;
+        _this.android = new com.google.android.gms.maps.model.PolylineOptions();
+        _this._points = new Array();
+        return _this;
+    }
+    Object.defineProperty(Polyline.prototype, "clickable", {
+        get: function () {
+            return this._android.isClickable();
+        },
+        set: function (value) {
+            if (this._isReal) {
+                this._android.setClickable(value);
+            }
+            else {
+                this._android.clickable(value);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Polyline.prototype, "zIndex", {
+        get: function () {
+            return this._android.getZIndex();
+        },
+        set: function (value) {
+            if (this._isReal) {
+                this._android.setZIndex(value);
+            }
+            else {
+                this._android.zIndex(value);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Polyline.prototype, "visible", {
+        get: function () {
+            return this._android.isVisible();
+        },
+        set: function (value) {
+            if (this._isReal) {
+                this._android.setVisible(value);
+            }
+            else {
+                this._android.visible(value);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Polyline.prototype.loadPoints = function () {
+        var _this = this;
+        if (!this._isReal) {
+            this._points.forEach(function (point) {
+                _this._android.add(point.android);
+            });
+        }
+    };
+    Polyline.prototype.reloadPoints = function () {
+        if (this._isReal) {
+            var points = new java.util.ArrayList();
+            this._points.forEach(function (point) {
+                points.add(point.android);
+            });
+            this._android.setPoints(points);
+        }
+    };
+    Object.defineProperty(Polyline.prototype, "width", {
+        get: function () {
+            return this._android.getStrokeWidth();
+        },
+        set: function (value) {
+            if (this._isReal) {
+                this._android.setWidth(value);
+            }
+            else {
+                this._android.width(value);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Polyline.prototype, "color", {
+        get: function () {
+            return this._color;
+        },
+        set: function (value) {
+            this._color = value;
+            if (this._isReal) {
+                this._android.setStrokeColor(value.android);
+            }
+            else {
+                this._android.color(value.android);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Polyline.prototype, "geodesic", {
+        get: function () {
+            return this._android.isGeodesic();
+        },
+        set: function (value) {
+            if (this._isReal) {
+                this._android.setGeodesic(value);
+            }
+            else {
+                this._android.geodesic(value);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Polyline.prototype, "android", {
+        get: function () {
+            return this._android;
+        },
+        set: function (android) {
+            this._android = android;
+            this._isReal = android.getClass().getName() === Polyline.CLASS;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Polyline.CLASS = 'com.google.android.gms.maps.model.Polyline';
+    return Polyline;
+}(map_view_common_1.PolylineBase));
+exports.Polyline = Polyline;
+var Polygon = (function (_super) {
+    __extends(Polygon, _super);
+    function Polygon() {
+        var _this = _super.call(this) || this;
+        _this._isReal = false;
+        _this.android = new com.google.android.gms.maps.model.PolygonOptions();
+        _this._points = [];
+        _this._holes = [];
+        return _this;
+    }
+    Object.defineProperty(Polygon.prototype, "clickable", {
+        get: function () {
+            return this._android.isClickable();
+        },
+        set: function (value) {
+            if (this._isReal) {
+                this._android.setClickable(value);
+            }
+            else {
+                this._android.clickable(value);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Polygon.prototype, "zIndex", {
+        get: function () {
+            return this._android.getZIndex();
+        },
+        set: function (value) {
+            if (this._isReal) {
+                this._android.setZIndex(value);
+            }
+            else {
+                this._android.zIndex(value);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Polygon.prototype, "visible", {
+        get: function () {
+            return this._android.isVisible();
+        },
+        set: function (value) {
+            if (this._isReal) {
+                this._android.setVisible(value);
+            }
+            else {
+                this._android.visible(value);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Polygon.prototype.loadPoints = function () {
+        var _this = this;
+        if (!this._isReal) {
+            this._points.forEach(function (point) {
+                _this._android.add(point.android);
+            });
+        }
+    };
+    Polygon.prototype.loadHoles = function () {
+        var _this = this;
+        if (!this._isReal) {
+            this._holes.forEach(function (hole) {
+                var points = new java.util.ArrayList();
+                hole.forEach(function (point) {
+                    points.add(point.android);
+                });
+                _this._android.addHole(points);
+            });
+        }
+    };
+    Polygon.prototype.reloadPoints = function () {
+        if (this._isReal) {
+            var points = new java.util.ArrayList();
+            this._points.forEach(function (point) {
+                points.add(point.android);
+            });
+            this._android.setPoints(points);
+        }
+    };
+    Polygon.prototype.reloadHoles = function () {
+        if (this._isReal) {
+            var holes = new java.util.ArrayList();
+            this._holes.forEach(function (hole) {
+                var points = new java.util.ArrayList();
+                hole.forEach(function (point) {
+                    points.add(point.android);
+                });
+                holes.add(points);
+            });
+            this._android.setHoles(holes);
+        }
+    };
+    Object.defineProperty(Polygon.prototype, "strokeWidth", {
+        get: function () {
+            return this._android.getStrokeWidth();
+        },
+        set: function (value) {
+            if (this._isReal) {
+                this._android.setStrokeWidth(value);
+            }
+            else {
+                this._android.strokeWidth(value);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Polygon.prototype, "strokeColor", {
+        get: function () {
+            return this._strokeColor;
+        },
+        set: function (value) {
+            this._strokeColor = value;
+            if (this._isReal) {
+                this._android.setStrokeColor(value.android);
+            }
+            else {
+                this._android.strokeColor(value.android);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Polygon.prototype, "fillColor", {
+        get: function () {
+            return this._fillColor;
+        },
+        set: function (value) {
+            this._fillColor = value;
+            if (this._isReal) {
+                this._android.setFillColor(value.android);
+            }
+            else {
+                this._android.fillColor(value.android);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Polygon.prototype, "android", {
+        get: function () {
+            return this._android;
+        },
+        set: function (android) {
+            this._android = android;
+            this._isReal = android.getClass().getName() === Polygon.CLASS;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Polygon.CLASS = 'com.google.android.gms.maps.model.Polygon';
+    return Polygon;
+}(map_view_common_1.PolygonBase));
+exports.Polygon = Polygon;
+var Circle = (function (_super) {
+    __extends(Circle, _super);
+    function Circle() {
+        var _this = _super.call(this) || this;
+        _this._isReal = false;
+        _this.android = new com.google.android.gms.maps.model.CircleOptions();
+        return _this;
+    }
+    Object.defineProperty(Circle.prototype, "clickable", {
+        get: function () {
+            return this._android.isClickable();
+        },
+        set: function (value) {
+            if (this._isReal) {
+                this._android.setClickable(value);
+            }
+            else {
+                this._android.clickable(value);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Circle.prototype, "zIndex", {
+        get: function () {
+            return this._android.getZIndex();
+        },
+        set: function (value) {
+            if (this._isReal) {
+                this._android.setZIndex(value);
+            }
+            else {
+                this._android.zIndex(value);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Circle.prototype, "visible", {
+        get: function () {
+            return this._android.isVisible();
+        },
+        set: function (value) {
+            if (this._isReal) {
+                this._android.setVisible(value);
+            }
+            else {
+                this._android.visible(value);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Circle.prototype, "center", {
+        get: function () {
+            return this._center;
+        },
+        set: function (value) {
+            this._center = value;
+            if (this._isReal) {
+                this._android.setCenter(value.android);
+            }
+            else {
+                this._android.center(value.android);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Circle.prototype, "radius", {
+        get: function () {
+            return this._android.getRadius();
+        },
+        set: function (value) {
+            if (this._isReal) {
+                this._android.setRadius(value);
+            }
+            else {
+                this._android.radius(value);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Circle.prototype, "strokeWidth", {
+        get: function () {
+            return this._android.getStrokeWidth();
+        },
+        set: function (value) {
+            if (this._isReal) {
+                this._android.setStrokeWidth(value);
+            }
+            else {
+                this._android.strokeWidth(value);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Circle.prototype, "strokeColor", {
+        get: function () {
+            return this._strokeColor;
+        },
+        set: function (value) {
+            this._strokeColor = value;
+            if (this._isReal) {
+                this._android.setStrokeColor(value.android);
+            }
+            else {
+                this._android.strokeColor(value.android);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Circle.prototype, "fillColor", {
+        get: function () {
+            return this._fillColor;
+        },
+        set: function (value) {
+            this._fillColor = value;
+            if (this._isReal) {
+                this._android.setFillColor(value.android);
+            }
+            else {
+                this._android.fillColor(value.android);
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Circle.prototype, "android", {
+        get: function () {
+            return this._android;
+        },
+        set: function (android) {
+            this._android = android;
+            this._isReal = android.getClass().getName() === Circle.CLASS;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Circle.CLASS = 'com.google.android.gms.maps.model.Circle';
+    return Circle;
+}(map_view_common_1.CircleBase));
+exports.Circle = Circle;
+
+
+/***/ }),
+
 /***/ "../node_modules/nativescript-permissions/permissions.js":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17517,6 +18844,656 @@ function makeText(text, duration) {
 }
 
 exports.makeText = makeText;
+
+
+/***/ }),
+
+/***/ "../node_modules/nativescript-ui-sidedrawer/ui-sidedrawer.common.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var view_1 = __webpack_require__("../node_modules/tns-core-modules/ui/core/view/view.js");
+var colorModule = __webpack_require__("../node_modules/tns-core-modules/color/color.js");
+exports.FadeTransitionString = "fadetransition";
+exports.PushTransitionString = "pushtransition";
+exports.RevealTransitionString = "revealtransition";
+exports.ReverseSlideOutTransitionString = "reverseslideouttransition";
+exports.ScaleDownPusherTransitionString = "scaledownpushertransition";
+exports.ScaleUpTransitionString = "scaleuptransition";
+exports.SlideAlongTransitionString = "slidealongtransition";
+exports.SlideInOnTopTransitionString = "slideinontoptransition";
+var SideDrawerLocation;
+(function (SideDrawerLocation) {
+    SideDrawerLocation.Left = "Left";
+    SideDrawerLocation.Right = "Right";
+    SideDrawerLocation.Top = "Top";
+    SideDrawerLocation.Bottom = "Bottom";
+})(SideDrawerLocation = exports.SideDrawerLocation || (exports.SideDrawerLocation = {}));
+var DrawerTransitionBase = /** @class */ (function () {
+    function DrawerTransitionBase() {
+    }
+    DrawerTransitionBase.prototype.getNativeContent = function () {
+        return undefined;
+    };
+    return DrawerTransitionBase;
+}());
+exports.DrawerTransitionBase = DrawerTransitionBase;
+var DrawerStateChangingEventArgs = /** @class */ (function () {
+    function DrawerStateChangingEventArgs() {
+    }
+    return DrawerStateChangingEventArgs;
+}());
+exports.DrawerStateChangingEventArgs = DrawerStateChangingEventArgs;
+var DrawerStateChangedEventArgs = /** @class */ (function () {
+    function DrawerStateChangedEventArgs() {
+    }
+    return DrawerStateChangedEventArgs;
+}());
+exports.DrawerStateChangedEventArgs = DrawerStateChangedEventArgs;
+var RadSideDrawer = /** @class */ (function (_super) {
+    __extends(RadSideDrawer, _super);
+    function RadSideDrawer() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.shadowColor = RadSideDrawer.shadowColorProperty.defaultValue;
+        return _this;
+    }
+    RadSideDrawer.prototype.onGesturesEnabledPropertyChanged = function (oldValue, newValue) {
+        this._onGesturesEnabledChanged(oldValue, newValue);
+    };
+    RadSideDrawer.prototype.onAllowEdgeSwipePropertyChanged = function (oldValue, newValue) {
+        this._onAllowEdgeSwipeChanged(oldValue, newValue);
+    };
+    RadSideDrawer.prototype.onDrawerTransitionChanged = function (oldValue, newValue) {
+        this._onDrawerTransitionChanged(oldValue, newValue);
+    };
+    RadSideDrawer.prototype.onDrawerContentSizeChanged = function (oldValue, newValue) {
+        this._onDrawerContentSizeChanged(oldValue, newValue);
+    };
+    RadSideDrawer.prototype.onDrawerLocationPropertyChanged = function (oldValue, newValue) {
+        this._onDrawerLocationChanged(oldValue, newValue);
+    };
+    RadSideDrawer.prototype.onShadowColorPropertyChanged = function (oldValue, newValue) {
+        this._onShadowColorChanged(oldValue, newValue);
+    };
+    RadSideDrawer.prototype._onMainContentPropertyChanged = function (oldValue, newValue) {
+        this._onMainContentChanged(oldValue, newValue);
+    };
+    RadSideDrawer.prototype._onDrawerContentPropertyChanged = function (oldValue, newValue) {
+        this._onDrawerContentChanged(oldValue, newValue);
+    };
+    RadSideDrawer.prototype._onMainContentChanged = function (oldValue, newValue) {
+        if (oldValue) {
+            this._removeView(oldValue);
+        }
+        if (newValue) {
+            this._addView(newValue);
+        }
+    };
+    RadSideDrawer.prototype._onDrawerContentChanged = function (oldValue, newValue) {
+        if (oldValue) {
+            this._removeView(oldValue);
+        }
+        if (newValue) {
+            this._addView(newValue);
+        }
+    };
+    RadSideDrawer.prototype._onDrawerLocationChanged = function (oldValue, newValue) { };
+    RadSideDrawer.prototype._onShadowColorChanged = function (oldValue, newValue) { };
+    RadSideDrawer.prototype._onDrawerTransitionChanged = function (oldValue, newValue) { };
+    RadSideDrawer.prototype._onDrawerContentSizeChanged = function (oldValue, newValue) { };
+    RadSideDrawer.prototype._onGesturesEnabledChanged = function (oldValue, newValue) { };
+    RadSideDrawer.prototype._onAllowEdgeSwipeChanged = function (oldValue, newValue) { };
+    RadSideDrawer.prototype.showDrawer = function () {
+    };
+    RadSideDrawer.prototype.closeDrawer = function () {
+    };
+    RadSideDrawer.prototype.getIsOpen = function () {
+        var androidIsOpen = false;
+        var iosIsOpen = false;
+        if (this.android) {
+            androidIsOpen = this.android.getIsOpen();
+        }
+        if (this.ios) {
+            iosIsOpen = this.ios.defaultSideDrawer.isVisible;
+        }
+        var result = androidIsOpen || iosIsOpen;
+        if (result) {
+            return result;
+        }
+        return false;
+    };
+    Object.defineProperty(RadSideDrawer.prototype, "_isRootView", {
+        get: function () {
+            return this.page ? false : true;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    RadSideDrawer.prototype.toggleDrawerState = function () {
+        if (this.getIsOpen()) {
+            this.closeDrawer();
+        }
+        else {
+            this.showDrawer();
+        }
+    };
+    Object.defineProperty(RadSideDrawer.prototype, "_childrenCount", {
+        get: function () {
+            var count = 0;
+            if (this.drawerContent) {
+                count++;
+            }
+            if (this.mainContent) {
+                count++;
+            }
+            return count;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    RadSideDrawer.prototype.eachChildView = function (callback) {
+        var mainContent = this.mainContent;
+        if (mainContent) {
+            callback(mainContent);
+        }
+        var drawerContent = this.drawerContent;
+        if (drawerContent) {
+            callback(drawerContent);
+        }
+    };
+    RadSideDrawer.drawerOpeningEvent = "drawerOpening";
+    RadSideDrawer.drawerOpenedEvent = "drawerOpened";
+    RadSideDrawer.drawerClosingEvent = "drawerClosing";
+    RadSideDrawer.drawerClosedEvent = "drawerClosed";
+    RadSideDrawer.drawerPanEvent = "drawerPan";
+    RadSideDrawer.gesturesEnabledProperty = new view_1.Property({
+        name: "gesturesEnabled",
+        defaultValue: true,
+        valueConverter: view_1.booleanConverter,
+        valueChanged: function (target, oldValue, newValue) {
+            target.onGesturesEnabledPropertyChanged(oldValue, newValue);
+        },
+    });
+    RadSideDrawer.allowEdgeSwipeProperty = new view_1.Property({
+        name: "allowEdgeSwipe",
+        defaultValue: true,
+        valueConverter: view_1.booleanConverter,
+        valueChanged: function (target, oldValue, newValue) {
+            target.onAllowEdgeSwipePropertyChanged(oldValue, newValue);
+        },
+    });
+    RadSideDrawer.drawerTransitionProperty = new view_1.Property({
+        name: "drawerTransition",
+        defaultValue: undefined,
+        valueChanged: function (target, oldValue, newValue) {
+            target.onDrawerTransitionChanged(oldValue, newValue);
+        },
+    });
+    RadSideDrawer.drawerContentSizeProperty = new view_1.Property({
+        name: "drawerContentSize",
+        defaultValue: 280,
+        valueConverter: parseInt,
+        valueChanged: function (target, oldValue, newValue) {
+            target.onDrawerContentSizeChanged(oldValue, newValue);
+        },
+    });
+    RadSideDrawer.drawerLocationProperty = new view_1.Property({
+        name: "drawerLocation",
+        defaultValue: SideDrawerLocation.Left,
+        valueChanged: function (target, oldValue, newValue) {
+            target.onDrawerLocationPropertyChanged(oldValue, newValue);
+        },
+    });
+    RadSideDrawer.shadowColorProperty = new view_1.Property({
+        name: "shadowColor",
+        defaultValue: new colorModule.Color("#000000"),
+        valueConverter: function (value) { return new colorModule.Color(value); },
+        valueChanged: function (target, oldValue, newValue) {
+            target.onShadowColorPropertyChanged(oldValue, newValue);
+        },
+    });
+    RadSideDrawer.mainContentProperty = new view_1.Property({
+        name: "mainContent",
+        defaultValue: undefined,
+        valueChanged: function (target, oldValue, newValue) {
+            target._onMainContentPropertyChanged(oldValue, newValue);
+        },
+    });
+    RadSideDrawer.drawerContentProperty = new view_1.Property({
+        name: "drawerContent",
+        defaultValue: undefined,
+        valueChanged: function (target, oldValue, newValue) {
+            target._onDrawerContentPropertyChanged(oldValue, newValue);
+        },
+    });
+    return RadSideDrawer;
+}(view_1.View));
+exports.RadSideDrawer = RadSideDrawer;
+RadSideDrawer.gesturesEnabledProperty.register(RadSideDrawer);
+RadSideDrawer.allowEdgeSwipeProperty.register(RadSideDrawer);
+RadSideDrawer.drawerTransitionProperty.register(RadSideDrawer);
+RadSideDrawer.drawerContentSizeProperty.register(RadSideDrawer);
+RadSideDrawer.drawerLocationProperty.register(RadSideDrawer);
+RadSideDrawer.shadowColorProperty.register(RadSideDrawer);
+RadSideDrawer.mainContentProperty.register(RadSideDrawer);
+RadSideDrawer.drawerContentProperty.register(RadSideDrawer);
+
+
+/***/ }),
+
+/***/ "../node_modules/nativescript-ui-sidedrawer/ui-sidedrawer.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+Object.defineProperty(exports, "__esModule", { value: true });
+__export(__webpack_require__("../node_modules/nativescript-ui-sidedrawer/ui-sidedrawer.common.js"));
+var commonModule = __webpack_require__("../node_modules/nativescript-ui-sidedrawer/ui-sidedrawer.common.js");
+var utils = __webpack_require__("../node_modules/tns-core-modules/utils/utils.js");
+var platform = __webpack_require__("../node_modules/tns-core-modules/platform/platform.js");
+var RadSideDrawer = /** @class */ (function (_super) {
+    __extends(RadSideDrawer, _super);
+    function RadSideDrawer() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this._androidViewId = -1;
+        return _this;
+    }
+    Object.defineProperty(RadSideDrawer.prototype, "_nativeView", {
+        get: function () {
+            return this._android;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RadSideDrawer.prototype, "_page", {
+        get: function () {
+            var page;
+            if (this.page) {
+                page = this.page;
+            }
+            else {
+                page = this.mainContent.nativeView;
+            }
+            return page;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    RadSideDrawer.prototype.onUnloaded = function () {
+        _super.prototype.onUnloaded.call(this);
+        this._actionBarHeight = undefined;
+        if (this._mainContentNativeView) {
+            var lp = this._mainContentNativeView.getLayoutParams();
+            lp.topMargin = 0;
+            this._mainContentNativeView.setLayoutParams(lp);
+        }
+        if (this._page && this._page.actionBar) {
+            this._page.actionBar.nativeView.removeOnLayoutChangeListener(this.layoutChangeFunction);
+        }
+    };
+    RadSideDrawer.prototype.onBackPressed = function () {
+        var currentView = this.mainContent;
+        if (currentView && this._isRootView) {
+            return currentView.onBackPressed();
+        }
+        return false;
+    };
+    RadSideDrawer.prototype._addViewToNativeVisualTree = function (child) {
+        if (this._android && child.android) {
+            if (this.mainContent === child) {
+                this._android.setMainContent(child.nativeView);
+                return true;
+            }
+            if (this.drawerContent === child) {
+                this._android.setDrawerContent(child.nativeView);
+                return true;
+            }
+        }
+        return false;
+    };
+    RadSideDrawer.prototype._removeViewFromNativeVisualTree = function (child) {
+        if (this._android && child.android) {
+            // TODO: Remove listener
+            if (this.mainContent === child) {
+                this._android.setMainContent(null);
+                child._isAddedToNativeVisualTree = false;
+            }
+            if (this.drawerContent === child) {
+                this._android.setDrawerContent(null);
+                child._isAddedToNativeVisualTree = false;
+            }
+        }
+    };
+    RadSideDrawer.prototype.initDrawer = function () {
+        this._android = new com.telerik.android.primitives.widget.sidedrawer.RadSideDrawer(this._context);
+        var that = new WeakRef(this);
+        this._android.addChangeListener(new com.telerik.android.primitives.widget.sidedrawer.DrawerChangeListener({
+            onDrawerOpening: function (drawer) {
+                if (that.get().hasListeners(commonModule.RadSideDrawer.drawerOpeningEvent)) {
+                    var args = {
+                        eventName: commonModule.RadSideDrawer.drawerOpeningEvent,
+                        object: that.get(),
+                        returnValue: false
+                    };
+                    that.get().notify(args);
+                    if (args.returnValue) {
+                        return args.returnValue;
+                    }
+                }
+                return false;
+            },
+            onDrawerOpened: function (drawer) {
+                if (that.get().hasListeners(commonModule.RadSideDrawer.drawerOpenedEvent)) {
+                    var args = {
+                        eventName: commonModule.RadSideDrawer.drawerOpenedEvent,
+                        object: that.get()
+                    };
+                    that.get().notify(args);
+                }
+            },
+            onDrawerClosing: function (drawer) {
+                if (that.get().hasListeners(commonModule.RadSideDrawer.drawerClosingEvent)) {
+                    var args = {
+                        eventName: commonModule.RadSideDrawer.drawerClosingEvent,
+                        object: that.get(),
+                        returnValue: false
+                    };
+                    that.get().notify(args);
+                    if (args.returnValue) {
+                        return args.returnValue;
+                    }
+                }
+                return false;
+            },
+            onDrawerClosed: function (drawer) {
+                if (that.get().hasListeners(commonModule.RadSideDrawer.drawerClosedEvent)) {
+                    var args = {
+                        eventName: commonModule.RadSideDrawer.drawerClosedEvent,
+                        object: that.get()
+                    };
+                    that.get().notify(args);
+                }
+            },
+            onDrawerPan: function (drawer) {
+                if (that.get().hasListeners(commonModule.RadSideDrawer.drawerPanEvent)) {
+                    var args = {
+                        eventName: commonModule.RadSideDrawer.drawerPanEvent,
+                        object: that.get()
+                    };
+                    that.get().notify(args);
+                }
+            }
+        }));
+    };
+    RadSideDrawer.prototype.getSdkVersion = function () {
+        return parseInt(platform.device.sdkVersion);
+    };
+    RadSideDrawer.prototype.createNativeView = function () {
+        if (this._page) {
+            this._page.on("navigatingFrom", this.onNavigatingFrom, this);
+        }
+        this.initDrawer();
+        this._android.setDrawerSize(utils.layout.getDisplayDensity() * this.drawerContentSize);
+        this._android.setIsLocked(!this.gesturesEnabled);
+        this._android.setAllowEdgeSwipe(this.allowEdgeSwipe);
+        if (this.drawerTransition) {
+            this._android.setDrawerTransition(this.drawerTransition.getNativeContent());
+        }
+        if (this.drawerLocation) {
+            this.setDrawerLocation(this.drawerLocation);
+        }
+        return this._android;
+    };
+    RadSideDrawer.prototype.initNativeView = function () {
+        _super.prototype.initNativeView.call(this);
+        if (this._androidViewId < 0) {
+            this._androidViewId = android.view.View.generateViewId();
+        }
+        this._nativeView.setId(this._androidViewId);
+    };
+    RadSideDrawer.prototype.disposeNativeView = function () {
+        if (this._page) {
+            this._page.off("navigatingFrom", this.onNavigatingFrom, this);
+        }
+    };
+    RadSideDrawer.prototype.onNavigatingFrom = function (args) {
+        if (this.getIsOpen()) {
+            this.closeDrawer();
+        }
+    };
+    Object.defineProperty(RadSideDrawer.prototype, "android", {
+        get: function () {
+            return this._android;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    RadSideDrawer.prototype._onGesturesEnabledChanged = function (oldValue, newValue) {
+        var value = newValue;
+        if (!this.android) {
+            return;
+        }
+        this.android.setIsLocked(!value);
+    };
+    RadSideDrawer.prototype._onAllowEdgeSwipeChanged = function (oldValue, newValue) {
+        var value = newValue;
+        if (!this.android) {
+            return;
+        }
+        this.android.setAllowEdgeSwipe(value);
+    };
+    RadSideDrawer.prototype._onDrawerContentSizeChanged = function (oldValue, newValue) {
+        if (!this.android) {
+            return;
+        }
+        if (newValue) {
+            this.android.setDrawerSize(utils.layout.getDisplayDensity() * newValue);
+        }
+    };
+    RadSideDrawer.prototype._onDrawerTransitionChanged = function (oldValue, newValue) {
+        if (!newValue) {
+            return;
+        }
+        var finalVal;
+        if (typeof newValue === "string") {
+            switch (newValue.toLowerCase()) {
+                case commonModule.FadeTransitionString: {
+                    finalVal = new FadeTransition();
+                    break;
+                }
+                case commonModule.PushTransitionString: {
+                    finalVal = new PushTransition();
+                    break;
+                }
+                case commonModule.RevealTransitionString: {
+                    finalVal = new RevealTransition();
+                    break;
+                }
+                case commonModule.ReverseSlideOutTransitionString: {
+                    finalVal = new ReverseSlideOutTransition();
+                    break;
+                }
+                case commonModule.ScaleDownPusherTransitionString: {
+                    finalVal = new ScaleDownPusherTransition();
+                    break;
+                }
+                case commonModule.ScaleUpTransitionString: {
+                    finalVal = new ScaleUpTransition();
+                    break;
+                }
+                case commonModule.SlideAlongTransitionString: {
+                    finalVal = new SlideAlongTransition();
+                    break;
+                }
+                case commonModule.SlideInOnTopTransitionString: {
+                    finalVal = new SlideInOnTopTransition();
+                    break;
+                }
+                default: {
+                    console.log("Error: Not supported value (" + newValue + ") set to 'drawerTransition'");
+                    finalVal = new SlideInOnTopTransition();
+                    break;
+                }
+            }
+            if (this.drawerTransition !== finalVal) {
+                this.drawerTransition = finalVal;
+                return;
+            }
+        }
+        else {
+            finalVal = newValue;
+        }
+        if (this.android) {
+            this.android.setDrawerTransition(finalVal.getNativeContent());
+        }
+    };
+    RadSideDrawer.prototype._onShadowColorChanged = function (oldValue, newValue) {
+        if (!this.android) {
+            return;
+        }
+        var nativeColor = newValue ? newValue.android : RadSideDrawer.shadowColorProperty.defaultValue.android;
+        this.android.resolveFadeLayer().view().setBackgroundColor(nativeColor);
+    };
+    RadSideDrawer.prototype._onDrawerLocationChanged = function (oldValue, newValue) {
+        _super.prototype._onDrawerLocationChanged.call(this, oldValue, newValue);
+        if (!this.android) {
+            return;
+        }
+        if (!newValue) {
+            return;
+        }
+        this.setDrawerLocation(newValue);
+    };
+    RadSideDrawer.prototype.setDrawerLocation = function (newLocation) {
+        var newLocationToLower = newLocation.toLocaleLowerCase();
+        switch (newLocationToLower) {
+            case commonModule.SideDrawerLocation.Left.toLocaleLowerCase():
+                this.android.setDrawerLocation(com.telerik.android.primitives.widget.sidedrawer.DrawerLocation.LEFT);
+                break;
+            case commonModule.SideDrawerLocation.Right.toLocaleLowerCase():
+                this.android.setDrawerLocation(com.telerik.android.primitives.widget.sidedrawer.DrawerLocation.RIGHT);
+                break;
+            case commonModule.SideDrawerLocation.Top.toLocaleLowerCase():
+                this.android.setDrawerLocation(com.telerik.android.primitives.widget.sidedrawer.DrawerLocation.TOP);
+                break;
+            case commonModule.SideDrawerLocation.Bottom.toLocaleLowerCase():
+                this.android.setDrawerLocation(com.telerik.android.primitives.widget.sidedrawer.DrawerLocation.BOTTOM);
+                break;
+        }
+    };
+    RadSideDrawer.prototype.closeDrawer = function () {
+        if (this.android) {
+            this.android.setIsOpen(false);
+            _super.prototype.closeDrawer.call(this);
+        }
+    };
+    RadSideDrawer.prototype.showDrawer = function () {
+        if (this._android) {
+            this._android.setIsOpen(true);
+            _super.prototype.showDrawer.call(this);
+        }
+    };
+    return RadSideDrawer;
+}(commonModule.RadSideDrawer));
+exports.RadSideDrawer = RadSideDrawer;
+var DrawerTransitionBase = /** @class */ (function () {
+    function DrawerTransitionBase() {
+    }
+    DrawerTransitionBase.prototype.getNativeContent = function () {
+        return undefined;
+    };
+    return DrawerTransitionBase;
+}());
+exports.DrawerTransitionBase = DrawerTransitionBase;
+var FadeTransition = /** @class */ (function (_super) {
+    __extends(FadeTransition, _super);
+    function FadeTransition() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    FadeTransition.prototype.getNativeContent = function () {
+        return new com.telerik.android.primitives.widget.sidedrawer.transitions.FadeTransition();
+    };
+    return FadeTransition;
+}(DrawerTransitionBase));
+exports.FadeTransition = FadeTransition;
+var PushTransition = /** @class */ (function (_super) {
+    __extends(PushTransition, _super);
+    function PushTransition() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    PushTransition.prototype.getNativeContent = function () {
+        return new com.telerik.android.primitives.widget.sidedrawer.transitions.PushTransition();
+    };
+    return PushTransition;
+}(DrawerTransitionBase));
+exports.PushTransition = PushTransition;
+var RevealTransition = /** @class */ (function (_super) {
+    __extends(RevealTransition, _super);
+    function RevealTransition() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    RevealTransition.prototype.getNativeContent = function () {
+        return new com.telerik.android.primitives.widget.sidedrawer.transitions.RevealTransition();
+    };
+    return RevealTransition;
+}(DrawerTransitionBase));
+exports.RevealTransition = RevealTransition;
+var ReverseSlideOutTransition = /** @class */ (function (_super) {
+    __extends(ReverseSlideOutTransition, _super);
+    function ReverseSlideOutTransition() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    ReverseSlideOutTransition.prototype.getNativeContent = function () {
+        return new com.telerik.android.primitives.widget.sidedrawer.transitions.ReverseSlideOutTransition();
+    };
+    return ReverseSlideOutTransition;
+}(DrawerTransitionBase));
+exports.ReverseSlideOutTransition = ReverseSlideOutTransition;
+var ScaleDownPusherTransition = /** @class */ (function (_super) {
+    __extends(ScaleDownPusherTransition, _super);
+    function ScaleDownPusherTransition() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    ScaleDownPusherTransition.prototype.getNativeContent = function () {
+        return new com.telerik.android.primitives.widget.sidedrawer.transitions.ScaleDownPusherTransition();
+    };
+    return ScaleDownPusherTransition;
+}(DrawerTransitionBase));
+exports.ScaleDownPusherTransition = ScaleDownPusherTransition;
+var ScaleUpTransition = /** @class */ (function (_super) {
+    __extends(ScaleUpTransition, _super);
+    function ScaleUpTransition() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    ScaleUpTransition.prototype.getNativeContent = function () {
+        return new com.telerik.android.primitives.widget.sidedrawer.transitions.ScaleUpTransition();
+    };
+    return ScaleUpTransition;
+}(DrawerTransitionBase));
+exports.ScaleUpTransition = ScaleUpTransition;
+var SlideAlongTransition = /** @class */ (function (_super) {
+    __extends(SlideAlongTransition, _super);
+    function SlideAlongTransition() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    SlideAlongTransition.prototype.getNativeContent = function () {
+        return new com.telerik.android.primitives.widget.sidedrawer.transitions.SlideAlongTransition();
+    };
+    return SlideAlongTransition;
+}(DrawerTransitionBase));
+exports.SlideAlongTransition = SlideAlongTransition;
+var SlideInOnTopTransition = /** @class */ (function (_super) {
+    __extends(SlideInOnTopTransition, _super);
+    function SlideInOnTopTransition() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    SlideInOnTopTransition.prototype.getNativeContent = function () {
+        return new com.telerik.android.primitives.widget.sidedrawer.transitions.SlideInOnTopTransition();
+    };
+    return SlideInOnTopTransition;
+}(DrawerTransitionBase));
+exports.SlideInOnTopTransition = SlideInOnTopTransition;
 
 
 /***/ }),

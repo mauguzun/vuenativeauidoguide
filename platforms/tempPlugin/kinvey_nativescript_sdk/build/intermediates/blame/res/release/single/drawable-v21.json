@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "C:\\GeolocationNativescriptVue\\platforms\\tempPlugin\\kinvey_nativescript_sdk\\build\\intermediates\\res\\merged\\release\\drawable-v21\\notification_action_background.xml",
+        "source": "C:\\Users\\maugu\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-27.0.2.aar\\56c406d810fecf21acaff47bd695abfa\\res\\drawable-v21\\notification_action_background.xml"
+    },
+    {
+        "merged": "C:\\GeolocationNativescriptVue\\platforms\\tempPlugin\\kinvey_nativescript_sdk\\build\\intermediates\\res\\merged\\release\\drawable-v21\\abc_btn_colored_material.xml",
+        "source": "C:\\Users\\maugu\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.0.2.aar\\441d9d615dcaf0c48a9907832748e31e\\res\\drawable-v21\\abc_btn_colored_material.xml"
+    },
+    {
+        "merged": "C:\\GeolocationNativescriptVue\\platforms\\tempPlugin\\kinvey_nativescript_sdk\\build\\intermediates\\res\\merged\\release\\drawable-v21\\abc_edit_text_material.xml",
+        "source": "C:\\Users\\maugu\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.0.2.aar\\441d9d615dcaf0c48a9907832748e31e\\res\\drawable-v21\\abc_edit_text_material.xml"
+    },
+    {
+        "merged": "C:\\GeolocationNativescriptVue\\platforms\\tempPlugin\\kinvey_nativescript_sdk\\build\\intermediates\\res\\merged\\release\\drawable-v21\\abc_action_bar_item_background_material.xml",
+        "source": "C:\\Users\\maugu\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.0.2.aar\\441d9d615dcaf0c48a9907832748e31e\\res\\drawable-v21\\abc_action_bar_item_background_material.xml"
+    }
+]

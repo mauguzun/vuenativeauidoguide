@@ -3,18 +3,23 @@
 	"appFilesHashes": {
 		"C:\\GeolocationNativescriptVue\\app\\fonts\\.gitkeep": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
 		"C:\\GeolocationNativescriptVue\\app\\assets\\images\\NativeScript-Vue.png": "31f09bdba72293198ee2e2a83c4fe5aa5744bc3d",
-		"C:\\GeolocationNativescriptVue\\app\\components\\backgroundServices.js": "b056743c82da290560698e97acbabd6bb77be77f",
-		"C:\\GeolocationNativescriptVue\\app\\components\\Master.vue": "a788d6df05bfdddf2646c9aeed339c7a140c6ce8",
+		"C:\\GeolocationNativescriptVue\\app\\components\\api.js": "67eb55ce4f039da61943a47e42ffd83949ec2245",
 		"C:\\GeolocationNativescriptVue\\app\\components\\beep.js": "08dc36c987980096af5114fc98ba55f33ca0f29b",
-		"C:\\GeolocationNativescriptVue\\app\\styles.scss": "866f5f15f8c5e98655a3848246a544e966ab6077",
+		"C:\\GeolocationNativescriptVue\\app\\components\\Master.vue": "8ed2ee5a7a1d9c9ad595081ef48e66a746672362",
+		"C:\\GeolocationNativescriptVue\\app\\components\\backgroundServices.js": "ba3e27337b05ed463dc4fc4ec195dcddc5ff1898",
+		"C:\\GeolocationNativescriptVue\\app\\components\\pages\\About.vue": "b4daaa9f61925548f671fac3cf43be6db0f02c90",
+		"C:\\GeolocationNativescriptVue\\app\\components\\pages\\PageMap.vue": "ac456967062c8787d1ab97c879739afc90ab0d66",
+		"C:\\GeolocationNativescriptVue\\app\\components\\pages\\Player.vue": "913445e38b0e3643191d28ea124939038a2e18b4",
+		"C:\\GeolocationNativescriptVue\\app\\components\\pages\\Settings.vue": "85753814342c4235da457d7320323c1c1d8bf578",
 		"C:\\GeolocationNativescriptVue\\app\\package.json": "e36f4008ca56ecdfa46c87945ac8672e78be9e02",
-		"C:\\GeolocationNativescriptVue\\app\\translate.json": "ca1e02643b722fdb82fbb43c7cc26ced7ddb1e73",
-		"C:\\GeolocationNativescriptVue\\app\\main.js": "f41e332d937c633d565ff06b8910bbf7bae65971"
+		"C:\\GeolocationNativescriptVue\\app\\main.js": "749545918d24d9503f6eae4822dc21d3127a9cd7",
+		"C:\\GeolocationNativescriptVue\\app\\styles.scss": "228861a1006f89fa3a8732eb3c6e7598cf4e6581",
+		"C:\\GeolocationNativescriptVue\\app\\translate.json": "ca1e02643b722fdb82fbb43c7cc26ced7ddb1e73"
 	},
 	"release": false,
 	"bundle": true,
-	"changesRequireBuild": false,
-	"time": "Wed Mar 06 2019 15:30:02 GMT+0200 (Eastern European Standard Time)",
-	"changesRequireBuildTime": "Sun Feb 24 2019 17:37:38 GMT+0200 (Eastern European Standard Time)",
-	"projectFileHash": "80c051a989830ddcbc265c11a3bcf30234b1ea3882a95716de97c192871c525c"
+	"changesRequireBuild": true,
+	"time": "Wed Mar 06 2019 20:46:07 GMT+0200 (Eastern European Standard Time)",
+	"changesRequireBuildTime": "Wed Mar 06 2019 20:46:07 GMT+0200 (Eastern European Standard Time)",
+	"projectFileHash": "ce98f8f82db87ced4787d6b9bb64da5ea47acbeec7c5bbfb88134ae9d0798c39"
 }

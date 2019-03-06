@@ -5,6 +5,7 @@ INJECTED from C:\GeolocationNativescriptVue\platforms\android\app\src\main\Andro
 INJECTED from C:\GeolocationNativescriptVue\platforms\android\app\src\main\AndroidManifest.xml:2:1-27:12
 INJECTED from C:\GeolocationNativescriptVue\platforms\android\app\src\main\AndroidManifest.xml:2:1-27:12
 MERGED from [com.google.android.gms:play-services-location:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-location-12.0.1.aar\99b4d0058ddc13c1fd907a962c38ab84\AndroidManifest.xml:2:1-9:12
+MERGED from [com.google.android.gms:play-services-maps:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-maps-12.0.1.aar\d90627406b64a5852509048ab4bd180d\AndroidManifest.xml:17:1-32:12
 MERGED from [com.android.support:design:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\design-27.0.1.aar\516183598f742fe281748538ff190d16\AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.support:multidex:1.0.2] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\multidex-1.0.2.aar\95add9a5db8596db7494e7e68a4d9da8\AndroidManifest.xml:17:1-22:12
 MERGED from [com.google.android.gms:play-services-base:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-base-12.0.1.aar\a751e534d7268262a847457e75fb7ae2\AndroidManifest.xml:17:1-29:12
@@ -14,8 +15,12 @@ MERGED from [com.android.support:support-v4:27.0.1] C:\Users\maugu\.gradle\cache
 MERGED from [com.android.support:appcompat-v7:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\appcompat-v7-27.0.1.aar\87143907b936473098d02a2375170020\AndroidManifest.xml:17:1-22:12
 MERGED from [:nativescript-optimized-with-inspector:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\nativescript-optimized-with-inspector.aar\44fcc97f4be75f90e094b0e301258636\AndroidManifest.xml:2:1-11:12
 MERGED from [:nativescript_geolocation:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\nativescript_geolocation.aar\df7ed8282d3ad1445d51f4470a526f34\AndroidManifest.xml:2:1-11:12
+MERGED from [:nativescript_google_maps_sdk:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\nativescript_google_maps_sdk.aar\b6c7e9d1a980e1a2ac09798ccb782f58\AndroidManifest.xml:2:1-12:12
+MERGED from [:TNSSideDrawer-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\TNSSideDrawer-release.aar\d91daf7bc3fe4a5f2894f76177d27d09\AndroidManifest.xml:2:1-11:12
+MERGED from [:TNSCore-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\TNSCore-release.aar\5d56d5fcb6078b5203058ad292f7c7d5\AndroidManifest.xml:2:1-11:12
 MERGED from [:widgets-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\widgets-release.aar\265e282fa674d5fc99ef2f69e5bbbf23\AndroidManifest.xml:2:1-14:12
 MERGED from [com.google.android.gms:play-services-location-license:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-location-license-12.0.1.aar\a835b96434e4b70d62f70de7a0590a58\AndroidManifest.xml:17:1-24:12
+MERGED from [com.google.android.gms:play-services-maps-license:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-maps-license-12.0.1.aar\e71880b87449fb83d476317f2845b325\AndroidManifest.xml:17:1-24:12
 MERGED from [com.android.support:recyclerview-v7:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\recyclerview-v7-27.0.1.aar\c2bd1e3393457aa64e8a861f79fcb2fe\AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.support:transition:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\transition-27.0.1.aar\5a0b5546336c105004708b3e666519b9\AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.support:support-fragment:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\support-fragment-27.0.1.aar\2fc86b65fd3f4dbd6e7b86d0f8c97715\AndroidManifest.xml:17:1-22:12
@@ -62,6 +67,8 @@ INJECTED from C:\GeolocationNativescriptVue\platforms\android\app\src\main\Andro
 INJECTED from C:\GeolocationNativescriptVue\platforms\android\app\src\main\AndroidManifest.xml:5:5-74
 MERGED from [com.google.android.gms:play-services-location:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-location-12.0.1.aar\99b4d0058ddc13c1fd907a962c38ab84\AndroidManifest.xml:5:5-44
 MERGED from [com.google.android.gms:play-services-location:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-location-12.0.1.aar\99b4d0058ddc13c1fd907a962c38ab84\AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-maps:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-maps-12.0.1.aar\d90627406b64a5852509048ab4bd180d\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-maps:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-maps-12.0.1.aar\d90627406b64a5852509048ab4bd180d\AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:design:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\design-27.0.1.aar\516183598f742fe281748538ff190d16\AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:design:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\design-27.0.1.aar\516183598f742fe281748538ff190d16\AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:multidex:1.0.2] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\multidex-1.0.2.aar\95add9a5db8596db7494e7e68a4d9da8\AndroidManifest.xml:20:5-43
@@ -80,10 +87,18 @@ MERGED from [:nativescript-optimized-with-inspector:] C:\Users\maugu\.gradle\cac
 MERGED from [:nativescript-optimized-with-inspector:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\nativescript-optimized-with-inspector.aar\44fcc97f4be75f90e094b0e301258636\AndroidManifest.xml:7:5-9:41
 MERGED from [:nativescript_geolocation:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\nativescript_geolocation.aar\df7ed8282d3ad1445d51f4470a526f34\AndroidManifest.xml:7:5-47
 MERGED from [:nativescript_geolocation:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\nativescript_geolocation.aar\df7ed8282d3ad1445d51f4470a526f34\AndroidManifest.xml:7:5-47
+MERGED from [:nativescript_google_maps_sdk:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\nativescript_google_maps_sdk.aar\b6c7e9d1a980e1a2ac09798ccb782f58\AndroidManifest.xml:7:5-47
+MERGED from [:nativescript_google_maps_sdk:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\nativescript_google_maps_sdk.aar\b6c7e9d1a980e1a2ac09798ccb782f58\AndroidManifest.xml:7:5-47
+MERGED from [:TNSSideDrawer-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\TNSSideDrawer-release.aar\d91daf7bc3fe4a5f2894f76177d27d09\AndroidManifest.xml:7:5-9:41
+MERGED from [:TNSSideDrawer-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\TNSSideDrawer-release.aar\d91daf7bc3fe4a5f2894f76177d27d09\AndroidManifest.xml:7:5-9:41
+MERGED from [:TNSCore-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\TNSCore-release.aar\5d56d5fcb6078b5203058ad292f7c7d5\AndroidManifest.xml:7:5-9:41
+MERGED from [:TNSCore-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\TNSCore-release.aar\5d56d5fcb6078b5203058ad292f7c7d5\AndroidManifest.xml:7:5-9:41
 MERGED from [:widgets-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\widgets-release.aar\265e282fa674d5fc99ef2f69e5bbbf23\AndroidManifest.xml:7:5-9:41
 MERGED from [:widgets-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\widgets-release.aar\265e282fa674d5fc99ef2f69e5bbbf23\AndroidManifest.xml:7:5-9:41
 MERGED from [com.google.android.gms:play-services-location-license:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-location-license-12.0.1.aar\a835b96434e4b70d62f70de7a0590a58\AndroidManifest.xml:20:5-44
 MERGED from [com.google.android.gms:play-services-location-license:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-location-license-12.0.1.aar\a835b96434e4b70d62f70de7a0590a58\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-maps-license:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-maps-license-12.0.1.aar\e71880b87449fb83d476317f2845b325\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-maps-license:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-maps-license-12.0.1.aar\e71880b87449fb83d476317f2845b325\AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:recyclerview-v7:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\recyclerview-v7-27.0.1.aar\c2bd1e3393457aa64e8a861f79fcb2fe\AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:recyclerview-v7:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\recyclerview-v7-27.0.1.aar\c2bd1e3393457aa64e8a861f79fcb2fe\AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:transition:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\transition-27.0.1.aar\5a0b5546336c105004708b3e666519b9\AndroidManifest.xml:20:5-44
@@ -120,9 +135,12 @@ INJECTED from C:\GeolocationNativescriptVue\platforms\android\app\src\main\Andro
 		ADDED from C:\GeolocationNativescriptVue\platforms\android\app\src\main\AndroidManifest.xml:5:15-41
 		INJECTED from C:\GeolocationNativescriptVue\platforms\android\app\src\main\AndroidManifest.xml
 		MERGED from C:\GeolocationNativescriptVue\platforms\android\app\src\main\AndroidManifest.xml:5:15-41
+		MERGED from C:\GeolocationNativescriptVue\platforms\android\app\src\main\AndroidManifest.xml:5:15-41
 		INJECTED from C:\GeolocationNativescriptVue\platforms\android\app\src\main\AndroidManifest.xml
 uses-permission#android.permission.INTERNET
 ADDED from C:\GeolocationNativescriptVue\platforms\android\app\src\main\AndroidManifest.xml:6:5-67
+MERGED from [com.google.android.gms:play-services-maps:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-maps-12.0.1.aar\d90627406b64a5852509048ab4bd180d\AndroidManifest.xml:24:5-67
+MERGED from [com.google.android.gms:play-services-maps:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-maps-12.0.1.aar\d90627406b64a5852509048ab4bd180d\AndroidManifest.xml:24:5-67
 	android:name
 		ADDED from C:\GeolocationNativescriptVue\platforms\android\app\src\main\AndroidManifest.xml:6:22-64
 uses-permission#android.permission.READ_EXTERNAL_STORAGE
@@ -137,6 +155,8 @@ application
 ADDED from C:\GeolocationNativescriptVue\platforms\android\app\src\main\AndroidManifest.xml:9:5-26:19
 MERGED from [com.google.android.gms:play-services-location:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-location-12.0.1.aar\99b4d0058ddc13c1fd907a962c38ab84\AndroidManifest.xml:7:5-20
 MERGED from [com.google.android.gms:play-services-location:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-location-12.0.1.aar\99b4d0058ddc13c1fd907a962c38ab84\AndroidManifest.xml:7:5-20
+MERGED from [com.google.android.gms:play-services-maps:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-maps-12.0.1.aar\d90627406b64a5852509048ab4bd180d\AndroidManifest.xml:30:5-20
+MERGED from [com.google.android.gms:play-services-maps:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-maps-12.0.1.aar\d90627406b64a5852509048ab4bd180d\AndroidManifest.xml:30:5-20
 MERGED from [com.google.android.gms:play-services-base:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-base-12.0.1.aar\a751e534d7268262a847457e75fb7ae2\AndroidManifest.xml:22:5-27:19
 MERGED from [com.google.android.gms:play-services-base:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-base-12.0.1.aar\a751e534d7268262a847457e75fb7ae2\AndroidManifest.xml:22:5-27:19
 MERGED from [com.google.android.gms:play-services-tasks:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-tasks-12.0.1.aar\457d2b78f42cc702d14ae851465c71df\AndroidManifest.xml:7:5-20
@@ -147,6 +167,8 @@ MERGED from [:widgets-release:] C:\Users\maugu\.gradle\caches\transforms-1\files
 MERGED from [:widgets-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\widgets-release.aar\265e282fa674d5fc99ef2f69e5bbbf23\AndroidManifest.xml:11:5-12:19
 MERGED from [com.google.android.gms:play-services-location-license:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-location-license-12.0.1.aar\a835b96434e4b70d62f70de7a0590a58\AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.gms:play-services-location-license:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-location-license-12.0.1.aar\a835b96434e4b70d62f70de7a0590a58\AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.gms:play-services-maps-license:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-maps-license-12.0.1.aar\e71880b87449fb83d476317f2845b325\AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.gms:play-services-maps-license:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-maps-license-12.0.1.aar\e71880b87449fb83d476317f2845b325\AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.gms:play-services-base-license:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-base-license-12.0.1.aar\b306cbf6ae0ddb211ba591be7d26770e\AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.gms:play-services-base-license:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-base-license-12.0.1.aar\b306cbf6ae0ddb211ba591be7d26770e\AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.gms:play-services-basement-license:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-basement-license-12.0.1.aar\5a464174f1ce3297758a691e451eec66\AndroidManifest.xml:22:5-20
@@ -213,6 +235,18 @@ activity#com.tns.ErrorReportActivity
 ADDED from C:\GeolocationNativescriptVue\platforms\android\app\src\main\AndroidManifest.xml:25:9-64
 	android:name
 		ADDED from C:\GeolocationNativescriptVue\platforms\android\app\src\main\AndroidManifest.xml:25:19-61
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from [com.google.android.gms:play-services-maps:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-maps-12.0.1.aar\d90627406b64a5852509048ab4bd180d\AndroidManifest.xml:23:5-79
+MERGED from [:nativescript_google_maps_sdk:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\nativescript_google_maps_sdk.aar\b6c7e9d1a980e1a2ac09798ccb782f58\AndroidManifest.xml:9:5-79
+MERGED from [:nativescript_google_maps_sdk:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\nativescript_google_maps_sdk.aar\b6c7e9d1a980e1a2ac09798ccb782f58\AndroidManifest.xml:9:5-79
+	android:name
+		ADDED from [com.google.android.gms:play-services-maps:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-maps-12.0.1.aar\d90627406b64a5852509048ab4bd180d\AndroidManifest.xml:23:22-76
+uses-feature#0x00020000
+ADDED from [com.google.android.gms:play-services-maps:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-maps-12.0.1.aar\d90627406b64a5852509048ab4bd180d\AndroidManifest.xml:26:5-28:35
+	android:glEsVersion
+		ADDED from [com.google.android.gms:play-services-maps:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-maps-12.0.1.aar\d90627406b64a5852509048ab4bd180d\AndroidManifest.xml:27:9-41
+	android:required
+		ADDED from [com.google.android.gms:play-services-maps:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-maps-12.0.1.aar\d90627406b64a5852509048ab4bd180d\AndroidManifest.xml:28:9-32
 activity#com.google.android.gms.common.api.GoogleApiActivity
 ADDED from [com.google.android.gms:play-services-base:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-base-12.0.1.aar\a751e534d7268262a847457e75fb7ae2\AndroidManifest.xml:23:9-26:75
 	android:exported
@@ -231,6 +265,10 @@ uses-permission#android.permission.ACCESS_FINE_LOCATION
 ADDED from [:nativescript_geolocation:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\nativescript_geolocation.aar\df7ed8282d3ad1445d51f4470a526f34\AndroidManifest.xml:9:5-79
 	android:name
 		ADDED from [:nativescript_geolocation:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\nativescript_geolocation.aar\df7ed8282d3ad1445d51f4470a526f34\AndroidManifest.xml:9:22-76
+uses-permission#com.google.android.providers.gsf.permission.READ_GSERVICES
+ADDED from [:nativescript_google_maps_sdk:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\nativescript_google_maps_sdk.aar\b6c7e9d1a980e1a2ac09798ccb782f58\AndroidManifest.xml:10:5-98
+	android:name
+		ADDED from [:nativescript_google_maps_sdk:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\nativescript_google_maps_sdk.aar\b6c7e9d1a980e1a2ac09798ccb782f58\AndroidManifest.xml:10:22-95
 meta-data#android.arch.lifecycle.VERSION
 ADDED from [android.arch.lifecycle:runtime:1.0.0] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\runtime-1.0.0.aar\a21eda19a2cb4c9082ea931d4f1f50aa\AndroidManifest.xml:25:9-27:47
 	android:value

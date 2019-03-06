@@ -2,10 +2,13 @@
     "moment": true,
     "nativescript-audioplay": true,
     "nativescript-geolocation": true,
+    "nativescript-google-maps-sdk": true,
     "nativescript-theme-core": true,
     "nativescript-toast": true,
+    "nativescript-ui-sidedrawer": true,
     "nativescript-vue": true,
     "tns-core-modules": true,
     "nativescript-permissions": true,
+    "nativescript-ui-core": true,
     "tns-core-modules-widgets": true
 }

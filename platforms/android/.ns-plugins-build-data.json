@@ -5,5 +5,19 @@
 	},
 	"tns-core-modules-widgets": {
 		"C:\\GeolocationNativescriptVue\\node_modules\\tns-core-modules-widgets\\platforms\\android\\widgets-release.aar": "7a062e96fe7b542638c6a6570de1531521a7307b"
+	},
+	"nativescript-google-maps-sdk": {
+		"C:\\GeolocationNativescriptVue\\node_modules\\nativescript-google-maps-sdk\\platforms\\android\\include.gradle": "faf6fc754a47c6266f96b0406272ff1f1028a054",
+		"C:\\GeolocationNativescriptVue\\node_modules\\nativescript-google-maps-sdk\\platforms\\android\\nativescript_google_maps_sdk.aar": "b7564cdff4ceaa2f1c434b1d142a54842eefbfa4",
+		"C:\\GeolocationNativescriptVue\\node_modules\\nativescript-google-maps-sdk\\platforms\\android\\AndroidManifest.xml": "130cc0f7d61291e1fe1fe5162746b1b3def24330",
+		"C:\\GeolocationNativescriptVue\\node_modules\\nativescript-google-maps-sdk\\platforms\\android\\res\\values\\nativescript_google_maps_api.xml": "d17f77bd86070f002f9c7e6b406b8e89a9b039a6"
+	},
+	"nativescript-ui-sidedrawer": {
+		"C:\\GeolocationNativescriptVue\\node_modules\\nativescript-ui-sidedrawer\\platforms\\android\\typings\\sidedrawer.d.ts": "0f2a3e771108a347deabbf76e7a66491b6e6bfc1",
+		"C:\\GeolocationNativescriptVue\\node_modules\\nativescript-ui-sidedrawer\\platforms\\android\\TNSSideDrawer-release.aar": "346e3d4bc4cab015628573955926854fda0f8f98"
+	},
+	"nativescript-ui-core": {
+		"C:\\GeolocationNativescriptVue\\node_modules\\nativescript-ui-core\\platforms\\android\\typings\\core.d.ts": "57a0606617eef3c732c1a7f32480b1e166ad27ce",
+		"C:\\GeolocationNativescriptVue\\node_modules\\nativescript-ui-core\\platforms\\android\\TNSCore-release.aar": "7e9c7f089e6c8aeea48b19e54e4bb1ff62b70eed"
 	}
 }
