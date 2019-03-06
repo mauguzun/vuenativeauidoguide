@@ -5,7 +5,7 @@
 		"C:\\GeolocationNativescriptVue\\app\\assets\\images\\NativeScript-Vue.png": "31f09bdba72293198ee2e2a83c4fe5aa5744bc3d",
 		"C:\\GeolocationNativescriptVue\\app\\components\\api.js": "67eb55ce4f039da61943a47e42ffd83949ec2245",
 		"C:\\GeolocationNativescriptVue\\app\\components\\beep.js": "08dc36c987980096af5114fc98ba55f33ca0f29b",
-		"C:\\GeolocationNativescriptVue\\app\\components\\backgroundServices.js": "ba3e27337b05ed463dc4fc4ec195dcddc5ff1898",
+		"C:\\GeolocationNativescriptVue\\app\\components\\backgroundServices.js": "480772d77d5f6460317d3a3f526aff065be053e4",
 		"C:\\GeolocationNativescriptVue\\app\\components\\Master.vue": "46a7f7a9b2ae20d39a080f3c4184bff37c2b06de",
 		"C:\\GeolocationNativescriptVue\\app\\components\\pages\\About.vue": "b4daaa9f61925548f671fac3cf43be6db0f02c90",
 		"C:\\GeolocationNativescriptVue\\app\\components\\pages\\PageMap.vue": "ac456967062c8787d1ab97c879739afc90ab0d66",
@@ -19,7 +19,7 @@
 	"release": false,
 	"bundle": true,
 	"changesRequireBuild": false,
-	"time": "Wed Mar 06 2019 21:35:07 GMT+0200 (Eastern European Standard Time)",
+	"time": "Wed Mar 06 2019 22:38:41 GMT+0200 (Eastern European Standard Time)",
 	"changesRequireBuildTime": "Wed Mar 06 2019 21:27:36 GMT+0200 (Eastern European Standard Time)",
 	"projectFileHash": "4930f0fcef489bb8a0b3ef2e09db1342e90b6f0c768f153868a46b1528615e5d"
 }
