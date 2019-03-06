@@ -22,7 +22,6 @@ const locationSettings = {
 
 let prevLocation = { lat: null, lng: null };
 
-
 if (application.android) {
   const { sdkVersion } = platform.device;
   if (sdkVersion * 1 < 26) {
@@ -77,18 +76,16 @@ function watchLocation(comp) {
           if (loc) {
             // we thinka bout later
             let toast = Toast.makeText(counter + " counter ");
-            toast.setDuration(1000 * 1);
+            toast.setDuration(1000 * 20);
             toast.show();
 
             sortPoints(loc.latitude, loc.longitude);
-
-            console.log(counter );
 
             // fetch("https://audio.tricypolitain.com/ping?text=newtest" + counter)
             //   .then(e => {})
             //   .catch(e => {});
 
-            beep();
+            // beep();
           }
         },
         function(e) {
@@ -129,7 +126,7 @@ function sortPoints(currentLat, currentLng) {
 
   let points = appSettings.getString("points");
   if (points) {
-    console.log("pointssss")
+    console.log("pointssss");
     points = JSON.parse(points);
   } else {
     console.log("points not exist");
@@ -160,8 +157,6 @@ function sortPoints(currentLat, currentLng) {
 
       return 0;
     });
-  
-  console.log(clear);
 
   if (clear.length > 0) {
     if (clear[0].distance < locationSettings.pointCanPlaceDistanceKm) {
@@ -174,69 +169,92 @@ function sortPoints(currentLat, currentLng) {
 //                /mother of funciton above
 
 /**
- * 
+ *
  */
 const BackgroundAudio = {
-  point: null,
+  _point: null,
   player: null,
   interval: null,
   /**
    * Play Audio and save data to setttings
    */
   set point(point) {
-    if (this.point != null) {
-      this.point = point;
-      appSettings.setString("current", point);
+    if (this.point == null) {
+      this._point = point;
+      appSettings.setString("current", JSON.stringify(point));
       this.play();
     } else {
-      //call beep
-      beep();
-      // local notification
     }
+  },
+  get point() {
+    return this._point;
   },
 
   play() {
-    // if not null lets do
-    if (this.point != null) {
-      appSettings.setString("current", this.point);
-    }
+    const sound =
+      "https://notificationsounds.com/soundfiles/4e4b5fbbbb602b6d35bea8460aa8f8e5/file-sounds-1096-light.mp3";
 
-    this.player = new audioplayer.TNSPlayer();
+    let player = new audioplayer.TNSPlayer();
     let playerOptions = {
-      audioFile: point.mp3,
+      audioFile: this._point.mp3,
       loop: false,
-      completeCallback() {
+      completeCallback: function() {
         console.log("finished playing");
       },
-      errorCallback(errorObject) {
+      errorCallback: function(errorObject) {
         console.log(JSON.stringify(errorObject));
       },
-      infoCallback(args) {
+      infoCallback: function(args) {
         console.log(JSON.stringify(args));
       }
     };
 
-    this.player
+    player
       .playFromUrl(playerOptions)
-      .then(function(res) {
+      .then(res => {
         console.log(res);
       })
-      .catch(function(err) {
+      .catch(err => {
         console.log("something went wrong...", err);
       });
+    // alert("in da play");
 
-    this.interval = setInterval(() => {
-      this.player.getAudioTrackDuration().then(duration => {
-        // iOS: duration is in seconds
-        // Android: duration is in milliseconds
-        let current = this.player.currentTime;
-        if (isIOS) {
-          current *= 1000;
-        }
+    // this.player = new audioplayer.TNSPlayer();
+    // let playerOptions = {
+    //   audioFile: "https://notificationsounds.com/soundfiles/4e4b5fbbbb602b6d35bea8460aa8f8e5/file-sounds-1096-light.mp3",
+    //   loop: false,
+    //   completeCallback() {
+    //     console.log("finished playing");
+    //   },
+    //   errorCallback(errorObject) {
+    //     console.log(JSON.stringify(errorObject));
+    //   },
+    //   infoCallback(args) {
+    //     console.log(JSON.stringify(args));
+    //   }
+    // };
 
-        appSettings.setNumber("player_duration", current);
-      });
-    }, 1000);
+    // this.player
+    //   .playFromUrl(playerOptions)
+    //   .then(function(res) {
+    //     console.log(res);
+    //   })
+    //   .catch(function(err) {
+    //     console.log("something went wrong...", err);
+    //   });
+
+    // this.interval = setInterval(() => {
+    //   this.player.getAudioTrackDuration().then(duration => {
+    //     // iOS: duration is in seconds
+    //     // Android: duration is in milliseconds
+    //     let current = this.player.currentTime;
+    //     if (isIOS) {
+    //       current *= 1000;
+    //     }
+
+    //     appSettings.setNumber("player_duration", current);
+    //   });
+    // }, 1000);
   },
 
   /**
@@ -258,16 +276,14 @@ const BackgroundAudio = {
   }
 };
 
-
 /**
- * 
- * @param {number} lat1 
- * @param {number} lon1 
- * @param {number} lat2 
- * @param {number} lon2 
+ *
+ * @param {number} lat1
+ * @param {number} lon1
+ * @param {number} lat2
+ * @param {number} lon2
  */
-function distanceInKmBetweenEarthCoordinates(lat1, lon1, lat2, lon2)
-{
+function distanceInKmBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
   var earthRadiusKm = 6371;
 
   var dLat = degreesToRadians(lat2 - lat1);
@@ -276,17 +292,12 @@ function distanceInKmBetweenEarthCoordinates(lat1, lon1, lat2, lon2)
   lat1 = degreesToRadians(lat1);
   lat2 = degreesToRadians(lat2);
 
-  var a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2)
-    Math.sin(dLon / 2) *
-      Math.sin(dLon / 2) *
-      Math.cos(lat1) *
-      Math.cos(lat2);
+  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2);
+  Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return earthRadiusKm * c;
-};
-
+}
 
 function degreesToRadians(degrees) {
   return (degrees * Math.PI) / 180;
-};
+}
