@@ -410,12 +410,14 @@ let translate = __webpack_require__("./translate.json");
     console.log("mounted");
    
     if (appSettings.getString("points")) {
-      this.points = JSON.parse(appSettings.getString("points"));
-      _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points = this.points;
+      _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points  = JSON.parse(appSettings.getString("points"));
+      _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].printData();
+      console.log("data")
     }
+    
     if (appSettings.getString("lang")) {
       this.translate = translate[appSettings.getString("lang")];
-    }
+    }  
 
     // setInterval(e => {
     //   this.counter = appSettings.getNumber("cou", 0);
@@ -525,9 +527,9 @@ let translate = __webpack_require__("./translate.json");
         this.map.view.latitude = this.points[x].lat;
         this.map.view.longitude = this.points[x].lng;
       }
-      if (this.debug) {  
-        this.startBackgroundTap();
-      }
+      // if (this.debug) {  
+      //   this.startBackgroundTap();
+      // }
     },
 
     MAP_setCurrentLocation(lat, lng) {

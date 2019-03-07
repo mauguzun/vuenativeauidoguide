@@ -205,12 +205,14 @@ export default {
     console.log("mounted");
    
     if (appSettings.getString("points")) {
-      this.points = JSON.parse(appSettings.getString("points"));
-      Singleton.points = this.points;
+      Singleton.points  = JSON.parse(appSettings.getString("points"));
+      Singleton.printData();
+      console.log("data")
     }
+    
     if (appSettings.getString("lang")) {
       this.translate = translate[appSettings.getString("lang")];
-    }
+    }  
 
     // setInterval(e => {
     //   this.counter = appSettings.getNumber("cou", 0);
@@ -320,9 +322,9 @@ export default {
         this.map.view.latitude = this.points[x].lat;
         this.map.view.longitude = this.points[x].lng;
       }
-      if (this.debug) {  
-        this.startBackgroundTap();
-      }
+      // if (this.debug) {  
+      //   this.startBackgroundTap();
+      // }
     },
 
     MAP_setCurrentLocation(lat, lng) {
