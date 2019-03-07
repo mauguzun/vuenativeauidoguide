@@ -361,7 +361,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
+//
+//
+//
+//
+//
+//
 
 
 
@@ -388,9 +393,12 @@ let translate = __webpack_require__("./translate.json");
 ///
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+
+  destroyed() {
+    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+  },
+
   mounted() {
-
-
     console.log("mounted");
     console.log(_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].foo);
     console.log("mounted");
@@ -437,8 +445,6 @@ let translate = __webpack_require__("./translate.json");
       points: null,
       drawerToggle: false,
       currentComp: null,
-      drawer1: "",
-      drawer2: "",
       showmap: true,
       debug: true,
       translate: translate.en,
@@ -506,9 +512,9 @@ let translate = __webpack_require__("./translate.json");
         this.map.view.latitude = this.points[x].lat;
         this.map.view.longitude = this.points[x].lng;
       }
-      if (this.debug) {
-        this.startBackgroundTap();
-      }
+      // if (this.debug) {
+      //   this.startBackgroundTap();
+      // }
     },
 
     MAP_setCurrentLocation(lat, lng) {
@@ -613,8 +619,15 @@ let translate = __webpack_require__("./translate.json");
      * start background server or stop
      */
     playStop() {
-      alert(379);
-      startBackgroundTap();
+      if (!this.play) {
+        this.play = true;
+        alert("continue work on background");
+        startBackgroundTap();
+      } else {
+        this.play = false;
+        alert("stop");
+        stopBackgroundTap();
+      }
     },
 
     /**
@@ -647,7 +660,10 @@ let translate = __webpack_require__("./translate.json");
       this.current = this.points.find(x => x.id == id);
     },
     test() {
-      this.MAP_setCurrentLocation(43.7031691, 7.1827772);
+      alert("start test how i want make UI ")
+      this.MAP_setCurrentLocation(56.954, 24.2036519068497);
+      this.current = this.points[0];
+      this.feturePoints = this.points;
     },
     openModal(point) {
       Object(_beep_js__WEBPACK_IMPORTED_MODULE_10__["beep"])();
@@ -1183,9 +1199,7 @@ var render = function() {
                   _c("Label", {
                     staticClass: "font-awesome",
                     staticStyle: { fontSize: "27", color: "#333" },
-                    attrs: {
-                      text: _vm.drawerToggle ? _vm.drawer2 : _vm.drawer1
-                    }
+                    attrs: { text: "☰" }
                   })
                 ],
                 1
@@ -1250,7 +1264,7 @@ var render = function() {
                   _c("Label", {
                     staticClass: "drawerItemText font-awesome",
                     attrs: {
-                      text: "" + _vm.translate.menu.settings,
+                      text: _vm.translate.menu.settings,
                       paddingLeft: "30%",
                       color: "black",
                       margin: "10"
@@ -1264,7 +1278,7 @@ var render = function() {
                   _c("Label", {
                     staticClass: "drawerItemText font-awesome",
                     attrs: {
-                      text: "" + _vm.translate.menu.about,
+                      text: _vm.translate.menu.about,
                       paddingLeft: "30%",
                       color: "black",
                       margin: "10"
@@ -1278,7 +1292,17 @@ var render = function() {
                   _c("Label", {
                     staticClass: "drawerItemText font-awesome",
                     attrs: {
-                      text: "" + _vm.translate.menu.map,
+                      text: "Make my test",
+                      paddingLeft: "30%",
+                      color: "black",
+                      margin: "10"
+                    },
+                    on: { tap: _vm.test }
+                  }),
+                  _c("Label", {
+                    staticClass: "drawerItemText font-awesome",
+                    attrs: {
+                      text: _vm.translate.menu.map,
                       paddingLeft: "30%",
                       color: "black",
                       margin: "10"
@@ -1819,8 +1843,74 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Singleton", function() { return Singleton; });
-const  Singleton = {
+/* harmony import */ var tns_core_modules_platform__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../node_modules/tns-core-modules/platform/platform.js");
+/* harmony import */ var tns_core_modules_platform__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(tns_core_modules_platform__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var nativescript_audio__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("../node_modules/nativescript-audio/audio.js");
+/* harmony import */ var nativescript_audio__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(nativescript_audio__WEBPACK_IMPORTED_MODULE_1__);
+
+
+
+const Singleton = {
+    points: null,
+    featurePoint: null,
     foo: 123,
+    progress: 0,
+    isPlaying: false,
+    point: null,
+    player: null,
+    
+   
+    /**
+     * 
+     */
+    setup: function () {
+        this.player = null;
+        this.player = new nativescript_audio__WEBPACK_IMPORTED_MODULE_1__["TNSPlayer"]();
+  
+        const playerOptions = {
+          audioFile: this.point.mp3,
+          loop: false,
+          completeCallback: function() {}
+        };
+  
+        this.player
+          .playFromUrl(playerOptions)
+          .then(res => {
+            console.log(res);
+          })
+          .catch(err => {
+            console.log("something went wrong...", err);
+          });
+  
+        this._checkInterval = setInterval(() => {
+          this.player.getAudioTrackDuration().then(duration => {
+            // iOS: duration is in seconds
+            // Android: duration is in milliseconds
+            let current = this.player.currentTime;
+            if (tns_core_modules_platform__WEBPACK_IMPORTED_MODULE_0__["isIOS"]) {
+              duration *= 1000;
+              current *= 1000;
+            }
+  
+            this.progress = Math.ceil((current / duration) * 100);
+            this.isPlaying = this.player.isAudioPlaying();
+          });
+        }, 200);
+    },
+    play: function () {
+        
+    },
+    clear: function () {
+        
+    },
+    playPause: function () {
+        if (this.player.isAudioPlaying()) {
+          this.player.pause();
+        } else {
+          this.player.play();
+        }
+      },
+      
  };   
 
 /***/ }),

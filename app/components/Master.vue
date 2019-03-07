@@ -46,11 +46,7 @@
         class="actionBarContainer"
       >
         <StackLayout class="HLeft" style="margin-top:10;" @tap="toggleDrawer()">
-          <Label
-            :text="drawerToggle ? drawer2: drawer1"
-            style="font-size:27;color:#333;"
-            class="font-awesome"
-          />
+          <Label text="☰" style="font-size:27;color:#333;" class="font-awesome"/>
         </StackLayout>
         <StackLayout class="HMid">
           <Label :text="single"/>
@@ -66,7 +62,7 @@
         <StackLayout height="15%"></StackLayout>
         <StackLayout class>
           <Label
-            :text="'' + translate.menu.settings"
+            :text="translate.menu.settings"
             @tap="go('settings')"
             paddingLeft="30%"
             color="black"
@@ -74,7 +70,7 @@
             margin="10"
           />
           <Label
-            :text="'' + translate.menu.about"
+            :text="translate.menu.about"
             @tap="go('about')"
             paddingLeft="30%"
             color="black"
@@ -82,8 +78,18 @@
             margin="10"
           />
 
+        <Label
+            text="Make my test"
+            @tap="test"
+            paddingLeft="30%"
+            color="black"
+            class="drawerItemText font-awesome"
+            margin="10"
+          />
+
+
           <Label
-            :text="'' + translate.menu.map"
+            :text=" translate.menu.map"
             @tap="go('map')"
             paddingLeft="30%"
             color="black"
@@ -159,7 +165,6 @@
 <script>
 import { Singleton } from "./Singleton.js";
 
-
 import * as geolocation from "nativescript-geolocation";
 import * as platform from "tns-core-modules/platform";
 import { Accuracy } from "ui/enums";
@@ -183,9 +188,12 @@ let translate = require("./../translate.json");
 ///
 
 export default {
+
+  destroyed() {
+    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+  },
+
   mounted() {
-
-
     console.log("mounted");
     console.log(Singleton.foo);
     console.log("mounted");
@@ -232,8 +240,6 @@ export default {
       points: null,
       drawerToggle: false,
       currentComp: null,
-      drawer1: "",
-      drawer2: "",
       showmap: true,
       debug: true,
       translate: translate.en,
@@ -301,9 +307,9 @@ export default {
         this.map.view.latitude = this.points[x].lat;
         this.map.view.longitude = this.points[x].lng;
       }
-      if (this.debug) {
-        this.startBackgroundTap();
-      }
+      // if (this.debug) {
+      //   this.startBackgroundTap();
+      // }
     },
 
     MAP_setCurrentLocation(lat, lng) {
@@ -408,8 +414,15 @@ export default {
      * start background server or stop
      */
     playStop() {
-      alert(379);
-      startBackgroundTap();
+      if (!this.play) {
+        this.play = true;
+        alert("continue work on background");
+        startBackgroundTap();
+      } else {
+        this.play = false;
+        alert("stop");
+        stopBackgroundTap();
+      }
     },
 
     /**
@@ -442,7 +455,10 @@ export default {
       this.current = this.points.find(x => x.id == id);
     },
     test() {
-      this.MAP_setCurrentLocation(43.7031691, 7.1827772);
+      alert("start test how i want make UI ")
+      this.MAP_setCurrentLocation(56.954, 24.2036519068497);
+      this.current = this.points[0];
+      this.feturePoints = this.points;
     },
     openModal(point) {
       beep();
