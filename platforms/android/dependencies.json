@@ -16,6 +16,10 @@
         "directory": "..\\..\\node_modules\\nativescript-google-maps-sdk"
     },
     {
+        "name": "nativescript-sound",
+        "directory": "..\\..\\node_modules\\nativescript-sound"
+    },
+    {
         "name": "nativescript-theme-core",
         "directory": "..\\..\\node_modules\\nativescript-theme-core"
     },

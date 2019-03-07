@@ -367,6 +367,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -400,12 +408,10 @@ let translate = __webpack_require__("./translate.json");
 
   mounted() {
     console.log("mounted");
-    console.log(_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].foo);
-    console.log("mounted");
-
-    /////////////////
+   
     if (appSettings.getString("points")) {
       this.points = JSON.parse(appSettings.getString("points"));
+      _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points = this.points;
     }
     if (appSettings.getString("lang")) {
       this.translate = translate[appSettings.getString("lang")];
@@ -471,6 +477,13 @@ let translate = __webpack_require__("./translate.json");
   methods: {
     ////////
 
+    setAllAsActive(){
+      for(let  x in _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points)
+      {
+        _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points[x].active = true;
+      }
+    },
+
     startBackgroundTap,
     stopBackgroundTap,
     enableLocationTap,
@@ -512,9 +525,9 @@ let translate = __webpack_require__("./translate.json");
         this.map.view.latitude = this.points[x].lat;
         this.map.view.longitude = this.points[x].lng;
       }
-      // if (this.debug) {
-      //   this.startBackgroundTap();
-      // }
+      if (this.debug) {  
+        this.startBackgroundTap();
+      }
     },
 
     MAP_setCurrentLocation(lat, lng) {
@@ -1302,6 +1315,16 @@ var render = function() {
                   _c("Label", {
                     staticClass: "drawerItemText font-awesome",
                     attrs: {
+                      text: "Set all active",
+                      paddingLeft: "30%",
+                      color: "black",
+                      margin: "10"
+                    },
+                    on: { tap: _vm.setAllAsActive }
+                  }),
+                  _c("Label", {
+                    staticClass: "drawerItemText font-awesome",
+                    attrs: {
                       text: _vm.translate.menu.map,
                       paddingLeft: "30%",
                       color: "black",
@@ -1849,69 +1872,235 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var nativescript_audio__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(nativescript_audio__WEBPACK_IMPORTED_MODULE_1__);
 
 
+const appSettings = __webpack_require__("../node_modules/tns-core-modules/application-settings/application-settings.js");
 
 const Singleton = {
-    points: null,
-    featurePoint: null,
-    foo: 123,
-    progress: 0,
-    isPlaying: false,
-    point: null,
-    player: null,
-    
-   
-    /**
-     * 
-     */
-    setup: function () {
-        this.player = null;
-        this.player = new nativescript_audio__WEBPACK_IMPORTED_MODULE_1__["TNSPlayer"]();
-  
-        const playerOptions = {
-          audioFile: this.point.mp3,
-          loop: false,
-          completeCallback: function() {}
-        };
-  
-        this.player
-          .playFromUrl(playerOptions)
-          .then(res => {
-            console.log(res);
-          })
-          .catch(err => {
-            console.log("something went wrong...", err);
-          });
-  
-        this._checkInterval = setInterval(() => {
-          this.player.getAudioTrackDuration().then(duration => {
-            // iOS: duration is in seconds
-            // Android: duration is in milliseconds
-            let current = this.player.currentTime;
-            if (tns_core_modules_platform__WEBPACK_IMPORTED_MODULE_0__["isIOS"]) {
-              duration *= 1000;
-              current *= 1000;
-            }
-  
-            this.progress = Math.ceil((current / duration) * 100);
-            this.isPlaying = this.player.isAudioPlaying();
-          });
-        }, 200);
-    },
-    play: function () {
-        
-    },
-    clear: function () {
-        
-    },
-    playPause: function () {
-        if (this.player.isAudioPlaying()) {
-          this.player.pause();
-        } else {
-          this.player.play();
+  points: null,
+  featurePoints: null,
+  /**
+   * oe  ?  beebep stop loop :)
+   */
+  beebeepDone: [],
+  progress: 0,
+  isPlaying: false,
+
+  player: null,
+
+  _current: null,
+  get current() {
+    return this._current;
+  },
+
+  set current(value) {
+    this.points.find(x => x.id == value.id).active = false;
+    this._current = value;
+    this.printData();
+    appSettings.setString("points", JSON.stringify(this.points));
+  },
+
+  printData() {
+    console.log(
+      "active true -----------------------> " +
+        this.points.filter(x => x.active == true).length
+    );
+    console.log(
+      "active false ----------------------------------------------> " +
+        this.points.filter(x => x.active == false).length
+    );
+  },
+
+  /**
+   * play new song > ? why setup -> coz
+   */
+  setup() {
+    this.player = null;
+    this.player = new nativescript_audio__WEBPACK_IMPORTED_MODULE_1__["TNSPlayer"]();
+
+    const playerOptions = {
+      audioFile: this.current.mp3,
+      loop: false,
+      completeCallback: function() {}
+    };
+
+    this.player
+      .playFromUrl(playerOptions)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log("something went wrong...", err);
+      });
+
+    this._checkInterval = setInterval(() => {
+      this.player.getAudioTrackDuration().then(duration => {
+        // iOS: duration is in seconds
+        // Android: duration is in milliseconds
+        let current = this.player.currentTime;
+        if (tns_core_modules_platform__WEBPACK_IMPORTED_MODULE_0__["isIOS"]) {
+          duration *= 1000;
+          current *= 1000;
         }
-      },
-      
- };   
+
+        this.progress = Math.ceil((current / duration) * 100);
+        this.isPlaying = this.player.isAudioPlaying();
+      });
+    }, 200);
+  },
+  play() {
+    this.player.play();
+  },
+  clear() {},
+  playPause() {
+    if (this.player.isAudioPlaying()) {
+      this.player.pause();
+    } else {
+      this.player.play();
+    }
+  }
+};
+
+
+/***/ }),
+
+/***/ "./components/Sorting.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Sorting", function() { return Sorting; });
+/* harmony import */ var _Singleton_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("./components/Singleton.js");
+/* harmony import */ var _locationSettings_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("./components/locationSettings.js");
+/* harmony import */ var _beep__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("./components/beep.js");
+
+
+
+
+const Sorting = {
+  prevLocation: {
+    lat: null,
+    lng: null
+  },
+  /**
+   *
+   * @param {number} currentLat
+   * @param {number} currentLng
+   */
+  sortPoints(currentLat, currentLng) {
+    if (
+      this.prevLocation.lat != null &&
+      this.distanceInKmBetweenEarthCoordinates(
+        this.prevLocation.lat,
+        this.prevLocation.lng,
+        currentLat,
+        currentLng
+      ) < _locationSettings_js__WEBPACK_IMPORTED_MODULE_1__["locationSettings"].samePlaceInKm
+    ) {
+      console.log("not moved :( ");
+      return;
+    }
+
+    //  only active
+    let points = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points.filter(x => x.active == true);
+    if (!points) {
+      console.log("points all done ");
+      return;
+    }
+
+    for (let ind in points) {
+      points[ind].distance = this.distanceInKmBetweenEarthCoordinates(
+        currentLat,
+        currentLng,
+        points[ind].lat,
+        points[ind].lng
+      );
+      console.log(
+        points[ind].active +
+          " - " +
+          points[ind].distance +
+          " km " +
+          points[ind].title
+      );
+    }
+
+    let clear = points
+      .filter(
+        x =>
+          x.distance < _locationSettings_js__WEBPACK_IMPORTED_MODULE_1__["locationSettings"].featurePointDistanceKm &&
+          x.active == true
+      )
+      .sort((a, b) => {
+        if (a.distance > b.distance) {
+          return 1;
+        }
+        if (a.distance < b.distance) {
+          return -1;
+        }
+
+        return 0;
+      });
+
+    if (clear.length > 0) {
+      if (clear[0].distance < _locationSettings_js__WEBPACK_IMPORTED_MODULE_1__["locationSettings"].pointCanPlaceDistanceKm) {
+        console.log(
+          "[" + clear[0].title + clear[0].mp3 + " ]  this is current "
+        );
+        _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].printData();
+
+        if (
+          _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].progress &&
+          _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].progress > 0 &&
+          _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].progress < 100
+        ) {
+          if (!_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].beebeepDone.includes(_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current.id)) {
+            _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player.pause();
+            Object(_beep__WEBPACK_IMPORTED_MODULE_2__["beep"])();
+            _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].beebeepDone.push(_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current.id);
+            setTimeout(e => {
+              _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player.resume();
+            }, 2000);
+          }
+        } else {
+          _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current = clear[0];
+          _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].setup();
+        }
+      }
+    }
+    _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].featurePoints = clear.length > 0 ? clear : null;
+
+    //   this.prevLocation.lat = currentLat;
+    //   this.prevLocation.lng = currentLng;
+  },
+
+  /**
+   *
+   * @param {number} lat1
+   * @param {number} lon1
+   * @param {number} lat2
+   * @param {number} lon2
+   */
+  distanceInKmBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
+    var earthRadiusKm = 6371;
+
+    var dLat = this.degreesToRadians(lat2 - lat1);
+    var dLon = this.degreesToRadians(lon2 - lon1);
+
+    lat1 = this.degreesToRadians(lat1);
+    lat2 = this.degreesToRadians(lat2);
+
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2);
+    Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return earthRadiusKm * c;
+  },
+  /**
+   *
+   * @param {number} degrees
+   */
+  degreesToRadians(degrees) {
+    return (degrees * Math.PI) / 180;
+  }
+};
+
 
 /***/ }),
 
@@ -1963,7 +2152,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var nativescript_toast__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__("../node_modules/nativescript-toast/toast.js");
 /* harmony import */ var nativescript_toast__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(nativescript_toast__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _beep__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__("./components/beep.js");
-/* harmony import */ var _Singleton_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__("./components/Singleton.js");
+/* harmony import */ var _Sorting__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__("./components/Sorting.js");
+/* harmony import */ var _Singleton_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__("./components/Singleton.js");
+/* harmony import */ var _locationSettings__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__("./components/locationSettings.js");
 
 
 
@@ -1971,22 +2162,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const appSettings = __webpack_require__("../node_modules/tns-core-modules/application-settings/application-settings.js");
-const audioplayer = __webpack_require__("../node_modules/nativescript-audioplay/audio.js");
-
-var counter = 0;
 
 
-////////////////////////////// make sound if not empty
 
-const locationSettings = {
-  minimumUpdateTime: 5000,
-  updateTime: 5000, ///
-  updateDistanceInMetters: 0.1,
-  samePlaceInKm: 0.01,
-  pointCanPlaceDistanceKm: 0.5,
-  featurePointDistanceKm: 0.9
-};
+
+
 
 let prevLocation = { lat: null, lng: null };
 
@@ -2043,20 +2223,16 @@ function watchLocation(comp) {
         function(loc) {
           if (loc) {
             // we thinka bout later
-            let toast = nativescript_toast__WEBPACK_IMPORTED_MODULE_4__["makeText"](
-              loc.latitude + "  " + loc.longitude
-            );
+            let toast = nativescript_toast__WEBPACK_IMPORTED_MODULE_4__["makeText"](loc.latitude + "  " + loc.longitude);
             toast.setDuration(1000 * 20);
             toast.show();
-
-            _Singleton_js__WEBPACK_IMPORTED_MODULE_6__["Singleton"].foo = loc.latitude;
-            sortPoints(loc.latitude, loc.longitude);
-  
+                
+           
+             _Sorting__WEBPACK_IMPORTED_MODULE_6__["Sorting"].sortPoints(loc.latitude, loc.longitude);
+   
             // fetch("https://audio.tricypolitain.com/ping?text=newtest" + counter)
             //   .then(e => {})
             //   .catch(e => {});
-
-            // beep();
           }
         },
         function(e) {
@@ -2064,201 +2240,17 @@ function watchLocation(comp) {
         },
         {
           desiredAccuracy: tns_core_modules_ui_enums__WEBPACK_IMPORTED_MODULE_1__["Accuracy"].high,
-          updateDistance: locationSettings.updateDistanceInMetters,
-          updateTime: locationSettings.updateTime,
-          minimumUpdateTime: locationSettings.minimumUpdateTime
+          updateDistance: _locationSettings__WEBPACK_IMPORTED_MODULE_8__["locationSettings"].updateDistanceInMetters,
+          updateTime: _locationSettings__WEBPACK_IMPORTED_MODULE_8__["locationSettings"].updateTime,
+          minimumUpdateTime: _locationSettings__WEBPACK_IMPORTED_MODULE_8__["locationSettings"].minimumUpdateTime
         }
       );
-    },
+    },  
     function(e) {
-      console.log(
-        "Background enableLocationRequest error: " + (e.message || e)
-      );
+      console.log("Background enableLocationRequest error: " + (e.message || e));
     }
   );
-}
-
-/**
- * mother of funciton
- */
-function sortPoints(currentLat, currentLng) {
-  if (
-    prevLocation.lat != null &&
-    distanceInKmBetweenEarthCoordinates(
-      prevLocation.lat,
-      prevLocation.lng,
-      currentLat,
-      currentLng
-    ) < locationSettings.samePlaceInKm
-  ) {
-    console.log("we are same place");
-    return;
-  }
-
-  let points = appSettings.getString("points");
-  if (points) {
-    console.log("pointssss");
-    points = JSON.parse(points);
-  } else {
-    console.log("points not exist");
-    return;
-  }
-
-  for (let ind in points) {
-    console.log(points[ind].active);
-    points[ind].distance = distanceInKmBetweenEarthCoordinates(
-      currentLat,
-      currentLng,
-      points[ind].lat,
-      points[ind].lng
-    );
-  }
-
-  let clear = points
-    .filter(
-      x =>
-        x.distance < locationSettings.featurePointDistanceKm && x.active == true
-    )
-    .sort((a, b) => {
-      if (a.distance > b.distance) {
-        return 1;
-      }
-      if (a.distance < b.distance) {
-        return -1;
-      }
-
-      return 0;
-    });
-
-  console.log("clear");
-  console.log(clear);
-  console.log("clear");
-  if (clear.length > 0) {
-    if (clear[0].distance < locationSettings.pointCanPlaceDistanceKm) {
-      points.find(x => (x.id = clear[0].id)).active = false;
-      appSettings.setString("points", JSON.stringify(points));
-      BackgroundAudio.point = clear[0];
-    }
-  }
-  // feautrePoints = clear.length > 0 ? clear : null;
-}
-
-//                /mother of funciton above
-
-/**
- *
- */
-const BackgroundAudio = {
-  _point: null,
-  player: null,
-  interval: null,
-  /**
-   * Play Audio and save data to setttings
-   */
-  set point(point) {
-    if (this._point == null) {
-      this._point = point;
-      this.play();
-    } else {
-      // if (this._point.id != point.id) {
-      //    beep();
-      // }
-      //console.log("????--------------------->>>>>>>>>>>>>>>>>>>>>")
-    }
-  },
-  get point() {
-    return this._point;
-  },
-
-  play() {
-    this.clear();
-
-    this.player = new audioplayer.TNSPlayer();
-
-    console.log("zzz" + this._point.mp3);
-
-    let playerOptions = {
-      audioFile: this._point.mp3,
-      loop: false,
-      completeCallback() {
-        console.log("finished playing");
-      },
-      errorCallback(errorObject) {
-        console.log(JSON.stringify(errorObject));
-      },
-      infoCallback(args) {
-        console.log(JSON.stringify(args));
-      }
-    };
-
-    this.player
-      .playFromUrl(playerOptions)
-      .then(function(res) {
-        console.log(res);
-      })
-      .catch(function(err) {
-        console.log("something went wrong...", err);
-      });
-
-    // this.interval = setInterval(() => {
-    //   this.player.getAudioTrackDuration().then(duration => {
-    //     // iOS: duration is in seconds
-    //     // Android: duration is in milliseconds
-    //     let current = this.player.currentTime;
-    //     if (isIOS) {
-    //       current *= 1000;
-    //     }
-
-    //     appSettings.setNumber("player_duration", current);
-    //   });
-    // }, 1000);
-  },
-
-  /**
-   * Please clear all
-   */
-  clear() {
-    if (this.player != null) {
-      this.player.pause();
-    }
-    if (this.interval) {
-      clearInterval(this.interval);
-    }
-
-    this.point = null;
-    this.player = null;
-
-    // appSettings.remove("point");
-    //appSettings.remove("player_duration");
-  }
-};
-
-/**
- *
- * @param {number} lat1
- * @param {number} lon1
- * @param {number} lat2
- * @param {number} lon2
- */
-function distanceInKmBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
-  var earthRadiusKm = 6371;
-
-  var dLat = degreesToRadians(lat2 - lat1);
-  var dLon = degreesToRadians(lon2 - lon1);
-
-  lat1 = degreesToRadians(lat1);
-  lat2 = degreesToRadians(lat2);
-
-  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2);
-  Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return earthRadiusKm * c;
-}
-
-function degreesToRadians(degrees) {
-  return (degrees * Math.PI) / 180;
-}
-
+}  
 
 /***/ }),
 
@@ -2272,15 +2264,15 @@ const audio = __webpack_require__("../node_modules/nativescript-audioplay/audio.
 
 function beep() {
   const sound =
-    "https://notificationsounds.com/soundfiles/4e4b5fbbbb602b6d35bea8460aa8f8e5/file-sounds-1096-light.mp3";
+    "https://notificationsounds.com/soundfiles/1728efbda81692282ba642aafd57be3a/file-sounds-1101-plucky.mp3";
 
   let player = new audio.TNSPlayer();
   let playerOptions = {
     audioFile: sound,
-    loop: false,
+    loop: false,     
     completeCallback: function() {
       console.log("finished playing");
-    },
+    },  
     errorCallback: function(errorObject) {
       console.log(JSON.stringify(errorObject));
     },
@@ -2299,6 +2291,24 @@ function beep() {
     });
 }
 
+
+/***/ }),
+
+/***/ "./components/locationSettings.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "locationSettings", function() { return locationSettings; });
+const locationSettings = {
+  minimumUpdateTime: 5000,
+  updateTime: 5000,
+  updateDistanceInMetters: 0.1,
+  samePlaceInKm: 0.01,
+  pointCanPlaceDistanceKm: 0.5,
+  featurePointDistanceKm: 0.9
+};
+  
 
 /***/ }),
 

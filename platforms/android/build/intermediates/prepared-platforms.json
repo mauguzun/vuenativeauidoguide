@@ -4,6 +4,7 @@
     "nativescript-audioplay": true,
     "nativescript-geolocation": true,
     "nativescript-google-maps-sdk": true,
+    "nativescript-sound": true,
     "nativescript-theme-core": true,
     "nativescript-toast": true,
     "nativescript-ui-sidedrawer": true,

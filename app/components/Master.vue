@@ -86,6 +86,14 @@
             class="drawerItemText font-awesome"
             margin="10"
           />
+  <Label
+            text="Set all active"
+            @tap="setAllAsActive"
+            paddingLeft="30%"
+            color="black"
+            class="drawerItemText font-awesome"
+            margin="10"
+          />
 
 
           <Label
@@ -195,12 +203,10 @@ export default {
 
   mounted() {
     console.log("mounted");
-    console.log(Singleton.foo);
-    console.log("mounted");
-
-    /////////////////
+   
     if (appSettings.getString("points")) {
       this.points = JSON.parse(appSettings.getString("points"));
+      Singleton.points = this.points;
     }
     if (appSettings.getString("lang")) {
       this.translate = translate[appSettings.getString("lang")];
@@ -266,6 +272,13 @@ export default {
   methods: {
     ////////
 
+    setAllAsActive(){
+      for(let  x in Singleton.points)
+      {
+        Singleton.points[x].active = true;
+      }
+    },
+
     startBackgroundTap,
     stopBackgroundTap,
     enableLocationTap,
@@ -307,9 +320,9 @@ export default {
         this.map.view.latitude = this.points[x].lat;
         this.map.view.longitude = this.points[x].lng;
       }
-      // if (this.debug) {
-      //   this.startBackgroundTap();
-      // }
+      if (this.debug) {  
+        this.startBackgroundTap();
+      }
     },
 
     MAP_setCurrentLocation(lat, lng) {
