@@ -9,6 +9,8 @@ const appSettings = require("tns-core-modules/application-settings");
 const audioplayer = require("nativescript-audioplay");
 
 var counter = 0;
+import { Singleton } from "./Singleton.js";
+
 ////////////////////////////// make sound if not empty
 
 const locationSettings = {
@@ -75,12 +77,15 @@ function watchLocation(comp) {
         function(loc) {
           if (loc) {
             // we thinka bout later
-            let toast = Toast.makeText(counter + " counter ");
+            let toast = Toast.makeText(
+              loc.latitude + "  " + loc.longitude
+            );
             toast.setDuration(1000 * 20);
             toast.show();
 
+            Singleton.foo = loc.latitude;
             sortPoints(loc.latitude, loc.longitude);
-
+  
             // fetch("https://audio.tricypolitain.com/ping?text=newtest" + counter)
             //   .then(e => {})
             //   .catch(e => {});
@@ -134,6 +139,7 @@ function sortPoints(currentLat, currentLng) {
   }
 
   for (let ind in points) {
+    console.log(points[ind].active);
     points[ind].distance = distanceInKmBetweenEarthCoordinates(
       currentLat,
       currentLng,
@@ -158,8 +164,13 @@ function sortPoints(currentLat, currentLng) {
       return 0;
     });
 
+  console.log("clear");
+  console.log(clear);
+  console.log("clear");
   if (clear.length > 0) {
     if (clear[0].distance < locationSettings.pointCanPlaceDistanceKm) {
+      points.find(x => (x.id = clear[0].id)).active = false;
+      appSettings.setString("points", JSON.stringify(points));
       BackgroundAudio.point = clear[0];
     }
   }
@@ -179,11 +190,14 @@ const BackgroundAudio = {
    * Play Audio and save data to setttings
    */
   set point(point) {
-    if (this.point == null) {
+    if (this._point == null) {
       this._point = point;
-      appSettings.setString("current", JSON.stringify(point));
       this.play();
     } else {
+      // if (this._point.id != point.id) {
+      //    beep();
+      // }
+      //console.log("????--------------------->>>>>>>>>>>>>>>>>>>>>")
     }
   },
   get point() {
@@ -191,13 +205,11 @@ const BackgroundAudio = {
   },
 
   play() {
-    
     this.clear();
 
     this.player = new audioplayer.TNSPlayer();
 
     console.log("zzz" + this._point.mp3);
-    
 
     let playerOptions = {
       audioFile: this._point.mp3,
@@ -250,8 +262,8 @@ const BackgroundAudio = {
     this.point = null;
     this.player = null;
 
-    appSettings.remove("point");
-    appSettings.remove("player_duration");
+    // appSettings.remove("point");
+    //appSettings.remove("player_duration");
   }
 };
 

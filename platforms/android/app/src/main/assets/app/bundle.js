@@ -184,24 +184,27 @@ module.exports =
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var nativescript_geolocation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../node_modules/nativescript-geolocation/geolocation.js");
-/* harmony import */ var nativescript_geolocation__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(nativescript_geolocation__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var tns_core_modules_platform__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("../node_modules/tns-core-modules/platform/platform.js");
-/* harmony import */ var tns_core_modules_platform__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(tns_core_modules_platform__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var ui_enums__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("../node_modules/tns-core-modules/ui/enums/enums.js");
-/* harmony import */ var ui_enums__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(ui_enums__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var tns_core_modules_application__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("../node_modules/tns-core-modules/application/application.js");
-/* harmony import */ var tns_core_modules_application__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(tns_core_modules_application__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _pages_Settings__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__("./components/pages/Settings.vue");
-/* harmony import */ var _pages_About__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__("./components/pages/About.vue");
-/* harmony import */ var _pages_PageMap_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__("./components/pages/PageMap.vue");
-/* harmony import */ var _pages_Player__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__("./components/pages/Player.vue");
-/* harmony import */ var tns_core_modules_ui_image__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__("../node_modules/tns-core-modules/ui/image/image.js");
-/* harmony import */ var tns_core_modules_ui_image__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(tns_core_modules_ui_image__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _beep_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__("./components/beep.js");
-/* harmony import */ var _api_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__("./components/api.js");
-/* harmony import */ var tns_core_modules_application_settings_application_settings__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__("../node_modules/tns-core-modules/application-settings/application-settings.js");
-/* harmony import */ var tns_core_modules_application_settings_application_settings__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(tns_core_modules_application_settings_application_settings__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var _Singleton_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("./components/Singleton.js");
+/* harmony import */ var nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("../node_modules/nativescript-geolocation/geolocation.js");
+/* harmony import */ var nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var tns_core_modules_platform__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("../node_modules/tns-core-modules/platform/platform.js");
+/* harmony import */ var tns_core_modules_platform__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tns_core_modules_platform__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var ui_enums__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("../node_modules/tns-core-modules/ui/enums/enums.js");
+/* harmony import */ var ui_enums__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(ui_enums__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var tns_core_modules_application__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__("../node_modules/tns-core-modules/application/application.js");
+/* harmony import */ var tns_core_modules_application__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(tns_core_modules_application__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _pages_Settings__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__("./components/pages/Settings.vue");
+/* harmony import */ var _pages_About__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__("./components/pages/About.vue");
+/* harmony import */ var _pages_PageMap_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__("./components/pages/PageMap.vue");
+/* harmony import */ var _pages_Player__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__("./components/pages/Player.vue");
+/* harmony import */ var tns_core_modules_ui_image__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__("../node_modules/tns-core-modules/ui/image/image.js");
+/* harmony import */ var tns_core_modules_ui_image__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(tns_core_modules_ui_image__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _beep_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__("./components/beep.js");
+/* harmony import */ var _api_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__("./components/api.js");
+/* harmony import */ var tns_core_modules_application_settings_application_settings__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__("../node_modules/tns-core-modules/application-settings/application-settings.js");
+/* harmony import */ var tns_core_modules_application_settings_application_settings__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(tns_core_modules_application_settings_application_settings__WEBPACK_IMPORTED_MODULE_12__);
+//
+//
 //
 //
 //
@@ -360,14 +363,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 
-  
-  
-  
-  const utils = __webpack_require__("../node_modules/tns-core-modules/utils/utils.js");
-  
-  let locationService = __webpack_require__("./components/backgroundServices.js");
 
 
+
+
+
+const utils = __webpack_require__("../node_modules/tns-core-modules/utils/utils.js");
+
+let locationService = __webpack_require__("./components/backgroundServices.js");
 
 
 
@@ -386,18 +389,20 @@ let translate = __webpack_require__("./translate.json");
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted() {
+
+
     console.log("mounted");
+    console.log(_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].foo);
+    console.log("mounted");
+
     /////////////////
     if (appSettings.getString("points")) {
       this.points = JSON.parse(appSettings.getString("points"));
     }
     if (appSettings.getString("lang")) {
       this.translate = translate[appSettings.getString("lang")];
-      console.log(this.translate.menu.map);
     }
-    ///////////////////
 
-    this.counter = appSettings.getNumber("cou", 0);
     // setInterval(e => {
     //   this.counter = appSettings.getNumber("cou", 0);
     // }, 10000);
@@ -420,9 +425,9 @@ let translate = __webpack_require__("./translate.json");
     }
   },
   components: {
-    settings: _pages_Settings__WEBPACK_IMPORTED_MODULE_4__["default"],
-    about: _pages_About__WEBPACK_IMPORTED_MODULE_5__["default"],
-    audioplayer: _pages_Player__WEBPACK_IMPORTED_MODULE_7__["default"]
+    settings: _pages_Settings__WEBPACK_IMPORTED_MODULE_5__["default"],
+    about: _pages_About__WEBPACK_IMPORTED_MODULE_6__["default"],
+    audioplayer: _pages_Player__WEBPACK_IMPORTED_MODULE_8__["default"]
   },
 
   data() {
@@ -501,7 +506,7 @@ let translate = __webpack_require__("./translate.json");
         this.map.view.latitude = this.points[x].lat;
         this.map.view.longitude = this.points[x].lng;
       }
-      if(this.debug){
+      if (this.debug) {
         this.startBackgroundTap();
       }
     },
@@ -557,7 +562,7 @@ let translate = __webpack_require__("./translate.json");
       this.translate = translate[appSettings.getString("lang")];
     },
     laodPointsFromApi() {
-      Object(_api_js__WEBPACK_IMPORTED_MODULE_10__["apiCall"])("points", {
+      Object(_api_js__WEBPACK_IMPORTED_MODULE_11__["apiCall"])("points", {
         city: appSettings.getString("city", "5"),
         lang: appSettings.getString("lang", "en")
       })
@@ -645,7 +650,7 @@ let translate = __webpack_require__("./translate.json");
       this.MAP_setCurrentLocation(43.7031691, 7.1827772);
     },
     openModal(point) {
-      Object(_beep_js__WEBPACK_IMPORTED_MODULE_9__["beep"])();
+      Object(_beep_js__WEBPACK_IMPORTED_MODULE_10__["beep"])();
       confirm({
         title: point.title,
         message: point.title,
@@ -671,8 +676,8 @@ let translate = __webpack_require__("./translate.json");
 ///////
 
 function startBackgroundTap() {
-  if (tns_core_modules_application__WEBPACK_IMPORTED_MODULE_3__["android"]) {
-    const { sdkVersion } = tns_core_modules_platform__WEBPACK_IMPORTED_MODULE_1__["device"];
+  if (tns_core_modules_application__WEBPACK_IMPORTED_MODULE_4__["android"]) {
+    const { sdkVersion } = tns_core_modules_platform__WEBPACK_IMPORTED_MODULE_2__["device"];
     const context = utils.ad.getApplicationContext();
     if (sdkVersion * 1 < 26) {
       const intent = new android.content.Intent(
@@ -705,8 +710,8 @@ function startBackgroundTap() {
 }
 
 function stopBackgroundTap() {
-  if (tns_core_modules_application__WEBPACK_IMPORTED_MODULE_3__["android"]) {
-    const { sdkVersion } = tns_core_modules_platform__WEBPACK_IMPORTED_MODULE_1__["device"];
+  if (tns_core_modules_application__WEBPACK_IMPORTED_MODULE_4__["android"]) {
+    const { sdkVersion } = tns_core_modules_platform__WEBPACK_IMPORTED_MODULE_2__["device"];
     const context = utils.ad.getApplicationContext();
     if (sdkVersion * 1 < 26) {
       const intent = new android.content.Intent(
@@ -734,11 +739,11 @@ function stopBackgroundTap() {
 }
 
 function enableLocationTap() {
-  nativescript_geolocation__WEBPACK_IMPORTED_MODULE_0__["isEnabled"]().then(
+  nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1__["isEnabled"]().then(
     function(isEnabled) {
       console.log(isEnabled);
       if (!isEnabled) {
-        nativescript_geolocation__WEBPACK_IMPORTED_MODULE_0__["enableLocationRequest"]().then(
+        nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1__["enableLocationRequest"]().then(
           function() {},
           function(e) {
             console.log("Error: " + (e.message || e));
@@ -754,10 +759,10 @@ function enableLocationTap() {
 
 function buttonGetLocationTap() {
   const comp = this;
-  nativescript_geolocation__WEBPACK_IMPORTED_MODULE_0__["isEnabled"]().then(isEnabled => {
+  nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1__["isEnabled"]().then(isEnabled => {
     if (isEnabled) {
-      let location = nativescript_geolocation__WEBPACK_IMPORTED_MODULE_0__["getCurrentLocation"]({
-          desiredAccuracy: ui_enums__WEBPACK_IMPORTED_MODULE_2__["Accuracy"].high,
+      let location = nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1__["getCurrentLocation"]({
+          desiredAccuracy: ui_enums__WEBPACK_IMPORTED_MODULE_3__["Accuracy"].high,
           maximumAge: 5000,
           timeout: 10000,
           iosAllowsBackgroundLocationUpdates: true,
@@ -781,9 +786,9 @@ function buttonGetLocationTap() {
 function buttonStartTap() {
   try {
     const comp = this;
-    nativescript_geolocation__WEBPACK_IMPORTED_MODULE_0__["isEnabled"]().then(isEnabled => {
+    nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1__["isEnabled"]().then(isEnabled => {
       if (isEnabled) {
-        comp.watchId = nativescript_geolocation__WEBPACK_IMPORTED_MODULE_0__["watchLocation"](
+        comp.watchId = nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1__["watchLocation"](
           function(loc) {
             console.log(loc);
             if (loc) {
@@ -794,7 +799,7 @@ function buttonStartTap() {
             console.log("Error: " + e.message);
           },
           {
-            desiredAccuracy: ui_enums__WEBPACK_IMPORTED_MODULE_2__["Accuracy"].high,
+            desiredAccuracy: ui_enums__WEBPACK_IMPORTED_MODULE_3__["Accuracy"].high,
             maximumAge: 5000,
             timeout: 20000,
             updateDistance: 1,
@@ -812,7 +817,7 @@ function buttonStartTap() {
 
 function buttonStopTap() {
   if (this.watchId != null) {
-    nativescript_geolocation__WEBPACK_IMPORTED_MODULE_0__["clearWatch"](this.watchId);
+    nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1__["clearWatch"](this.watchId);
     this.watchId = null;
   }
 }
@@ -1185,7 +1190,12 @@ var render = function() {
                 ],
                 1
               ),
-              _c("StackLayout", { staticClass: "HMid" }),
+              _c(
+                "StackLayout",
+                { staticClass: "HMid" },
+                [_c("Label", { attrs: { text: _vm.single } })],
+                1
+              ),
               _c(
                 "StackLayout",
                 { staticClass: "HRight" },
@@ -1803,6 +1813,18 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./components/Singleton.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Singleton", function() { return Singleton; });
+const  Singleton = {
+    foo: 123,
+ };   
+
+/***/ }),
+
 /***/ "./components/api.js":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1851,6 +1873,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var nativescript_toast__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__("../node_modules/nativescript-toast/toast.js");
 /* harmony import */ var nativescript_toast__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(nativescript_toast__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _beep__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__("./components/beep.js");
+/* harmony import */ var _Singleton_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__("./components/Singleton.js");
 
 
 
@@ -1862,6 +1885,8 @@ const appSettings = __webpack_require__("../node_modules/tns-core-modules/applic
 const audioplayer = __webpack_require__("../node_modules/nativescript-audioplay/audio.js");
 
 var counter = 0;
+
+
 ////////////////////////////// make sound if not empty
 
 const locationSettings = {
@@ -1928,12 +1953,15 @@ function watchLocation(comp) {
         function(loc) {
           if (loc) {
             // we thinka bout later
-            let toast = nativescript_toast__WEBPACK_IMPORTED_MODULE_4__["makeText"](counter + " counter ");
+            let toast = nativescript_toast__WEBPACK_IMPORTED_MODULE_4__["makeText"](
+              loc.latitude + "  " + loc.longitude
+            );
             toast.setDuration(1000 * 20);
             toast.show();
 
+            _Singleton_js__WEBPACK_IMPORTED_MODULE_6__["Singleton"].foo = loc.latitude;
             sortPoints(loc.latitude, loc.longitude);
-
+  
             // fetch("https://audio.tricypolitain.com/ping?text=newtest" + counter)
             //   .then(e => {})
             //   .catch(e => {});
@@ -1987,6 +2015,7 @@ function sortPoints(currentLat, currentLng) {
   }
 
   for (let ind in points) {
+    console.log(points[ind].active);
     points[ind].distance = distanceInKmBetweenEarthCoordinates(
       currentLat,
       currentLng,
@@ -2011,8 +2040,13 @@ function sortPoints(currentLat, currentLng) {
       return 0;
     });
 
+  console.log("clear");
+  console.log(clear);
+  console.log("clear");
   if (clear.length > 0) {
     if (clear[0].distance < locationSettings.pointCanPlaceDistanceKm) {
+      points.find(x => (x.id = clear[0].id)).active = false;
+      appSettings.setString("points", JSON.stringify(points));
       BackgroundAudio.point = clear[0];
     }
   }
@@ -2032,11 +2066,14 @@ const BackgroundAudio = {
    * Play Audio and save data to setttings
    */
   set point(point) {
-    if (this.point == null) {
+    if (this._point == null) {
       this._point = point;
-      appSettings.setString("current", JSON.stringify(point));
       this.play();
     } else {
+      // if (this._point.id != point.id) {
+      //    beep();
+      // }
+      //console.log("????--------------------->>>>>>>>>>>>>>>>>>>>>")
     }
   },
   get point() {
@@ -2044,13 +2081,11 @@ const BackgroundAudio = {
   },
 
   play() {
-    
     this.clear();
 
     this.player = new audioplayer.TNSPlayer();
 
     console.log("zzz" + this._point.mp3);
-    
 
     let playerOptions = {
       audioFile: this._point.mp3,
@@ -2103,8 +2138,8 @@ const BackgroundAudio = {
     this.point = null;
     this.player = null;
 
-    appSettings.remove("point");
-    appSettings.remove("player_duration");
+    // appSettings.remove("point");
+    //appSettings.remove("player_duration");
   }
 };
 

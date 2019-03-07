@@ -52,7 +52,9 @@
             class="font-awesome"
           />
         </StackLayout>
-        <StackLayout class="HMid"></StackLayout>
+        <StackLayout class="HMid">
+          <Label :text="single"/>
+        </StackLayout>
         <StackLayout class="HRight">
           <Label :text="play ? '⏸' : '▶'" style="font-size:27;color:#333;" @tap="playStop"/>
         </StackLayout>
@@ -155,15 +157,15 @@
 </template>
 
 <script>
-
-  import * as geolocation from "nativescript-geolocation";
-  import * as platform from "tns-core-modules/platform";
-  import { Accuracy } from "ui/enums";
-  const utils = require("tns-core-modules/utils/utils");
-  import * as application from "tns-core-modules/application";
-  let locationService = require('./backgroundServices');
+import { Singleton } from "./Singleton.js";
 
 
+import * as geolocation from "nativescript-geolocation";
+import * as platform from "tns-core-modules/platform";
+import { Accuracy } from "ui/enums";
+const utils = require("tns-core-modules/utils/utils");
+import * as application from "tns-core-modules/application";
+let locationService = require("./backgroundServices");
 
 import Settings from "./pages/Settings";
 import About from "./pages/About";
@@ -182,18 +184,20 @@ let translate = require("./../translate.json");
 
 export default {
   mounted() {
+
+
     console.log("mounted");
+    console.log(Singleton.foo);
+    console.log("mounted");
+
     /////////////////
     if (appSettings.getString("points")) {
       this.points = JSON.parse(appSettings.getString("points"));
     }
     if (appSettings.getString("lang")) {
       this.translate = translate[appSettings.getString("lang")];
-      console.log(this.translate.menu.map);
     }
-    ///////////////////
 
-    this.counter = appSettings.getNumber("cou", 0);
     // setInterval(e => {
     //   this.counter = appSettings.getNumber("cou", 0);
     // }, 10000);
@@ -297,7 +301,7 @@ export default {
         this.map.view.latitude = this.points[x].lat;
         this.map.view.longitude = this.points[x].lng;
       }
-      if(this.debug){
+      if (this.debug) {
         this.startBackgroundTap();
       }
     },
