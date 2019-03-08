@@ -4,7 +4,14 @@ const appSettings = require("tns-core-modules/application-settings");
 
 export const Singleton = {
   points: null,
-  featurePoints: null,
+  _featurePoints: null,
+  get featurePoints() {
+    return this._featurePoints;
+  },
+  set featurePoints(value) {
+    this._featurePoints = value;
+    this.savePoints();
+  },
   /**
    * oe  ?  beebep stop loop :)
    */
@@ -20,13 +27,19 @@ export const Singleton = {
   },
 
   set current(value) {
+
     this.points.find(x => x.id == value.id).active = false;
     this._current = value;
     this.printData();
-    appSettings.setString("points", JSON.stringify(this.points));
+    this.savePoints();
   },
 
   printData() {
+
+    if (this.points == null) {
+      return;
+    }
+
     console.log(
       "active true -----------------------> " +
         this.points.filter(x => x.active == true).length
@@ -36,7 +49,9 @@ export const Singleton = {
         this.points.filter(x => x.active == false).length
     );
   },
-
+  savePoints() {
+    appSettings.setString("points", JSON.stringify(this.points));
+  },
   /**
    * play new song > ? why setup -> coz
    */
@@ -60,6 +75,11 @@ export const Singleton = {
       });
 
     this._checkInterval = setInterval(() => {
+
+      if (!this.player)
+        return;
+      
+      
       this.player.getAudioTrackDuration().then(duration => {
         // iOS: duration is in seconds
         // Android: duration is in milliseconds
@@ -77,7 +97,22 @@ export const Singleton = {
   play() {
     this.player.play();
   },
-  clear() {},
+  clear() {
+
+    try {
+      clearInterval(this._checkInterval);
+    }
+    catch (e) {
+      console.log("nenavizhu javascript")
+    }
+   
+    if (this.player) {
+      this.player.pause();
+      this.current = null;
+      this.player = null;  
+    }
+   
+  },
   playPause() {
     if (this.player.isAudioPlaying()) {
       this.player.pause();

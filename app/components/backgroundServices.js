@@ -3,12 +3,7 @@ import { Accuracy } from "tns-core-modules/ui/enums";
 import * as application from "tns-core-modules/application";
 import * as platform from "tns-core-modules/platform";
 import * as Toast from "nativescript-toast";
-import { beep } from "./beep";
-
 import { Sorting } from "./Sorting";
-
-
-import { Singleton } from "./Singleton.js";
 import { locationSettings } from "./locationSettings";
 
 let prevLocation = { lat: null, lng: null };

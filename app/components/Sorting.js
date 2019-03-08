@@ -25,6 +25,10 @@ export const Sorting = {
       console.log("not moved :( ");
       return;
     }
+    if (Singleton.points == null) {
+      alert("Please load  points");
+      return;
+    }
 
     //  only active
     let points = Singleton.points.filter(x => x.active == true);
@@ -49,6 +53,8 @@ export const Sorting = {
       );
     }
 
+
+   
     let clear = points
       .filter(
         x =>
@@ -65,12 +71,18 @@ export const Sorting = {
 
         return 0;
       });
-
+    
+    
+    console.log("ssssssssssss");
+    for (let a in clear) {
+      console.log(`${a}->${clear[a].title} in ${clear[a].distance}`)
+    }
+    console.log(`${0}->${clear[0].title} in ${clear[0].distance}`)
+  
+    console.log("ssssssssssss");
     if (clear.length > 0) {
       if (clear[0].distance < locationSettings.pointCanPlaceDistanceKm) {
-        console.log(
-          "[" + clear[0].title + clear[0].mp3 + " ]  this is current "
-        );
+       
         Singleton.printData();
 
         if (
@@ -78,7 +90,7 @@ export const Sorting = {
           Singleton.progress > 0 &&
           Singleton.progress < 100
         ) {
-          if (!Singleton.beebeepDone.includes(Singleton.current.id)) {
+          if (Singleton.player && !Singleton.beebeepDone.includes(Singleton.current.id)) {
             Singleton.player.pause();
             beep();
             Singleton.beebeepDone.push(Singleton.current.id);
@@ -89,7 +101,7 @@ export const Sorting = {
         } else {
           Singleton.current = clear[0];
           Singleton.setup();
-        }
+        }  
       }
     }
     Singleton.featurePoints = clear.length > 0 ? clear : null;

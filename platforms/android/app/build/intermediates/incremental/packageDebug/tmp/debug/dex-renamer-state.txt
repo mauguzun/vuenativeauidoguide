@@ -1,4 +1,4 @@
-#Thu Mar 07 21:49:20 EET 2019
+#Fri Mar 08 20:13:42 EET 2019
 base.0=C\:\\GeolocationNativescriptVue\\platforms\\android\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0
 path.0=classes.dex
 renamed.0=classes.dex

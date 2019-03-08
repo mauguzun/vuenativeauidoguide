@@ -1,40 +1,4 @@
-<!--<template>
-  <Page class="page">
-    <GridLayout rows="auto, auto, auto, *, auto">
-      <GridLayout row="0" columns="*, *, *, *">
-        <Button :text="counter" col="0" textWrap="true" @tap="enableLocationTap"/>
-        <Button text="Get Current Location" col="1" textWrap="true" @tap="buttonGetLocationTap"/>
-        <Button text="Start Monitoring" col="2" textWrap="true" @tap="buttonStartTap"/>
-        <Button text="Stop Monitoring" col="3" textWrap="true" @tap="buttonStopTap"/>
-      </GridLayout>
-      <GridLayout row="1" columns="*, *">
-        <Button
-          text="Start Background thread monitoring"
-          col="0"
-          ios:visibility="collapsed"
-          textWrap="true"
-          @tap="startBackgroundTap"
-        />
-        <Button
-          text="Stop Background thread monitoring"
-          col="1"
-          ios:visibility="collapsed"
-          textWrap="true"
-          @tap="stopBackgroundTap"
-        />
-      </GridLayout>
 
-      <Label row="2" :text="watchId"></Label>
-      <ListView row="3" for="loc in model.locations">
-        <v-template>
-          <Label :text="`${$index}, ${loc.latitude}, ${loc.longitude}, ${loc.altitude}`"/>
-        </v-template>
-      </ListView>
-
-      <Button text="Clear" row="4" @tap="buttonClearTap"/>
-    </GridLayout>
-  </Page>
-</template> -->
 
 <template>
   <Page class="page">
@@ -78,7 +42,7 @@
             margin="10"
           />
 
-        <Label
+          <Label
             text="Make my test"
             @tap="test"
             paddingLeft="30%"
@@ -86,7 +50,7 @@
             class="drawerItemText font-awesome"
             margin="10"
           />
-  <Label
+          <Label
             text="Set all active"
             @tap="setAllAsActive"
             paddingLeft="30%"
@@ -94,7 +58,14 @@
             class="drawerItemText font-awesome"
             margin="10"
           />
-
+          <Label
+            text="Test ---  "
+            @tap="geoLocation()"
+            paddingLeft="30%"
+            color="black"
+            class="drawerItemText font-awesome"
+            margin="10"
+          />
 
           <Label
             :text=" translate.menu.map"
@@ -154,7 +125,7 @@
                       </StackLayout>
                       <StackLayout marginLeft="10" paddingTop="3" width="50%">
                         <Label :text="item.title"/>
-                        <Label :text="item.text"/>
+                        <Label :text="item.distance"/>
                       </StackLayout>
                     </StackLayout>
                   </v-template>
@@ -185,10 +156,12 @@ import About from "./pages/About";
 import PageMap from "./pages/PageMap.vue";
 import Player from "./pages/Player";
 import { Image } from "tns-core-modules/ui/image";
+import { Sorting } from "./Sorting";
 
 import { beep } from "./beep.js";
 import { apiCall } from "./api.js";
 import { getString } from "tns-core-modules/application-settings/application-settings";
+import { locationSettings } from "./locationSettings";
 
 let mapsModule = require("nativescript-google-maps-sdk");
 const appSettings = require("tns-core-modules/application-settings");
@@ -196,42 +169,54 @@ let translate = require("./../translate.json");
 ///
 
 export default {
-
   destroyed() {
-    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+    console.log("destroyed");
+
+    this.isBackground = true;
+    if (appSettings.getBoolean("play") == true) {
+      startBackgroundTap();
+    }
   },
 
   mounted() {
     console.log("mounted");
-   
+
+    this.isBackground = false;
+    // if this play ,stop back , start front inteval :)
+
     if (appSettings.getString("points")) {
-      Singleton.points  = JSON.parse(appSettings.getString("points"));
+      Singleton.points = JSON.parse(appSettings.getString("points"));
       Singleton.printData();
-      console.log("data")
+      console.log("data");
     }
-    
+
     if (appSettings.getString("lang")) {
       this.translate = translate[appSettings.getString("lang")];
-    }  
+    }
 
-    // setInterval(e => {
-    //   this.counter = appSettings.getNumber("cou", 0);
-    // }, 10000);
-    ///////////
-    //////////////
+    // lets continue work
+    if (appSettings.getBoolean("play") == true) {
+      this.play = true;
+      stopBackgroundTap();
+      this.geoLocation();
+    }
   },
 
   watch: {
     current(value) {
-      this.current = this.points.find(x => x.id == value.id);
-      this.points.find(x => x.id == value.id).active = false;
+      if (Singleton.points == null) {
+        return;
+      }
+      this.current = Singleton.points.find(x => x.id == value.id);
+      Singleton.points.find(x => x.id == value.id).active = false;
+      Singleton.savePoints();
 
       // lets do this green ;)
       if (
         this.map.view != null &&
         this.map.markers.find(x => x.userData.id == value.id)
       ) {
-        this.map.markers.find(x => x.userData.id == value.id).color = "green";
+        this.map.markers.find(x => x.userData.id == value.id).color = locationSettings.color.visited;
       }
     }
   },
@@ -243,6 +228,8 @@ export default {
 
   data() {
     return {
+      isBackground: false,
+      frontLocation: null,
       current: null,
       feturePoints: null,
       points: null,
@@ -265,7 +252,6 @@ export default {
       model: {
         locations: []
       },
-      counter: appSettings.getNumber("cou", 0),
       watchId: null,
       BGids: []
       ///
@@ -274,19 +260,19 @@ export default {
   methods: {
     ////////
 
-    setAllAsActive(){
-      for(let  x in Singleton.points)
-      {
+    setAllAsActive() {
+      for (let x in Singleton.points) {
         Singleton.points[x].active = true;
       }
+      Singleton.savePoints();
+      Singleton.beebeepDone = [];
+      this.MAP_markerSetPoints();
     },
 
     startBackgroundTap,
     stopBackgroundTap,
     enableLocationTap,
-    buttonGetLocationTap,
-    buttonStartTap,
-    buttonStopTap,
+
     buttonClearTap,
     // map
     MAP_mapReady(args) {
@@ -296,38 +282,57 @@ export default {
       this.map.view.latitude = 43.7031691;
       this.map.view.longitude = 7.1827772;
       this.MAP_markerSetPoints();
+
+      ////
+      geolocation.getCurrentLocation(res => {
+        let lat = res.latitude;
+        let lng = res.longitude;
+
+        this.MAP_setCurrentLocation(lat, lng);
+        //
+      });
+
+      ///
     },
 
     MAP_markerSetPoints() {
-      if ((this.points == null) | (this.map.view == null)) {
+      if ((Singleton.points == null) | (this.map.view == null)) {
         return;
       }
 
       this.map.view.removeAllMarkers();
       this.map.markers = [];
 
-      for (var x = 0; this.points[x]; x++) {
+      for (var x = 0; Singleton.points[x]; x++) {
         let marker = new mapsModule.Marker();
         marker.position = new mapsModule.Position.positionFromLatLng(
-          this.points[x].lat,
-          this.points[x].lng
+          Singleton.points[x].lat,
+          Singleton.points[x].lng
         );
 
-        marker.title = this.points[x].title;
-        marker.userData = { id: this.points[x].id };
+        marker.title = Singleton.points[x].title;
+        marker.userData = { id: Singleton.points[x].id };
+
+        marker.color = Singleton.points[x].active
+          ? locationSettings.color.active
+          : locationSettings.color.visited;
 
         this.map.view.addMarker(marker);
         this.map.markers.push(marker);
 
-        this.map.view.latitude = this.points[x].lat;
-        this.map.view.longitude = this.points[x].lng;
+        this.map.view.latitude = Singleton.points[x].lat;
+        this.map.view.longitude = Singleton.points[x].lng;
       }
-      // if (this.debug) {  
+      // if (this.debug) {
       //   this.startBackgroundTap();
       // }
     },
 
     MAP_setCurrentLocation(lat, lng) {
+      if (this.map.view == null) {
+        alert("sssssssssss");
+        return;
+      }
       if (this.map.currentLocation == null) {
         this.map.currentLocation = new mapsModule.Marker();
         this.map.currentLocation.position = new mapsModule.Position.positionFromLatLng(
@@ -359,13 +364,14 @@ export default {
       appSettings.setString("lang", data.lang);
 
       // check if city is same ?
-      if (data.city != temp.city) {
+      if ((data.city != temp.city) | (Singleton.points == null)) {
         this.laodPointsFromApi();
       } else {
         this.MAP_markerSetPoints();
       }
       if (data.lang != temp.lang) {
         this.setLang();
+         this.laodPointsFromApi();
       }
 
       this.showmap = true;
@@ -395,8 +401,8 @@ export default {
               res.active = true;
             }
 
-            this.points = res.points;
-            appSettings.setString("points", JSON.stringify(this.points));
+            Singleton.points = res.points;
+            Singleton.savePoints();
             this.MAP_markerSetPoints();
           }
         });
@@ -418,12 +424,14 @@ export default {
       this.toggleDrawer();
     },
     playFeature(point) {
-      if (this.$refs.audio != null) {
-        this.$refs.audio.stop();
-        this.$refs.audio.points = null;
-      }
+      if (Singleton.player != null) {
+        Singleton.clear();
 
-      this.current = this.points.find(x => x.id == point.id);
+        // this.$refs.audio.points = null;
+      }
+      this.current = null;
+      Singleton.current = Singleton.points.find(x => x.id == point.id);
+      this.current = Singleton.current;
     },
     /**
      * start background server or stop
@@ -431,19 +439,56 @@ export default {
     playStop() {
       if (!this.play) {
         this.play = true;
-        alert("continue work on background");
-        startBackgroundTap();
+        appSettings.setBoolean("play", true);
+
+        this.geoLocation();
       } else {
+        appSettings.setBoolean("play", false);
         this.play = false;
-        alert("stop");
+        //////
+       // 
+        geolocation.clearWatch(this.frontLocation);
+
+        ///
+        Singleton.clear();
         stopBackgroundTap();
+      }
+    },
+
+    geoLocation() {
+      if (Singleton.points == null) {
+        this.playStop();
+        alert("Not Loaderd");
+        return;
+      }
+
+      if (this.frontLocation == null) {
+        this.frontLocation = geolocation.watchLocation(
+          res => {
+            let lat = res.latitude;
+            let lng = res.longitude;
+
+            this.MAP_setCurrentLocation(lat, lng);
+            Sorting.sortPoints(lat, lng);
+            this.current = Singleton.current;
+            this.feturePoints = Singleton.featurePoints;
+            //
+          },
+          error => console.log(error),
+          {
+            desiredAccuracy: Accuracy.high,
+            updateDistance: locationSettings.updateDistanceInMetters,
+            updateTime: locationSettings.updateTime,
+            minimumUpdateTime: locationSettings.minimumUpdateTime
+          }
+        );
       }
     },
 
     /**
      * @lat number lattitude
      * @lng number longitude
-     * call this funciton from backround
+     *
      */
 
     currentLocation(lat, lng) {},
@@ -452,29 +497,28 @@ export default {
      */
     play(id) {
       // check
+      if (!Singleton.points) {
+        return;
+      }
 
-      let playPoint = this.points.find(x => x.id == id);
+      let playPoint = Singleton.points.find(x => x.id == id);
 
       if (!playPoint | (playPoint.active == false)) {
         return;
       }
 
       // we cant play
-      if (this.$refs.audio) {
-        if (this.$refs.audio.progress > 0 && this.$refs.audio.progress < 100) {
+      if (Singleton.player != null) {
+        if (Singleton.progress > 0 && Singleton.progress < 100) {
           this.openModal(playPoint);
           return;
         }
       }
 
-      this.current = this.points.find(x => x.id == id);
+      Singleton.current = Singleton.points.find(x => x.id == id);
+      this.current = Singleton.current;
     },
-    test() {
-      alert("start test how i want make UI ")
-      this.MAP_setCurrentLocation(56.954, 24.2036519068497);
-      this.current = this.points[0];
-      this.feturePoints = this.points;
-    },
+
     openModal(point) {
       beep();
       confirm({
@@ -484,14 +528,15 @@ export default {
         cancelButtonText: "Skip"
       }).then(result => {
         if (result == true) {
-          if (this.$refs.audio) {
-            this.$refs.audio.stop();
-            this.$refs.audio.points = null;
-            this.current = this.points.find(x => x.id == point.id);
+          if (Singleton.player) {
+            Singleton.player.stop();
+            // this.$refs.audio.points = null;
+            Singleton.current = Singleton.points.find(x => x.id == point.id);
+            this.current = Singleton.current;
           }
           // we stop player !!! and send to play again
         } else {
-          this.$refs.audio.play();
+          Singleton.play();
         }
       });
     }
@@ -536,6 +581,7 @@ function startBackgroundTap() {
 }
 
 function stopBackgroundTap() {
+  Singleton.clear();
   if (application.android) {
     const { sdkVersion } = platform.device;
     const context = utils.ad.getApplicationContext();
@@ -583,68 +629,9 @@ function enableLocationTap() {
   );
 }
 
-function buttonGetLocationTap() {
-  const comp = this;
-  geolocation.isEnabled().then(isEnabled => {
-    if (isEnabled) {
-      let location = geolocation
-        .getCurrentLocation({
-          desiredAccuracy: Accuracy.high,
-          maximumAge: 5000,
-          timeout: 10000,
-          iosAllowsBackgroundLocationUpdates: true,
-          updateDistance: 0.1,
-          timeout: 20000
-        })
-        .then(
-          function(loc) {
-            if (!!loc) {
-              comp.model.locations.push(loc);
-            }
-          },
-          function(e) {
-            console.log("Error: " + (e.message || e));
-          }
-        );
-    }
-  });
-}
-
-function buttonStartTap() {
-  try {
-    const comp = this;
-    geolocation.isEnabled().then(isEnabled => {
-      if (isEnabled) {
-        comp.watchId = geolocation.watchLocation(
-          function(loc) {
-            console.log(loc);
-            if (loc) {
-              comp.model.locations.push(loc);
-            }
-          },
-          function(e) {
-            console.log("Error: " + e.message);
-          },
-          {
-            desiredAccuracy: Accuracy.high,
-            maximumAge: 5000,
-            timeout: 20000,
-            updateDistance: 1,
-            updateTime: 3000,
-            iosAllowsBackgroundLocationUpdates: true,
-            iosPausesLocationUpdatesAutomatically: false
-          }
-        );
-      }
-    });
-  } catch (ex) {
-    console.log("Error: " + ex.message);
-  }
-}
-
 function buttonStopTap() {
   if (this.watchId != null) {
-    geolocation.clearWatch(this.watchId);
+    this.stopBackgroundTap();
     this.watchId = null;
   }
 }
@@ -653,13 +640,6 @@ function buttonClearTap() {
   this.model.locations.splice(0, this.model.locations.length);
 }
 </script>
-
+  
 <style scoped>
-.hello-world {
-  margin: 20;
-}
-
-label {
-  color: red;
-}
 </style>
