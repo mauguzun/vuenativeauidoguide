@@ -5,6 +5,7 @@ const appSettings = require("tns-core-modules/application-settings");
 export const Singleton = {
   points: null,
   _featurePoints: null,
+  
   get featurePoints() {
     return this._featurePoints;
   },

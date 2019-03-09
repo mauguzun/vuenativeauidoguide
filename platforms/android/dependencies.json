@@ -16,6 +16,10 @@
         "directory": "..\\..\\node_modules\\nativescript-google-maps-sdk"
     },
     {
+        "name": "nativescript-local-notifications",
+        "directory": "..\\..\\node_modules\\nativescript-local-notifications"
+    },
+    {
         "name": "nativescript-sound",
         "directory": "..\\..\\node_modules\\nativescript-sound"
     },

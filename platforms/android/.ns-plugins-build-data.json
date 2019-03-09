@@ -28,5 +28,9 @@
 		"C:\\GeolocationNativescriptVue\\node_modules\\nativescript-ui-listview\\platforms\\android\\typings\\listview.d.ts": "e5cb786b04a720aa5f9069bdc019f91a5fd2769a",
 		"C:\\GeolocationNativescriptVue\\node_modules\\nativescript-ui-listview\\platforms\\android\\include.gradle": "455b6fc1ccdd84405dfdbaf9171410e91b54b242",
 		"C:\\GeolocationNativescriptVue\\node_modules\\nativescript-ui-listview\\platforms\\android\\TNSListView-release.aar": "5c59b2f481bc4983adf3d1dd9de280444a120d3a"
+	},
+	"nativescript-local-notifications": {
+		"C:\\GeolocationNativescriptVue\\node_modules\\nativescript-local-notifications\\platforms\\android\\include.gradle": "4f992285c2aef9454171825175b68993b2eb8bcc",
+		"C:\\GeolocationNativescriptVue\\node_modules\\nativescript-local-notifications\\platforms\\android\\app-release.aar": "3ab586eace47782549a734c3f758fe18c407d8bf"
 	}
 }

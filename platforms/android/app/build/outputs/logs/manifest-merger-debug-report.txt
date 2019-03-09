@@ -7,16 +7,17 @@ INJECTED from C:\GeolocationNativescriptVue\platforms\android\app\src\main\Andro
 MERGED from [com.google.android.gms:play-services-location:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-location-12.0.1.aar\99b4d0058ddc13c1fd907a962c38ab84\AndroidManifest.xml:2:1-9:12
 MERGED from [com.google.android.gms:play-services-maps:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-maps-12.0.1.aar\d90627406b64a5852509048ab4bd180d\AndroidManifest.xml:17:1-32:12
 MERGED from [com.android.support:design:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\design-27.0.1.aar\516183598f742fe281748538ff190d16\AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:multidex:1.0.2] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\multidex-1.0.2.aar\95add9a5db8596db7494e7e68a4d9da8\AndroidManifest.xml:17:1-22:12
 MERGED from [com.google.android.gms:play-services-base:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-base-12.0.1.aar\a751e534d7268262a847457e75fb7ae2\AndroidManifest.xml:17:1-29:12
 MERGED from [com.google.android.gms:play-services-tasks:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-tasks-12.0.1.aar\457d2b78f42cc702d14ae851465c71df\AndroidManifest.xml:2:1-9:12
 MERGED from [com.google.android.gms:play-services-basement:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-basement-12.0.1.aar\4fe18b5e92a272156f339a654e2d6d6f\AndroidManifest.xml:17:1-28:12
 MERGED from [com.android.support:support-v4:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\support-v4-27.0.1.aar\ef70a1e7d34fb62b03f75554697a1ae1\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:multidex:1.0.2] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\multidex-1.0.2.aar\95add9a5db8596db7494e7e68a4d9da8\AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.support:appcompat-v7:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\appcompat-v7-27.0.1.aar\87143907b936473098d02a2375170020\AndroidManifest.xml:17:1-22:12
 MERGED from [:nativescript-optimized-with-inspector:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\nativescript-optimized-with-inspector.aar\44fcc97f4be75f90e094b0e301258636\AndroidManifest.xml:2:1-11:12
 MERGED from [:nativescript_audio:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\nativescript_audio.aar\8180f3f00d1119ad158da9676d55d4bc\AndroidManifest.xml:2:1-11:12
 MERGED from [:nativescript_geolocation:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\nativescript_geolocation.aar\df7ed8282d3ad1445d51f4470a526f34\AndroidManifest.xml:2:1-11:12
 MERGED from [:nativescript_google_maps_sdk:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\nativescript_google_maps_sdk.aar\b6c7e9d1a980e1a2ac09798ccb782f58\AndroidManifest.xml:2:1-12:12
+MERGED from [:app-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\app-release.aar\ff54541a00768505bc07b2dd4831cdc4\AndroidManifest.xml:2:1-36:12
 MERGED from [:TNSSideDrawer-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\TNSSideDrawer-release.aar\d91daf7bc3fe4a5f2894f76177d27d09\AndroidManifest.xml:2:1-11:12
 MERGED from [:TNSCore-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\TNSCore-release.aar\5d56d5fcb6078b5203058ad292f7c7d5\AndroidManifest.xml:2:1-11:12
 MERGED from [:widgets-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\widgets-release.aar\265e282fa674d5fc99ef2f69e5bbbf23\AndroidManifest.xml:2:1-14:12
@@ -27,8 +28,8 @@ MERGED from [com.android.support:transition:27.0.1] C:\Users\maugu\.gradle\cache
 MERGED from [com.android.support:support-fragment:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\support-fragment-27.0.1.aar\2fc86b65fd3f4dbd6e7b86d0f8c97715\AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.support:support-core-utils:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\support-core-utils-27.0.1.aar\4f2675d6dbd08c949240a38819b9f483\AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.support:animated-vector-drawable:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-27.0.1.aar\fbe84bae0fda72e3c013a0e44d60c6c0\AndroidManifest.xml:17:1-22:12
-MERGED from [com.android.support:support-core-ui:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\support-core-ui-27.0.1.aar\b8c7691fc48e503ea74b5f48b492c8ec\AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.support:support-vector-drawable:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-27.0.1.aar\770798815248e74a5978e31cd017fb52\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-ui:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\support-core-ui-27.0.1.aar\b8c7691fc48e503ea74b5f48b492c8ec\AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.support:support-media-compat:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\support-media-compat-27.0.1.aar\d18b556d0145c18292a9c45ddce691df\AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.support:support-compat:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\support-compat-27.0.1.aar\6447ea0615d926cd3edb596d333fb6ea\AndroidManifest.xml:17:1-22:12
 MERGED from [com.google.android.gms:play-services-base-license:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-base-license-12.0.1.aar\b306cbf6ae0ddb211ba591be7d26770e\AndroidManifest.xml:17:1-24:12
@@ -72,8 +73,6 @@ MERGED from [com.google.android.gms:play-services-maps:12.0.1] C:\Users\maugu\.g
 MERGED from [com.google.android.gms:play-services-maps:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-maps-12.0.1.aar\d90627406b64a5852509048ab4bd180d\AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:design:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\design-27.0.1.aar\516183598f742fe281748538ff190d16\AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:design:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\design-27.0.1.aar\516183598f742fe281748538ff190d16\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:multidex:1.0.2] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\multidex-1.0.2.aar\95add9a5db8596db7494e7e68a4d9da8\AndroidManifest.xml:20:5-43
-MERGED from [com.android.support:multidex:1.0.2] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\multidex-1.0.2.aar\95add9a5db8596db7494e7e68a4d9da8\AndroidManifest.xml:20:5-43
 MERGED from [com.google.android.gms:play-services-base:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-base-12.0.1.aar\a751e534d7268262a847457e75fb7ae2\AndroidManifest.xml:20:5-44
 MERGED from [com.google.android.gms:play-services-base:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-base-12.0.1.aar\a751e534d7268262a847457e75fb7ae2\AndroidManifest.xml:20:5-44
 MERGED from [com.google.android.gms:play-services-tasks:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-tasks-12.0.1.aar\457d2b78f42cc702d14ae851465c71df\AndroidManifest.xml:5:5-44
@@ -82,6 +81,8 @@ MERGED from [com.google.android.gms:play-services-basement:12.0.1] C:\Users\maug
 MERGED from [com.google.android.gms:play-services-basement:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-basement-12.0.1.aar\4fe18b5e92a272156f339a654e2d6d6f\AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:support-v4:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\support-v4-27.0.1.aar\ef70a1e7d34fb62b03f75554697a1ae1\AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:support-v4:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\support-v4-27.0.1.aar\ef70a1e7d34fb62b03f75554697a1ae1\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:multidex:1.0.2] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\multidex-1.0.2.aar\95add9a5db8596db7494e7e68a4d9da8\AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:multidex:1.0.2] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\multidex-1.0.2.aar\95add9a5db8596db7494e7e68a4d9da8\AndroidManifest.xml:20:5-43
 MERGED from [com.android.support:appcompat-v7:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\appcompat-v7-27.0.1.aar\87143907b936473098d02a2375170020\AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:appcompat-v7:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\appcompat-v7-27.0.1.aar\87143907b936473098d02a2375170020\AndroidManifest.xml:20:5-44
 MERGED from [:nativescript-optimized-with-inspector:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\nativescript-optimized-with-inspector.aar\44fcc97f4be75f90e094b0e301258636\AndroidManifest.xml:7:5-9:41
@@ -92,6 +93,8 @@ MERGED from [:nativescript_geolocation:] C:\Users\maugu\.gradle\caches\transform
 MERGED from [:nativescript_geolocation:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\nativescript_geolocation.aar\df7ed8282d3ad1445d51f4470a526f34\AndroidManifest.xml:7:5-47
 MERGED from [:nativescript_google_maps_sdk:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\nativescript_google_maps_sdk.aar\b6c7e9d1a980e1a2ac09798ccb782f58\AndroidManifest.xml:7:5-47
 MERGED from [:nativescript_google_maps_sdk:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\nativescript_google_maps_sdk.aar\b6c7e9d1a980e1a2ac09798ccb782f58\AndroidManifest.xml:7:5-47
+MERGED from [:app-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\app-release.aar\ff54541a00768505bc07b2dd4831cdc4\AndroidManifest.xml:7:5-9:41
+MERGED from [:app-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\app-release.aar\ff54541a00768505bc07b2dd4831cdc4\AndroidManifest.xml:7:5-9:41
 MERGED from [:TNSSideDrawer-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\TNSSideDrawer-release.aar\d91daf7bc3fe4a5f2894f76177d27d09\AndroidManifest.xml:7:5-9:41
 MERGED from [:TNSSideDrawer-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\TNSSideDrawer-release.aar\d91daf7bc3fe4a5f2894f76177d27d09\AndroidManifest.xml:7:5-9:41
 MERGED from [:TNSCore-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\TNSCore-release.aar\5d56d5fcb6078b5203058ad292f7c7d5\AndroidManifest.xml:7:5-9:41
@@ -112,10 +115,10 @@ MERGED from [com.android.support:support-core-utils:27.0.1] C:\Users\maugu\.grad
 MERGED from [com.android.support:support-core-utils:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\support-core-utils-27.0.1.aar\4f2675d6dbd08c949240a38819b9f483\AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:animated-vector-drawable:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-27.0.1.aar\fbe84bae0fda72e3c013a0e44d60c6c0\AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:animated-vector-drawable:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-27.0.1.aar\fbe84bae0fda72e3c013a0e44d60c6c0\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-core-ui:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\support-core-ui-27.0.1.aar\b8c7691fc48e503ea74b5f48b492c8ec\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-core-ui:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\support-core-ui-27.0.1.aar\b8c7691fc48e503ea74b5f48b492c8ec\AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:support-vector-drawable:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-27.0.1.aar\770798815248e74a5978e31cd017fb52\AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:support-vector-drawable:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-27.0.1.aar\770798815248e74a5978e31cd017fb52\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\support-core-ui-27.0.1.aar\b8c7691fc48e503ea74b5f48b492c8ec\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\support-core-ui-27.0.1.aar\b8c7691fc48e503ea74b5f48b492c8ec\AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:support-media-compat:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\support-media-compat-27.0.1.aar\d18b556d0145c18292a9c45ddce691df\AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:support-media-compat:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\support-media-compat-27.0.1.aar\d18b556d0145c18292a9c45ddce691df\AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:support-compat:27.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\support-compat-27.0.1.aar\6447ea0615d926cd3edb596d333fb6ea\AndroidManifest.xml:20:5-44
@@ -167,6 +170,8 @@ MERGED from [com.google.android.gms:play-services-tasks:12.0.1] C:\Users\maugu\.
 MERGED from [com.google.android.gms:play-services-tasks:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-tasks-12.0.1.aar\457d2b78f42cc702d14ae851465c71df\AndroidManifest.xml:7:5-20
 MERGED from [com.google.android.gms:play-services-basement:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-basement-12.0.1.aar\4fe18b5e92a272156f339a654e2d6d6f\AndroidManifest.xml:22:5-26:19
 MERGED from [com.google.android.gms:play-services-basement:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-basement-12.0.1.aar\4fe18b5e92a272156f339a654e2d6d6f\AndroidManifest.xml:22:5-26:19
+MERGED from [:app-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\app-release.aar\ff54541a00768505bc07b2dd4831cdc4\AndroidManifest.xml:14:5-34:19
+MERGED from [:app-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\app-release.aar\ff54541a00768505bc07b2dd4831cdc4\AndroidManifest.xml:14:5-34:19
 MERGED from [:widgets-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\widgets-release.aar\265e282fa674d5fc99ef2f69e5bbbf23\AndroidManifest.xml:11:5-12:19
 MERGED from [:widgets-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\widgets-release.aar\265e282fa674d5fc99ef2f69e5bbbf23\AndroidManifest.xml:11:5-12:19
 MERGED from [com.google.android.gms:play-services-location-license:12.0.1] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\play-services-location-license-12.0.1.aar\a835b96434e4b70d62f70de7a0590a58\AndroidManifest.xml:22:5-20
@@ -283,6 +288,50 @@ uses-permission#com.google.android.providers.gsf.permission.READ_GSERVICES
 ADDED from [:nativescript_google_maps_sdk:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\nativescript_google_maps_sdk.aar\b6c7e9d1a980e1a2ac09798ccb782f58\AndroidManifest.xml:10:5-98
 	android:name
 		ADDED from [:nativescript_google_maps_sdk:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\nativescript_google_maps_sdk.aar\b6c7e9d1a980e1a2ac09798ccb782f58\AndroidManifest.xml:10:22-95
+uses-permission#android.permission.RECEIVE_BOOT_COMPLETED
+ADDED from [:app-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\app-release.aar\ff54541a00768505bc07b2dd4831cdc4\AndroidManifest.xml:11:5-81
+	android:name
+		ADDED from [:app-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\app-release.aar\ff54541a00768505bc07b2dd4831cdc4\AndroidManifest.xml:11:22-78
+uses-permission#android.permission.WAKE_LOCK
+ADDED from [:app-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\app-release.aar\ff54541a00768505bc07b2dd4831cdc4\AndroidManifest.xml:12:5-68
+	android:name
+		ADDED from [:app-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\app-release.aar\ff54541a00768505bc07b2dd4831cdc4\AndroidManifest.xml:12:22-65
+service#com.telerik.localnotifications.NotificationActionReceiver
+ADDED from [:app-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\app-release.aar\ff54541a00768505bc07b2dd4831cdc4\AndroidManifest.xml:15:9-17:40
+	android:exported
+		ADDED from [:app-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\app-release.aar\ff54541a00768505bc07b2dd4831cdc4\AndroidManifest.xml:17:13-37
+	android:name
+		ADDED from [:app-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\app-release.aar\ff54541a00768505bc07b2dd4831cdc4\AndroidManifest.xml:16:13-85
+receiver#com.telerik.localnotifications.NotificationClearedReceiver
+ADDED from [:app-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\app-release.aar\ff54541a00768505bc07b2dd4831cdc4\AndroidManifest.xml:19:9-21:40
+	android:exported
+		ADDED from [:app-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\app-release.aar\ff54541a00768505bc07b2dd4831cdc4\AndroidManifest.xml:21:13-37
+	android:name
+		ADDED from [:app-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\app-release.aar\ff54541a00768505bc07b2dd4831cdc4\AndroidManifest.xml:20:13-86
+receiver#com.telerik.localnotifications.NotificationAlarmReceiver
+ADDED from [:app-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\app-release.aar\ff54541a00768505bc07b2dd4831cdc4\AndroidManifest.xml:22:9-24:40
+	android:exported
+		ADDED from [:app-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\app-release.aar\ff54541a00768505bc07b2dd4831cdc4\AndroidManifest.xml:24:13-37
+	android:name
+		ADDED from [:app-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\app-release.aar\ff54541a00768505bc07b2dd4831cdc4\AndroidManifest.xml:23:13-84
+receiver#com.telerik.localnotifications.NotificationRestoreReceiver
+ADDED from [:app-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\app-release.aar\ff54541a00768505bc07b2dd4831cdc4\AndroidManifest.xml:25:9-33:20
+	android:exported
+		ADDED from [:app-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\app-release.aar\ff54541a00768505bc07b2dd4831cdc4\AndroidManifest.xml:28:13-37
+	android:directBootAware
+		ADDED from [:app-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\app-release.aar\ff54541a00768505bc07b2dd4831cdc4\AndroidManifest.xml:27:13-43
+	android:name
+		ADDED from [:app-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\app-release.aar\ff54541a00768505bc07b2dd4831cdc4\AndroidManifest.xml:26:13-86
+intent-filter#action:name:android.intent.action.BOOT_COMPLETED+action:name:android.intent.action.LOCKED_BOOT_COMPLETED
+ADDED from [:app-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\app-release.aar\ff54541a00768505bc07b2dd4831cdc4\AndroidManifest.xml:29:13-32:29
+action#android.intent.action.LOCKED_BOOT_COMPLETED
+ADDED from [:app-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\app-release.aar\ff54541a00768505bc07b2dd4831cdc4\AndroidManifest.xml:30:17-86
+	android:name
+		ADDED from [:app-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\app-release.aar\ff54541a00768505bc07b2dd4831cdc4\AndroidManifest.xml:30:25-83
+action#android.intent.action.BOOT_COMPLETED
+ADDED from [:app-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\app-release.aar\ff54541a00768505bc07b2dd4831cdc4\AndroidManifest.xml:31:17-79
+	android:name
+		ADDED from [:app-release:] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\app-release.aar\ff54541a00768505bc07b2dd4831cdc4\AndroidManifest.xml:31:25-76
 meta-data#android.arch.lifecycle.VERSION
 ADDED from [android.arch.lifecycle:runtime:1.0.0] C:\Users\maugu\.gradle\caches\transforms-1\files-1.1\runtime-1.0.0.aar\a21eda19a2cb4c9082ea931d4f1f50aa\AndroidManifest.xml:25:9-27:47
 	android:value

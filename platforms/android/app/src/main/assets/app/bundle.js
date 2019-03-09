@@ -377,18 +377,16 @@ let translate = __webpack_require__("./translate.json");
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   destroyed() {
-    console.log("destroyed");
-
-    this.isBackground = true;
-    if (appSettings.getBoolean("play") == true) {
-      startBackgroundTap();
-    }
+    // console.log("destroyed");
+    // this.isBackground = true;
+    // if (appSettings.getBoolean("play") == true) {
+    //   startBackgroundTap();
+    // }
   },
 
   mounted() {
     console.log("mounted");
 
-    this.isBackground = false;
     // if this play ,stop back , start front inteval :)
 
     if (appSettings.getString("points")) {
@@ -403,20 +401,22 @@ let translate = __webpack_require__("./translate.json");
 
     // lets continue work
     if (appSettings.getBoolean("play") == true) {
-      this.play = true;
-      stopBackgroundTap();
+
+      this.feturePoints = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].featurePoints;
+      this.showPlayer = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current;
+
       this.geoLocation();
     }
   },
 
   watch: {
-    current(value) {
+    showPlayer(value) {
+      this.showPlayer = value;
+
       if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points == null) {
-        return;
+        _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points.find(x => x.id == value.id).active = false;
+        _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].savePoints();
       }
-      this.current = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points.find(x => x.id == value.id);
-      _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points.find(x => x.id == value.id).active = false;
-      _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].savePoints();
 
       // lets do this green ;)
       if (
@@ -436,9 +436,10 @@ let translate = __webpack_require__("./translate.json");
 
   data() {
     return {
+      title: "look",
       isBackground: false,
       frontLocation: null,
-      current: null,
+      showPlayer: null,
       feturePoints: null,
       points: null,
       drawerToggle: false,
@@ -456,10 +457,6 @@ let translate = __webpack_require__("./translate.json");
         view: null
       },
 
-      ///
-      model: {
-        locations: []
-      },
       watchId: null,
       BGids: []
       ///
@@ -538,7 +535,7 @@ let translate = __webpack_require__("./translate.json");
 
     MAP_setCurrentLocation(lat, lng) {
       if (this.map.view == null) {
-        alert("sssssssssss");
+      
         return;
       }
       if (this.map.currentLocation == null) {
@@ -637,9 +634,10 @@ let translate = __webpack_require__("./translate.json");
 
         // this.$refs.audio.points = null;
       }
-      this.current = null;
+      // this.showPlayer = null;
       _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points.find(x => x.id == point.id);
-      this.current = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current;
+      _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].setup();
+      this.showPlayer = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current;
     },
     /**
      * start background server or stop
@@ -660,11 +658,13 @@ let translate = __webpack_require__("./translate.json");
 
         ///
         _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].clear();
-        this.current = null;
+        this.showPlayer = null;
         stopBackgroundTap();
       }
     },
-
+    /**
+     * this is start service
+     */
     geoLocation() {
       if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points == null) {
         this.playStop();
@@ -672,36 +672,36 @@ let translate = __webpack_require__("./translate.json");
         return;
       }
 
-      if (this.frontLocation == null) {
-        this.frontLocation = nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1__["watchLocation"](
-          res => {
-            let lat = res.latitude;
-            let lng = res.longitude;
+      this.startBackgroundTap();
+      this.frontLocation = nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1__["watchLocation"](
+        res => {
+          let lat = res.latitude;
+          let lng = res.longitude;
 
-            this.MAP_setCurrentLocation(lat, lng);
-            _Sorting__WEBPACK_IMPORTED_MODULE_10__["Sorting"].sortPoints(lat, lng);
-            this.current = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current;
-            this.feturePoints = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].featurePoints;
-            //
-          },
-          error => console.log(error),
-          {
-            desiredAccuracy: ui_enums__WEBPACK_IMPORTED_MODULE_3__["Accuracy"].high,
-            updateDistance: _locationSettings__WEBPACK_IMPORTED_MODULE_14__["locationSettings"].updateDistanceInMetters,
-            updateTime: _locationSettings__WEBPACK_IMPORTED_MODULE_14__["locationSettings"].updateTime,
-            minimumUpdateTime: _locationSettings__WEBPACK_IMPORTED_MODULE_14__["locationSettings"].minimumUpdateTime
+          this.MAP_setCurrentLocation(lat, lng);
+
+          if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current) {
+            this.title = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current.title;
+          } else {
+            this.title = lat + lng;
           }
-        );
-      }
+          // Sorting.sortPoints(lat, lng);
+          // for render
+          this.showPlayer = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current;
+          this.feturePoints = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].featurePoints;
+          //
+        },
+        error => console.log(error),
+        {
+          desiredAccuracy: ui_enums__WEBPACK_IMPORTED_MODULE_3__["Accuracy"].high,
+          updateDistance: _locationSettings__WEBPACK_IMPORTED_MODULE_14__["locationSettings"].updateDistanceInMetters,
+          updateTime: _locationSettings__WEBPACK_IMPORTED_MODULE_14__["locationSettings"].updateTime,
+          minimumUpdateTime: _locationSettings__WEBPACK_IMPORTED_MODULE_14__["locationSettings"].minimumUpdateTime
+        }
+      );
     },
 
-    /**
-     * @lat number lattitude
-     * @lng number longitude
-     *
-     */
-
-    currentLocation(lat, lng) {},
+  
     /**
      * @id = "string"
      */
@@ -1191,7 +1191,7 @@ var render = function() {
               _c(
                 "StackLayout",
                 { staticClass: "HMid" },
-                [_c("Label", { attrs: { text: _vm.single } })],
+                [_c("Label", { attrs: { text: _vm.title } })],
                 1
               ),
               _c(
@@ -1351,10 +1351,10 @@ var render = function() {
                         "StackLayout",
                         { attrs: { width: "100%", dock: "top" } },
                         [
-                          _vm.current != null
+                          _vm.showPlayer != null
                             ? _c("audioplayer", {
                                 ref: "audio",
-                                attrs: { point: _vm.current }
+                                attrs: { point: _vm.showPlayer }
                               })
                             : _vm._e(),
                           _c(
@@ -1385,6 +1385,7 @@ var render = function() {
                                   expression: "showmap"
                                 }
                               ],
+                              ref: "mapContainer",
                               attrs: {
                                 width: "100%",
                                 dock: "top",
@@ -1858,6 +1859,7 @@ const appSettings = __webpack_require__("../node_modules/tns-core-modules/applic
 const Singleton = {
   points: null,
   _featurePoints: null,
+  
   get featurePoints() {
     return this._featurePoints;
   },
@@ -1997,6 +1999,7 @@ const Sorting = {
    * @param {number} currentLng
    */
   sortPoints(currentLat, currentLng) {
+    console.log(currentLat, currentLng);
     if (
       this.prevLocation.lat != null &&
       this.distanceInKmBetweenEarthCoordinates(
@@ -2022,7 +2025,7 @@ const Sorting = {
     }
 
     for (let ind in points) {
-      points[ind].distance = this.distanceInKmBetweenEarthCoordinates(
+      points[ind].distance = this.getDistanceFromLatLonInKm(
         currentLat,
         currentLng,
         points[ind].lat,
@@ -2037,8 +2040,6 @@ const Sorting = {
       );
     }
 
-
-   
     let clear = points
       .filter(
         x =>
@@ -2055,18 +2056,16 @@ const Sorting = {
 
         return 0;
       });
-    
-    
+
     console.log("ssssssssssss");
     for (let a in clear) {
-      console.log(`${a}->${clear[a].title} in ${clear[a].distance}`)
+      console.log(`${a}->${clear[a].title} in ${clear[a].distance}`);
     }
-    console.log(`${0}->${clear[0].title} in ${clear[0].distance}`)
-  
+    console.log(`${0}->${clear[0].title} in ${clear[0].distance}`);
+
     console.log("ssssssssssss");
     if (clear.length > 0) {
       if (clear[0].distance < _locationSettings_js__WEBPACK_IMPORTED_MODULE_1__["locationSettings"].pointCanPlaceDistanceKm) {
-       
         _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].printData();
 
         if (
@@ -2074,18 +2073,21 @@ const Sorting = {
           _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].progress > 0 &&
           _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].progress < 100
         ) {
-          if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player && !_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].beebeepDone.includes(_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current.id)) {
-            _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player.pause();
+          if (
+            _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player &&
+            !_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].beebeepDone.includes(_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current.id)
+          ) {
+            if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player) _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player.pause();
             Object(_beep__WEBPACK_IMPORTED_MODULE_2__["beep"])();
             _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].beebeepDone.push(_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current.id);
             setTimeout(e => {
-              _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player.resume();
+              if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player) _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player.resume();
             }, 2000);
           }
         } else {
           _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current = clear[0];
           _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].setup();
-        }  
+        }
       }
     }
     _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].featurePoints = clear.length > 0 ? clear : null;
@@ -2101,26 +2103,23 @@ const Sorting = {
    * @param {number} lat2
    * @param {number} lon2
    */
-  distanceInKmBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
-    var earthRadiusKm = 6371;
-
-    var dLat = this.degreesToRadians(lat2 - lat1);
-    var dLon = this.degreesToRadians(lon2 - lon1);
-
-    lat1 = this.degreesToRadians(lat1);
-    lat2 = this.degreesToRadians(lat2);
-
-    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2);
-    Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+  getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+    var R = 6371; // Radius of the earth in km
+    var dLat = this.deg2rad(lat2 - lat1); // deg2rad below
+    var dLon = this.deg2rad(lon2 - lon1);
+    var a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(this.deg2rad(lat1)) *
+        Math.cos(this.deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return earthRadiusKm * c;
+    var d = R * c; // Distance in km
+    return d;
   },
-  /**
-   *
-   * @param {number} degrees
-   */
-  degreesToRadians(degrees) {
-    return (degrees * Math.PI) / 180;
+
+  deg2rad(deg) {
+    return deg * (Math.PI / 180);
   }
 };
 
@@ -2322,7 +2321,7 @@ const locationSettings = {
   updateDistanceInMetters: 0.1,
   samePlaceInKm: 0.01,
   pointCanPlaceDistanceKm: 0.1,
-  featurePointDistanceKm: 0.4,
+  featurePointDistanceKm: 0.6,
   maximumAge: 50000, 
   color: {
     user: "blue",

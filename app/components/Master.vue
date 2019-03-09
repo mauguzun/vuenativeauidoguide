@@ -13,7 +13,7 @@
           <Label text="☰" style="font-size:27;color:#333;" class="font-awesome"/>
         </StackLayout>
         <StackLayout class="HMid">
-          <Label :text="single"/>
+          <Label :text="title"/>
         </StackLayout>
         <StackLayout class="HRight">
           <Label :text="play ? '⏸' : '▶'" style="font-size:27;color:#333;" @tap="playStop"/>
@@ -82,14 +82,14 @@
         <DockLayout>
           <StackLayout dock="top" width="100%">
             <StackLayout width="100%" dock="top">
-              <audioplayer v-if="current != null" ref="audio" :point="current"></audioplayer>
+              <audioplayer v-if="showPlayer != null" ref="audio" :point="showPlayer"></audioplayer>
               <ScrollView>
                 <component @settingSaved="settingsDone" :translate="translate" :is="currentComp"></component>
               </ScrollView>
             </StackLayout>
 
             <ScrollView>
-              <StackLayout width="100%" v-show="showmap" dock="top" height="85%">
+              <StackLayout width="100%" v-show="showmap" dock="top" ref="mapContainer" height="85%">
                 <MapView
                   width="100%"
                   height="100%"
@@ -170,18 +170,16 @@ let translate = require("./../translate.json");
 
 export default {
   destroyed() {
-    console.log("destroyed");
-
-    this.isBackground = true;
-    if (appSettings.getBoolean("play") == true) {
-      startBackgroundTap();
-    }
+    // console.log("destroyed");
+    // this.isBackground = true;
+    // if (appSettings.getBoolean("play") == true) {
+    //   startBackgroundTap();
+    // }
   },
 
   mounted() {
     console.log("mounted");
 
-    this.isBackground = false;
     // if this play ,stop back , start front inteval :)
 
     if (appSettings.getString("points")) {
@@ -196,20 +194,22 @@ export default {
 
     // lets continue work
     if (appSettings.getBoolean("play") == true) {
-      this.play = true;
-      stopBackgroundTap();
+
+      this.feturePoints = Singleton.featurePoints;
+      this.showPlayer = Singleton.current;
+
       this.geoLocation();
     }
   },
 
   watch: {
-    current(value) {
+    showPlayer(value) {
+      this.showPlayer = value;
+
       if (Singleton.points == null) {
-        return;
+        Singleton.points.find(x => x.id == value.id).active = false;
+        Singleton.savePoints();
       }
-      this.current = Singleton.points.find(x => x.id == value.id);
-      Singleton.points.find(x => x.id == value.id).active = false;
-      Singleton.savePoints();
 
       // lets do this green ;)
       if (
@@ -229,9 +229,10 @@ export default {
 
   data() {
     return {
+      title: "look",
       isBackground: false,
       frontLocation: null,
-      current: null,
+      showPlayer: null,
       feturePoints: null,
       points: null,
       drawerToggle: false,
@@ -249,10 +250,6 @@ export default {
         view: null
       },
 
-      ///
-      model: {
-        locations: []
-      },
       watchId: null,
       BGids: []
       ///
@@ -331,7 +328,7 @@ export default {
 
     MAP_setCurrentLocation(lat, lng) {
       if (this.map.view == null) {
-        alert("sssssssssss");
+      
         return;
       }
       if (this.map.currentLocation == null) {
@@ -430,9 +427,10 @@ export default {
 
         // this.$refs.audio.points = null;
       }
-      this.current = null;
+      // this.showPlayer = null;
       Singleton.current = Singleton.points.find(x => x.id == point.id);
-      this.current = Singleton.current;
+      Singleton.setup();
+      this.showPlayer = Singleton.current;
     },
     /**
      * start background server or stop
@@ -453,11 +451,13 @@ export default {
 
         ///
         Singleton.clear();
-        this.current = null;
+        this.showPlayer = null;
         stopBackgroundTap();
       }
     },
-
+    /**
+     * this is start service
+     */
     geoLocation() {
       if (Singleton.points == null) {
         this.playStop();
@@ -465,36 +465,36 @@ export default {
         return;
       }
 
-      if (this.frontLocation == null) {
-        this.frontLocation = geolocation.watchLocation(
-          res => {
-            let lat = res.latitude;
-            let lng = res.longitude;
+      this.startBackgroundTap();
+      this.frontLocation = geolocation.watchLocation(
+        res => {
+          let lat = res.latitude;
+          let lng = res.longitude;
 
-            this.MAP_setCurrentLocation(lat, lng);
-            Sorting.sortPoints(lat, lng);
-            this.current = Singleton.current;
-            this.feturePoints = Singleton.featurePoints;
-            //
-          },
-          error => console.log(error),
-          {
-            desiredAccuracy: Accuracy.high,
-            updateDistance: locationSettings.updateDistanceInMetters,
-            updateTime: locationSettings.updateTime,
-            minimumUpdateTime: locationSettings.minimumUpdateTime
+          this.MAP_setCurrentLocation(lat, lng);
+
+          if (Singleton.current) {
+            this.title = Singleton.current.title;
+          } else {
+            this.title = lat + lng;
           }
-        );
-      }
+          // Sorting.sortPoints(lat, lng);
+          // for render
+          this.showPlayer = Singleton.current;
+          this.feturePoints = Singleton.featurePoints;
+          //
+        },
+        error => console.log(error),
+        {
+          desiredAccuracy: Accuracy.high,
+          updateDistance: locationSettings.updateDistanceInMetters,
+          updateTime: locationSettings.updateTime,
+          minimumUpdateTime: locationSettings.minimumUpdateTime
+        }
+      );
     },
 
-    /**
-     * @lat number lattitude
-     * @lng number longitude
-     *
-     */
-
-    currentLocation(lat, lng) {},
+  
     /**
      * @id = "string"
      */
@@ -652,7 +652,7 @@ function buttonClearTap() {
 .btn {
   font-size: 18;
 }
-
+  
 .actionBarContainer {
   width: 100%;
   float: left;

@@ -377,18 +377,17 @@ let translate = __webpack_require__("./translate.json");
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   destroyed() {
-    console.log("destroyed");
-
-    this.isBackground = true;
-    if (appSettings.getBoolean("play") == true) {
-      startBackgroundTap();
-    }
+    // console.log("destroyed");
+    // this.isBackground = true;
+    // if (appSettings.getBoolean("play") == true) {
+    //   startBackgroundTap();
+    // }
   },
 
   mounted() {
     console.log("mounted");
 
-    this.isBackground = false;
+    
     // if this play ,stop back , start front inteval :)
 
     if (appSettings.getString("points")) {
@@ -403,20 +402,19 @@ let translate = __webpack_require__("./translate.json");
 
     // lets continue work
     if (appSettings.getBoolean("play") == true) {
-      this.play = true;
-      stopBackgroundTap();
+    
       this.geoLocation();
     }
   },
 
   watch: {
-    current(value) {
+    showPlayer(value) {
+      this.showPlayer = value;
+
       if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points == null) {
-        return;
+        _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points.find(x => x.id == value.id).active = false;
+        _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].savePoints();
       }
-      this.current = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points.find(x => x.id == value.id);
-      _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points.find(x => x.id == value.id).active = false;
-      _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].savePoints();
 
       // lets do this green ;)
       if (
@@ -438,7 +436,7 @@ let translate = __webpack_require__("./translate.json");
     return {
       isBackground: false,
       frontLocation: null,
-      current: null,
+      showPlayer: null,
       feturePoints: null,
       points: null,
       drawerToggle: false,
@@ -456,10 +454,6 @@ let translate = __webpack_require__("./translate.json");
         view: null
       },
 
-      ///
-      model: {
-        locations: []
-      },
       watchId: null,
       BGids: []
       ///
@@ -637,9 +631,9 @@ let translate = __webpack_require__("./translate.json");
 
         // this.$refs.audio.points = null;
       }
-      this.current = null;
+      // this.showPlayer = null;
       _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points.find(x => x.id == point.id);
-      this.current = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current;
+      this.showPlayer = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current;
     },
     /**
      * start background server or stop
@@ -660,18 +654,21 @@ let translate = __webpack_require__("./translate.json");
 
         ///
         _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].clear();
-        this.current = null;
+        this.showPlayer = null;
         stopBackgroundTap();
       }
     },
-
+    /**
+     * this is start service
+     */
     geoLocation() {
+
       if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points == null) {
         this.playStop();
         alert("Not Loaderd");
         return;
-      }
-
+      }     
+     
       if (this.frontLocation == null) {
         this.frontLocation = nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1__["watchLocation"](
           res => {
@@ -679,8 +676,9 @@ let translate = __webpack_require__("./translate.json");
             let lng = res.longitude;
 
             this.MAP_setCurrentLocation(lat, lng);
-            _Sorting__WEBPACK_IMPORTED_MODULE_10__["Sorting"].sortPoints(lat, lng);
-            this.current = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current;
+            // Sorting.sortPoints(lat, lng);
+            // for render
+            this.showPlayer = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current;
             this.feturePoints = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].featurePoints;
             //
           },
@@ -1858,6 +1856,7 @@ const appSettings = __webpack_require__("../node_modules/tns-core-modules/applic
 const Singleton = {
   points: null,
   _featurePoints: null,
+  
   get featurePoints() {
     return this._featurePoints;
   },

@@ -4,7 +4,7 @@ export const locationSettings = {
   updateDistanceInMetters: 0.1,
   samePlaceInKm: 0.01,
   pointCanPlaceDistanceKm: 0.1,
-  featurePointDistanceKm: 0.4,
+  featurePointDistanceKm: 0.6,
   maximumAge: 50000, 
   color: {
     user: "blue",
