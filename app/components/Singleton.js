@@ -28,14 +28,14 @@ export const Singleton = {
 
   set current(value) {
 
-    this.points.find(x => x.id == value.id).active = false;
+      
+    this.points.find(x => x.id == value.id).active = false; 
     this._current = value;
     this.printData();
     this.savePoints();
   },
 
   printData() {
-
     if (this.points == null) {
       return;
     }
@@ -75,11 +75,8 @@ export const Singleton = {
       });
 
     this._checkInterval = setInterval(() => {
+      if (!this.player) return;
 
-      if (!this.player)
-        return;
-      
-      
       this.player.getAudioTrackDuration().then(duration => {
         // iOS: duration is in seconds
         // Android: duration is in milliseconds
@@ -101,17 +98,15 @@ export const Singleton = {
 
     try {
       clearInterval(this._checkInterval);
+    } catch (e) {
+      console.log("nenavizhu javascript");
     }
-    catch (e) {
-      console.log("nenavizhu javascript")
-    }
-   
+
     if (this.player) {
       this.player.pause();
-      this.current = null;
-      this.player = null;  
+      // this.current = null;
+      this.player = null;
     }
-   
   },
   playPause() {
     if (this.player.isAudioPlaying()) {
