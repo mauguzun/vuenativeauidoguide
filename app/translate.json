@@ -8,6 +8,10 @@
     "labels": {
       "lang": "Choose lang",
       "city": "Choose city"
+    },
+    "global": {
+      "title": "Audio Guide",
+      "desc": "Guide for nice "
     }
   },
   "lv": {
@@ -19,6 +23,10 @@
     "labels": {
       "lang": "lv Choose lang",
       "city": "lv Choose city"
+    },
+    "global": {
+      "title": "Audio Guide",
+      "desc": "Guide for nice "
     }
   },
   "ru": {
@@ -30,6 +38,10 @@
     "labels": {
       "lang": "ru Choose lang",
       "city": "ru Choose city"
+    },
+    "global": {
+      "title": "Audio Guide",
+      "desc": "Guide for nice "
     }
   },
   "fr": {
@@ -41,6 +53,11 @@
     "labels": {
       "lang": "fr Choose lang",
       "city": "fr Choose city"
+    },
+    "global": {
+      "title": "Audio Guide",
+      "desc": "Guide for nice "
     }
+    
   }
 }

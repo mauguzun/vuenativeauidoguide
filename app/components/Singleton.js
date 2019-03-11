@@ -5,7 +5,7 @@ const appSettings = require("tns-core-modules/application-settings");
 export const Singleton = {
   points: null,
   _featurePoints: null,
-  
+
   get featurePoints() {
     return this._featurePoints;
   },
@@ -28,19 +28,17 @@ export const Singleton = {
   },
 
   set current(value) {
-
-      
-    this.points.find(x => x.id == value.id).active = false; 
-    this._current = value;
-    this.printData();
+    this._current = null;   
+    this.points.find(x => x.id == value.id).active = false;
     this.savePoints();
+    this._current = value;
+   
   },
 
   printData() {
     if (this.points == null) {
       return;
     }
-
     console.log(
       "active true -----------------------> " +
         this.points.filter(x => x.active == true).length
@@ -57,6 +55,12 @@ export const Singleton = {
    * play new song > ? why setup -> coz
    */
   setup() {
+    try {
+      this.player.audioFile = null;
+
+    } catch (e) {
+      
+    }
     this.player = null;
     this.player = new TNSPlayer();
 
@@ -65,7 +69,7 @@ export const Singleton = {
       loop: false,
       completeCallback: function() {}
     };
-
+  
     this.player
       .playFromUrl(playerOptions)
       .then(res => {
@@ -96,18 +100,20 @@ export const Singleton = {
     this.player.play();
   },
   clear() {
-
     try {
       clearInterval(this._checkInterval);
     } catch (e) {
-      console.log("nenavizhu javascript");
+      console.log(e.message);
     }
-
-    if (this.player) {
+    try {
       this.player.pause();
-      // this.current = null;
-      this.player = null;
+      this.player.audioFile == null ;
+    } catch (e) {
+      console.log(e.message);
     }
+    this._current = null;
+    this.player = null;
+    this.savePoints();
   },
   playPause() {
     if (this.player.isAudioPlaying()) {

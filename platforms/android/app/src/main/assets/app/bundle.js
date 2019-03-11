@@ -376,18 +376,10 @@ let translate = __webpack_require__("./translate.json");
 ///
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  destroyed() {
-    // console.log("destroyed");
-    // this.isBackground = true;
-    // if (appSettings.getBoolean("play") == true) {
-    //   startBackgroundTap();
-    // }
-  },
+  destroyed() {},
 
   mounted() {
     console.log("mounted");
-
-    // if this play ,stop back , start front inteval :)
 
     if (appSettings.getString("points")) {
       _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points = JSON.parse(appSettings.getString("points"));
@@ -399,13 +391,17 @@ let translate = __webpack_require__("./translate.json");
       this.translate = translate[appSettings.getString("lang")];
     }
 
+    if (appSettings.getString("cityTitle")) {
+      this.cityTitle = appSettings.getString("cityTitle");
+    } else {
+      // this.cityTitle = this.translate.global.title;
+    }
+
     // lets continue work
     if (appSettings.getBoolean("play") == true) {
-
-      this.feturePoints = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].featurePoints;
+      this.featurePoints = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].featurePoints;
       this.showPlayer = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current;
-
-      this.geoLocation();
+      this.startPlay();
     }
   },
 
@@ -426,6 +422,15 @@ let translate = __webpack_require__("./translate.json");
         this.map.markers.find(x => x.userData.id == value.id).color =
           _locationSettings__WEBPACK_IMPORTED_MODULE_14__["locationSettings"].color.visited;
       }
+    },
+
+    featurePoints(value) {
+      if (value == null) {
+        this.$refs.mapContainer.nativeView.height = "100%";
+      } else {
+        this.$refs.mapContainer.nativeView.height = "80%";
+      }
+      this.featurePoints = value;
     }
   },
   components: {
@@ -436,18 +441,18 @@ let translate = __webpack_require__("./translate.json");
 
   data() {
     return {
-      title: "look",
+      cityTitle: null,
       isBackground: false,
       frontLocation: null,
       showPlayer: null,
-      feturePoints: null,
+      featurePoints: null,
       points: null,
+      play: false,
       drawerToggle: false,
       currentComp: null,
       showmap: true,
       debug: true,
       translate: translate.en,
-      play: false,
       map: {
         longitude: 7.1827772,
         latitude: 43.7031691,
@@ -535,9 +540,9 @@ let translate = __webpack_require__("./translate.json");
 
     MAP_setCurrentLocation(lat, lng) {
       if (this.map.view == null) {
-      
         return;
       }
+
       if (this.map.currentLocation == null) {
         this.map.currentLocation = new mapsModule.Marker();
         this.map.currentLocation.position = new mapsModule.Position.positionFromLatLng(
@@ -567,6 +572,7 @@ let translate = __webpack_require__("./translate.json");
 
       appSettings.setString("city", data.city);
       appSettings.setString("lang", data.lang);
+      appSettings.setString("cityTitle", data.cityTitle);
 
       // check if city is same ?
       if ((data.city != temp.city) | (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points == null)) {
@@ -623,56 +629,70 @@ let translate = __webpack_require__("./translate.json");
       this.$refs.drawer.nativeView.toggleDrawerState();
     },
 
+    test() {
+      this.$refs.mapContainer.nativeView.height = "80%";
+    },
+
     go(page) {
       this.showmap = page != "map" ? false : true;
       this.currentComp = page != "map" ? page : null;
       this.toggleDrawer();
     },
     playFeature(point) {
-      if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player != null) {
-        _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].clear();
+      _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"]._current = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points.find(x => x.id == point.id);
+      try {
+        _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player.dispose();
+      } catch (e) {}
 
-        // this.$refs.audio.points = null;
-      }
-      // this.showPlayer = null;
-      _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points.find(x => x.id == point.id);
-      _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].setup();
       this.showPlayer = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current;
+      _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].setup();
     },
     /**
      * start background server or stop
      */
-    playStop() {
-      if (!this.play) {
-        this.play = true;
-        appSettings.setBoolean("play", true);
-        this.geoLocation();
+    switchPlay() {
+      if (appSettings.getBoolean("play") == true) {
+        this.stopPlay();
       } else {
-        appSettings.setBoolean("play", false);
-        this.play = false;
-        //////
-        //
-        if (this.frontLocation) {
-          nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1__["clearWatch"](this.frontLocation);
-        }
-
-        ///
-        _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].clear();
-        this.showPlayer = null;
-        stopBackgroundTap();
+        this.startPlay();
       }
+    },
+    stopPlay() {
+      appSettings.setBoolean("play", false);
+
+      this.play = false;
+     
+      this.featurePoints = null;
+      this.showPlayer = null;
+      this.$forceUpdate();
+      stopBackgroundTap();
+
+      try {
+        nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1__["clearWatch"](this.frontLocation);
+      } catch (e) {}
+
+      try {
+        _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player = null;
+      } catch (e) {}
+      
     },
     /**
      * this is start service
      */
-    geoLocation() {
+    startPlay() {
       if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points == null) {
-        this.playStop();
-        alert("Not Loaderd");
+        this.stopPlay();
         return;
       }
 
-      this.startBackgroundTap();
+      this.play = true;
+
+      appSettings.setBoolean("play", true);
+      this.$forceUpdate();
+      // check did this exist ?
+      stopBackgroundTap();
+      startBackgroundTap();
+
       this.frontLocation = nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1__["watchLocation"](
         res => {
           let lat = res.latitude;
@@ -680,15 +700,10 @@ let translate = __webpack_require__("./translate.json");
 
           this.MAP_setCurrentLocation(lat, lng);
 
-          if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current) {
-            this.title = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current.title;
-          } else {
-            this.title = lat + lng;
-          }
           // Sorting.sortPoints(lat, lng);
           // for render
           this.showPlayer = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current;
-          this.feturePoints = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].featurePoints;
+          this.featurePoints = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].featurePoints;
           //
         },
         error => console.log(error),
@@ -699,62 +714,57 @@ let translate = __webpack_require__("./translate.json");
           minimumUpdateTime: _locationSettings__WEBPACK_IMPORTED_MODULE_14__["locationSettings"].minimumUpdateTime
         }
       );
-    },
+    }
 
-  
     /**
      * @id = "string"
      */
-    play(id) {
-      // check
-      if (!_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points) {
-        return;
-      }
+    // play(id) {
+    //   // check
+    //   if (!Singleton.points) {
+    //     return;
+    //   }
 
-      let playPoint = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points.find(x => x.id == id);
+    //   let playPoint = Singleton.points.find(x => x.id == id);
 
-      if (!playPoint | (playPoint.active == false)) {
-        return;
-      }
+    //   if (!playPoint | (playPoint.active == false)) {
+    //     return;
+    //   }
 
-      // we cant play
-      if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player != null) {
-        if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].progress > 0 && _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].progress < 100) {
-          this.openModal(playPoint);
-          return;
-        }
-      }
+    //   // we cant play
+    //   if (Singleton.player != null) {
+    //     if (Singleton.progress > 0 && Singleton.progress < 100) {
+    //       this.openModal(playPoint);
+    //       return;
+    //     }
+    //   }
 
-      _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points.find(x => x.id == id);
-      this.current = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current;
-    },
+    //   Singleton.current = Singleton.points.find(x => x.id == id);
+    //   this.current = Singleton.current;
+    // },
 
-    openModal(point) {
-      Object(_beep_js__WEBPACK_IMPORTED_MODULE_11__["beep"])();
-      confirm({
-        title: point.title,
-        message: point.title,
-        okButtonText: "Ok",
-        cancelButtonText: "Skip"
-      }).then(result => {
-        if (result == true) {
-          if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player) {
-            _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player.stop();
-            // this.$refs.audio.points = null;
-            _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points.find(x => x.id == point.id);
-            this.current = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current;
-          }
-          // we stop player !!! and send to play again
-        } else {
-          _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].play();
-        }
-      });
-    }
+    // openModal(point) {
+    //   confirm({
+    //     title: point.title,
+    //     message: point.title,
+    //     okButtonText: "Ok",
+    //     cancelButtonText: "Skip"
+    //   }).then(result => {
+    //     if (result == true) {
+    //       if (Singleton.current != null) {
+    //         Singleton.player.stop();
+    //         Singleton.current = Singleton.points.find(x => x.id == point.id);
+    //         this.showPlayer = Singleton.current;
+    //       }
+    //     } else {
+    //       if (Singleton.current != null) Singleton.play();
+    //     }
+    //   });
+    // }
   }
 
   ////////
 });
-///////
 
 function startBackgroundTap() {
   if (tns_core_modules_application__WEBPACK_IMPORTED_MODULE_4__["android"]) {
@@ -1030,10 +1040,8 @@ __webpack_require__.r(__webpack_exports__);
     playPause() {
       if (_Singleton__WEBPACK_IMPORTED_MODULE_2__["Singleton"].player && _Singleton__WEBPACK_IMPORTED_MODULE_2__["Singleton"].player.isAudioPlaying()) {
         _Singleton__WEBPACK_IMPORTED_MODULE_2__["Singleton"].player.pause();
-        this.isPlaying = false;
       } else if (_Singleton__WEBPACK_IMPORTED_MODULE_2__["Singleton"].player) {
         _Singleton__WEBPACK_IMPORTED_MODULE_2__["Singleton"].player.play();
-       this.isPlaying = true;
       }
     },
     play() {
@@ -1126,12 +1134,14 @@ const appSettings = __webpack_require__("../node_modules/tns-core-modules/applic
 
   methods: {
     onButtonTap() {
-      this.$emit("settingSaved", { city: this.sendCity, lang: this.sendLang });
+      this.$emit("settingSaved", { city: this.sendCity, lang: this.sendLang ,cityTitle : this.cities[this.indexCity].title });
     },
     changeLang(args) {
       this.sendCity = this.cities[this.indexCity].id;
       this.sendLang = this.lang[this.indexLang].id;
+
     }
+
   }
 });
 
@@ -1191,18 +1201,18 @@ var render = function() {
               _c(
                 "StackLayout",
                 { staticClass: "HMid" },
-                [_c("Label", { attrs: { text: _vm.title } })],
+                [_c("Label", { attrs: { text: _vm.cityTitle } })],
                 1
               ),
               _c(
                 "StackLayout",
-                { staticClass: "HRight" },
+                { staticClass: "HRight", on: { tap: _vm.switchPlay } },
                 [
                   _c("Label", {
                     staticStyle: { fontSize: "27", color: "#333" },
-                    attrs: { text: _vm.play ? "⏸" : "▶" },
-                    on: { tap: _vm.playStop }
-                  })
+                    attrs: { text: _vm.play == true ? "◼" : "▶" }
+                  }),
+                  _vm._v("\n\n        \\\n      ")
                 ],
                 1
               )
@@ -1262,50 +1272,12 @@ var render = function() {
                   _c("Label", {
                     staticClass: "drawerItemText font-awesome",
                     attrs: {
-                      text: _vm.translate.menu.about,
-                      paddingLeft: "30%",
-                      color: "black",
-                      margin: "10"
-                    },
-                    on: {
-                      tap: function($event) {
-                        _vm.go("about")
-                      }
-                    }
-                  }),
-                  _c("Label", {
-                    staticClass: "drawerItemText font-awesome",
-                    attrs: {
-                      text: "Make my test",
-                      paddingLeft: "30%",
-                      color: "black",
-                      margin: "10"
-                    },
-                    on: { tap: _vm.test }
-                  }),
-                  _c("Label", {
-                    staticClass: "drawerItemText font-awesome",
-                    attrs: {
                       text: "Set all active",
                       paddingLeft: "30%",
                       color: "black",
                       margin: "10"
                     },
                     on: { tap: _vm.setAllAsActive }
-                  }),
-                  _c("Label", {
-                    staticClass: "drawerItemText font-awesome",
-                    attrs: {
-                      text: "Test ---  ",
-                      paddingLeft: "30%",
-                      color: "black",
-                      margin: "10"
-                    },
-                    on: {
-                      tap: function($event) {
-                        _vm.geoLocation()
-                      }
-                    }
                   }),
                   _c("Label", {
                     staticClass: "drawerItemText font-awesome",
@@ -1320,6 +1292,30 @@ var render = function() {
                         _vm.go("map")
                       }
                     }
+                  }),
+                  _c("Label", {
+                    staticClass: "drawerItemText font-awesome",
+                    attrs: {
+                      text: _vm.translate.menu.about,
+                      paddingLeft: "30%",
+                      color: "black",
+                      margin: "10"
+                    },
+                    on: {
+                      tap: function($event) {
+                        _vm.go("about")
+                      }
+                    }
+                  }),
+                  _c("Label", {
+                    staticClass: "drawerItemText font-awesome",
+                    attrs: {
+                      text: "test",
+                      paddingLeft: "30%",
+                      color: "black",
+                      margin: "10"
+                    },
+                    on: { tap: _vm.test }
                   })
                 ],
                 1
@@ -1389,7 +1385,7 @@ var render = function() {
                               attrs: {
                                 width: "100%",
                                 dock: "top",
-                                height: "85%"
+                                height: "100%"
                               }
                             },
                             [
@@ -1413,7 +1409,7 @@ var render = function() {
                         ],
                         1
                       ),
-                      _vm.feturePoints != null
+                      _vm.featurePoints != null
                         ? _c(
                             "StackLayout",
                             {
@@ -1435,7 +1431,7 @@ var render = function() {
                                         height: "100%",
                                         separatorColor: "transparent",
                                         id: "listView",
-                                        items: _vm.feturePoints,
+                                        items: _vm.featurePoints,
                                         "+alias": "item"
                                       }
                                     },
@@ -1645,10 +1641,6 @@ var render = function() {
                   _c("Label", {
                     staticClass: "postDateSmall",
                     attrs: { text: _vm.point.title }
-                  }),
-                  _c("Label", {
-                    staticClass: "postDateSmall",
-                    attrs: { text: _vm.isPlaying ? "⏸" : "▶" }
                   })
                 ],
                 1
@@ -1859,7 +1851,7 @@ const appSettings = __webpack_require__("../node_modules/tns-core-modules/applic
 const Singleton = {
   points: null,
   _featurePoints: null,
-  
+
   get featurePoints() {
     return this._featurePoints;
   },
@@ -1882,19 +1874,17 @@ const Singleton = {
   },
 
   set current(value) {
-
-      
-    this.points.find(x => x.id == value.id).active = false; 
-    this._current = value;
-    this.printData();
+    this._current = null;   
+    this.points.find(x => x.id == value.id).active = false;
     this.savePoints();
+    this._current = value;
+   
   },
 
   printData() {
     if (this.points == null) {
       return;
     }
-
     console.log(
       "active true -----------------------> " +
         this.points.filter(x => x.active == true).length
@@ -1911,6 +1901,12 @@ const Singleton = {
    * play new song > ? why setup -> coz
    */
   setup() {
+    try {
+      this.player.audioFile = null;
+
+    } catch (e) {
+      
+    }
     this.player = null;
     this.player = new nativescript_audio__WEBPACK_IMPORTED_MODULE_1__["TNSPlayer"]();
 
@@ -1919,7 +1915,7 @@ const Singleton = {
       loop: false,
       completeCallback: function() {}
     };
-
+  
     this.player
       .playFromUrl(playerOptions)
       .then(res => {
@@ -1950,18 +1946,20 @@ const Singleton = {
     this.player.play();
   },
   clear() {
-
     try {
       clearInterval(this._checkInterval);
     } catch (e) {
-      console.log("nenavizhu javascript");
+      console.log(e.message);
     }
-
-    if (this.player) {
+    try {
       this.player.pause();
-      // this.current = null;
-      this.player = null;
+      this.player.audioFile == null ;
+    } catch (e) {
+      console.log(e.message);
     }
+    this._current = null;
+    this.player = null;
+    this.savePoints();
   },
   playPause() {
     if (this.player.isAudioPlaying()) {
@@ -2057,39 +2055,47 @@ const Sorting = {
         return 0;
       });
 
-    console.log("ssssssssssss");
+    console.log("for debug only");
     for (let a in clear) {
       console.log(`${a}->${clear[a].title} in ${clear[a].distance}`);
     }
     console.log(`${0}->${clear[0].title} in ${clear[0].distance}`);
 
-    console.log("ssssssssssss");
     if (clear.length > 0) {
+
+      
       if (clear[0].distance < _locationSettings_js__WEBPACK_IMPORTED_MODULE_1__["locationSettings"].pointCanPlaceDistanceKm) {
         _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].printData();
+        if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player != null) {
 
-        if (
-          _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].progress &&
-          _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].progress > 0 &&
-          _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].progress < 100
-        ) {
-          if (
-            _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player &&
-            !_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].beebeepDone.includes(_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current.id)
-          ) {
-            if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player) _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player.pause();
-            Object(_beep__WEBPACK_IMPORTED_MODULE_2__["beep"])();
-            _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].beebeepDone.push(_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current.id);
-            setTimeout(e => {
-              if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player) _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player.resume();
-            }, 2000);
+          if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].isPlaying &&   !_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].beebeepDone.includes(_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current.id)) {
+            
+            _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player.pause();
+                _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].beebeepDone.push(_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current.id);
+                // Singleton.player.resume();
+                Object(_beep__WEBPACK_IMPORTED_MODULE_2__["beep"])();    
+                setTimeout(e => {
+                  try {
+                    _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player.resume();
+                  } catch (e) { 
+                    alert(e)
+                  }
+                  
+                }, 2000);
           }
-        } else {
+          else if (!_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].isPlaying ) {
+            _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current = clear[0];
+            _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].setup();
+          }
+
+        } else  {
           _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current = clear[0];
           _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].setup();
         }
       }
     }
+
+
     _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].featurePoints = clear.length > 0 ? clear : null;
 
     //   this.prevLocation.lat = currentLat;
@@ -2677,7 +2683,7 @@ module.exports = {"android":{"v8Flags":"--expose_gc"},"main":"main","name":"geol
 /***/ "./translate.json":
 /***/ (function(module) {
 
-module.exports = {"en":{"menu":{"settings":"settings","map":"view map","about":"about"},"labels":{"lang":"Choose lang","city":"Choose city"}},"lv":{"menu":{"settings":"lv settings","map":"lv view map","about":"lv about"},"labels":{"lang":"lv Choose lang","city":"lv Choose city"}},"ru":{"menu":{"settings":"nastroiki","map":"vie map","about":"about"},"labels":{"lang":"ru Choose lang","city":"ru Choose city"}},"fr":{"menu":{"settings":"la settings","map":"le map","about":"la about"},"labels":{"lang":"fr Choose lang","city":"fr Choose city"}}};
+module.exports = {"en":{"menu":{"settings":"settings","map":"view map","about":"about"},"labels":{"lang":"Choose lang","city":"Choose city"},"global":{"title":"Audio Guide","desc":"Guide for nice "}},"lv":{"menu":{"settings":"lv settings","map":"lv view map","about":"lv about"},"labels":{"lang":"lv Choose lang","city":"lv Choose city"},"global":{"title":"Audio Guide","desc":"Guide for nice "}},"ru":{"menu":{"settings":"nastroiki","map":"vie map","about":"about"},"labels":{"lang":"ru Choose lang","city":"ru Choose city"},"global":{"title":"Audio Guide","desc":"Guide for nice "}},"fr":{"menu":{"settings":"la settings","map":"le map","about":"la about"},"labels":{"lang":"fr Choose lang","city":"fr Choose city"},"global":{"title":"Audio Guide","desc":"Guide for nice "}}};
 
 /***/ })
 

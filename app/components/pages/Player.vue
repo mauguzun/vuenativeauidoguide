@@ -6,7 +6,7 @@
         <StackLayout>
           <Label :text="point.title" class="postDateSmall"/>
           <!-- <Progress class="postDateSmall" :value="progress"/> -->
-          <Label :text="isPlaying ? '⏸' : '▶'" class="postDateSmall"/>
+          <!-- <Label :text="isPlaying ? '⏸' : '▶'" class="postDateSmall"/> -->
         </StackLayout>
       </StackLayout>
     </StackLayout>
@@ -49,10 +49,8 @@ export default {
     playPause() {
       if (Singleton.player && Singleton.player.isAudioPlaying()) {
         Singleton.player.pause();
-        this.isPlaying = false;
       } else if (Singleton.player) {
         Singleton.player.play();
-       this.isPlaying = true;
       }
     },
     play() {

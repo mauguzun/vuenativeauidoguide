@@ -66,12 +66,14 @@ export default {
 
   methods: {
     onButtonTap() {
-      this.$emit("settingSaved", { city: this.sendCity, lang: this.sendLang });
+      this.$emit("settingSaved", { city: this.sendCity, lang: this.sendLang ,cityTitle : this.cities[this.indexCity].title });
     },
     changeLang(args) {
       this.sendCity = this.cities[this.indexCity].id;
       this.sendLang = this.lang[this.indexLang].id;
+
     }
+
   }
 };
 </script>

@@ -1,5 +1,3 @@
-
-
 <template>
   <Page class="page">
     <ActionBar title="Hello World">
@@ -13,10 +11,12 @@
           <Label text="☰" style="font-size:27;color:#333;" class="font-awesome"/>
         </StackLayout>
         <StackLayout class="HMid">
-          <Label :text="title"/>
+          <Label :text="cityTitle"/>
         </StackLayout>
-        <StackLayout class="HRight">
-          <Label :text="play ? '⏸' : '▶'" style="font-size:27;color:#333;" @tap="playStop"/>
+        <StackLayout @tap="switchPlay" class="HRight">
+          <Label :text="play == true ?  '◼' : '▶' " style="font-size:27;color:#333;"/>
+
+          \
         </StackLayout>
       </StackLayout>
     </ActionBar>
@@ -33,6 +33,25 @@
             class="drawerItemText font-awesome"
             margin="10"
           />
+
+          <Label
+            text="Set all active"
+            @tap="setAllAsActive"
+            paddingLeft="30%"
+            color="black"
+            class="drawerItemText font-awesome"
+            margin="10"
+          />
+
+          <Label
+            :text=" translate.menu.map"
+            @tap="go('map')"
+            paddingLeft="30%"
+            color="black"
+            class="drawerItemText font-awesome"
+            margin="10"
+          />
+
           <Label
             :text="translate.menu.about"
             @tap="go('about')"
@@ -43,33 +62,8 @@
           />
 
           <Label
-            text="Make my test"
+            text="test"
             @tap="test"
-            paddingLeft="30%"
-            color="black"
-            class="drawerItemText font-awesome"
-            margin="10"
-          />
-          <Label
-            text="Set all active"
-            @tap="setAllAsActive"
-            paddingLeft="30%"
-            color="black"
-            class="drawerItemText font-awesome"
-            margin="10"
-          />
-          <Label
-            text="Test ---  "
-            @tap="geoLocation()"
-            paddingLeft="30%"
-            color="black"
-            class="drawerItemText font-awesome"
-            margin="10"
-          />
-
-          <Label
-            :text=" translate.menu.map"
-            @tap="go('map')"
             paddingLeft="30%"
             color="black"
             class="drawerItemText font-awesome"
@@ -89,7 +83,13 @@
             </StackLayout>
 
             <ScrollView>
-              <StackLayout width="100%" v-show="showmap" dock="top" ref="mapContainer" height="85%">
+              <StackLayout
+                width="100%"
+                v-show="showmap"
+                dock="top"
+                ref="mapContainer"
+                height="100%"
+              >
                 <MapView
                   width="100%"
                   height="100%"
@@ -104,10 +104,10 @@
                 />
               </StackLayout>
             </ScrollView>
-            <StackLayout v-if="feturePoints != null" dock="top" height="100%" width="100%" style>
+            <StackLayout v-if="featurePoints != null" dock="top" height="100%" width="100%" style>
               <ScrollView>
                 <ListView
-                  for="item in feturePoints"
+                  for="item in featurePoints"
                   :key="index"
                   height="100%"
                   separatorColor="transparent"
@@ -169,18 +169,10 @@ let translate = require("./../translate.json");
 ///
 
 export default {
-  destroyed() {
-    // console.log("destroyed");
-    // this.isBackground = true;
-    // if (appSettings.getBoolean("play") == true) {
-    //   startBackgroundTap();
-    // }
-  },
+  destroyed() {},
 
   mounted() {
     console.log("mounted");
-
-    // if this play ,stop back , start front inteval :)
 
     if (appSettings.getString("points")) {
       Singleton.points = JSON.parse(appSettings.getString("points"));
@@ -192,13 +184,17 @@ export default {
       this.translate = translate[appSettings.getString("lang")];
     }
 
+    if (appSettings.getString("cityTitle")) {
+      this.cityTitle = appSettings.getString("cityTitle");
+    } else {
+      // this.cityTitle = this.translate.global.title;
+    }
+
     // lets continue work
     if (appSettings.getBoolean("play") == true) {
-
-      this.feturePoints = Singleton.featurePoints;
+      this.featurePoints = Singleton.featurePoints;
       this.showPlayer = Singleton.current;
-
-      this.geoLocation();
+      this.startPlay();
     }
   },
 
@@ -219,6 +215,15 @@ export default {
         this.map.markers.find(x => x.userData.id == value.id).color =
           locationSettings.color.visited;
       }
+    },
+
+    featurePoints(value) {
+      if (value == null) {
+        this.$refs.mapContainer.nativeView.height = "100%";
+      } else {
+        this.$refs.mapContainer.nativeView.height = "80%";
+      }
+      this.featurePoints = value;
     }
   },
   components: {
@@ -229,18 +234,18 @@ export default {
 
   data() {
     return {
-      title: "look",
+      cityTitle: null,
       isBackground: false,
       frontLocation: null,
       showPlayer: null,
-      feturePoints: null,
+      featurePoints: null,
       points: null,
+      play: false,
       drawerToggle: false,
       currentComp: null,
       showmap: true,
       debug: true,
       translate: translate.en,
-      play: false,
       map: {
         longitude: 7.1827772,
         latitude: 43.7031691,
@@ -328,9 +333,9 @@ export default {
 
     MAP_setCurrentLocation(lat, lng) {
       if (this.map.view == null) {
-      
         return;
       }
+
       if (this.map.currentLocation == null) {
         this.map.currentLocation = new mapsModule.Marker();
         this.map.currentLocation.position = new mapsModule.Position.positionFromLatLng(
@@ -360,6 +365,7 @@ export default {
 
       appSettings.setString("city", data.city);
       appSettings.setString("lang", data.lang);
+      appSettings.setString("cityTitle", data.cityTitle);
 
       // check if city is same ?
       if ((data.city != temp.city) | (Singleton.points == null)) {
@@ -416,56 +422,70 @@ export default {
       this.$refs.drawer.nativeView.toggleDrawerState();
     },
 
+    test() {
+      this.$refs.mapContainer.nativeView.height = "80%";
+    },
+
     go(page) {
       this.showmap = page != "map" ? false : true;
       this.currentComp = page != "map" ? page : null;
       this.toggleDrawer();
     },
     playFeature(point) {
-      if (Singleton.player != null) {
-        Singleton.clear();
+      Singleton._current = Singleton.points.find(x => x.id == point.id);
+      try {
+        Singleton.player.dispose();
+      } catch (e) {}
 
-        // this.$refs.audio.points = null;
-      }
-      // this.showPlayer = null;
-      Singleton.current = Singleton.points.find(x => x.id == point.id);
-      Singleton.setup();
       this.showPlayer = Singleton.current;
+      Singleton.setup();
     },
     /**
      * start background server or stop
      */
-    playStop() {
-      if (!this.play) {
-        this.play = true;
-        appSettings.setBoolean("play", true);
-        this.geoLocation();
+    switchPlay() {
+      if (appSettings.getBoolean("play") == true) {
+        this.stopPlay();
       } else {
-        appSettings.setBoolean("play", false);
-        this.play = false;
-        //////
-        //
-        if (this.frontLocation) {
-          geolocation.clearWatch(this.frontLocation);
-        }
-
-        ///
-        Singleton.clear();
-        this.showPlayer = null;
-        stopBackgroundTap();
+        this.startPlay();
       }
+    },
+    stopPlay() {
+      appSettings.setBoolean("play", false);
+
+      this.play = false;
+     
+      this.featurePoints = null;
+      this.showPlayer = null;
+      this.$forceUpdate();
+      stopBackgroundTap();
+
+      try {
+        geolocation.clearWatch(this.frontLocation);
+      } catch (e) {}
+
+      try {
+        Singleton.player = null;
+      } catch (e) {}
+      
     },
     /**
      * this is start service
      */
-    geoLocation() {
+    startPlay() {
       if (Singleton.points == null) {
-        this.playStop();
-        alert("Not Loaderd");
+        this.stopPlay();
         return;
       }
 
-      this.startBackgroundTap();
+      this.play = true;
+
+      appSettings.setBoolean("play", true);
+      this.$forceUpdate();
+      // check did this exist ?
+      stopBackgroundTap();
+      startBackgroundTap();
+
       this.frontLocation = geolocation.watchLocation(
         res => {
           let lat = res.latitude;
@@ -473,15 +493,10 @@ export default {
 
           this.MAP_setCurrentLocation(lat, lng);
 
-          if (Singleton.current) {
-            this.title = Singleton.current.title;
-          } else {
-            this.title = lat + lng;
-          }
           // Sorting.sortPoints(lat, lng);
           // for render
           this.showPlayer = Singleton.current;
-          this.feturePoints = Singleton.featurePoints;
+          this.featurePoints = Singleton.featurePoints;
           //
         },
         error => console.log(error),
@@ -492,62 +507,57 @@ export default {
           minimumUpdateTime: locationSettings.minimumUpdateTime
         }
       );
-    },
+    }
 
-  
     /**
      * @id = "string"
      */
-    play(id) {
-      // check
-      if (!Singleton.points) {
-        return;
-      }
+    // play(id) {
+    //   // check
+    //   if (!Singleton.points) {
+    //     return;
+    //   }
 
-      let playPoint = Singleton.points.find(x => x.id == id);
+    //   let playPoint = Singleton.points.find(x => x.id == id);
 
-      if (!playPoint | (playPoint.active == false)) {
-        return;
-      }
+    //   if (!playPoint | (playPoint.active == false)) {
+    //     return;
+    //   }
 
-      // we cant play
-      if (Singleton.player != null) {
-        if (Singleton.progress > 0 && Singleton.progress < 100) {
-          this.openModal(playPoint);
-          return;
-        }
-      }
+    //   // we cant play
+    //   if (Singleton.player != null) {
+    //     if (Singleton.progress > 0 && Singleton.progress < 100) {
+    //       this.openModal(playPoint);
+    //       return;
+    //     }
+    //   }
 
-      Singleton.current = Singleton.points.find(x => x.id == id);
-      this.current = Singleton.current;
-    },
+    //   Singleton.current = Singleton.points.find(x => x.id == id);
+    //   this.current = Singleton.current;
+    // },
 
-    openModal(point) {
-      beep();
-      confirm({
-        title: point.title,
-        message: point.title,
-        okButtonText: "Ok",
-        cancelButtonText: "Skip"
-      }).then(result => {
-        if (result == true) {
-          if (Singleton.player) {
-            Singleton.player.stop();
-            // this.$refs.audio.points = null;
-            Singleton.current = Singleton.points.find(x => x.id == point.id);
-            this.current = Singleton.current;
-          }
-          // we stop player !!! and send to play again
-        } else {
-          Singleton.play();
-        }
-      });
-    }
+    // openModal(point) {
+    //   confirm({
+    //     title: point.title,
+    //     message: point.title,
+    //     okButtonText: "Ok",
+    //     cancelButtonText: "Skip"
+    //   }).then(result => {
+    //     if (result == true) {
+    //       if (Singleton.current != null) {
+    //         Singleton.player.stop();
+    //         Singleton.current = Singleton.points.find(x => x.id == point.id);
+    //         this.showPlayer = Singleton.current;
+    //       }
+    //     } else {
+    //       if (Singleton.current != null) Singleton.play();
+    //     }
+    //   });
+    // }
   }
 
   ////////
 };
-///////
 
 function startBackgroundTap() {
   if (application.android) {
@@ -645,14 +655,12 @@ function buttonClearTap() {
 </script>
   
 <style>
-#searchField {
-  placeholder-color: white;
-}
+
 
 .btn {
   font-size: 18;
 }
-  
+
 .actionBarContainer {
   width: 100%;
   float: left;

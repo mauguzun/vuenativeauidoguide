@@ -71,39 +71,47 @@ export const Sorting = {
         return 0;
       });
 
-    console.log("ssssssssssss");
+    console.log("for debug only");
     for (let a in clear) {
       console.log(`${a}->${clear[a].title} in ${clear[a].distance}`);
     }
     console.log(`${0}->${clear[0].title} in ${clear[0].distance}`);
 
-    console.log("ssssssssssss");
     if (clear.length > 0) {
+
+      
       if (clear[0].distance < locationSettings.pointCanPlaceDistanceKm) {
         Singleton.printData();
+        if (Singleton.player != null) {
 
-        if (
-          Singleton.progress &&
-          Singleton.progress > 0 &&
-          Singleton.progress < 100
-        ) {
-          if (
-            Singleton.player &&
-            !Singleton.beebeepDone.includes(Singleton.current.id)
-          ) {
-            if (Singleton.player) Singleton.player.pause();
-            beep();
-            Singleton.beebeepDone.push(Singleton.current.id);
-            setTimeout(e => {
-              if (Singleton.player) Singleton.player.resume();
-            }, 2000);
+          if (Singleton.isPlaying &&   !Singleton.beebeepDone.includes(Singleton.current.id)) {
+            
+            Singleton.player.pause();
+                Singleton.beebeepDone.push(Singleton.current.id);
+                // Singleton.player.resume();
+                beep();    
+                setTimeout(e => {
+                  try {
+                    Singleton.player.resume();
+                  } catch (e) { 
+                    alert(e)
+                  }
+                  
+                }, 2000);
           }
-        } else {
+          else if (!Singleton.isPlaying ) {
+            Singleton.current = clear[0];
+            Singleton.setup();
+          }
+
+        } else  {
           Singleton.current = clear[0];
           Singleton.setup();
         }
       }
     }
+
+
     Singleton.featurePoints = clear.length > 0 ? clear : null;
 
     //   this.prevLocation.lat = currentLat;
