@@ -1,10 +1,10 @@
 {
 	"C:\\GeolocationNativescriptVue\\platforms\\android\\app\\src\\main\\assets\\app\\tns-java-classes.js": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
-	"C:\\GeolocationNativescriptVue\\platforms\\android\\app\\src\\main\\assets\\app\\app.css": "e3e9e27a40d34717161d7dac3d01054b77fb4752",
 	"C:\\GeolocationNativescriptVue\\platforms\\android\\app\\src\\main\\assets\\app\\assets\\images\\NativeScript-Vue.png": "31f09bdba72293198ee2e2a83c4fe5aa5744bc3d",
 	"C:\\GeolocationNativescriptVue\\platforms\\android\\app\\src\\main\\assets\\app\\package.json": "a2c1719374d9181e55fa46bc3b9f2eb33df85ea2",
 	"C:\\GeolocationNativescriptVue\\platforms\\android\\app\\src\\main\\assets\\app\\starter.js": "dd9362b222c14a4bc62c958735c0ef7929bf0c93",
 	"C:\\GeolocationNativescriptVue\\platforms\\android\\app\\src\\main\\assets\\app\\vendor.app.css": "f55953beadd45a00f0a3fb9772470d8400ad4923",
-	"C:\\GeolocationNativescriptVue\\platforms\\android\\app\\src\\main\\assets\\app\\bundle.js": "b2fa3bc8ce00979a44c9f75091028f18774606f3",
+	"C:\\GeolocationNativescriptVue\\platforms\\android\\app\\src\\main\\assets\\app\\app.css": "d83f3708a3754c95185996f335f38c3aa381e284",
+	"C:\\GeolocationNativescriptVue\\platforms\\android\\app\\src\\main\\assets\\app\\bundle.js": "9609dab3c1f4e4220c7ca54e7b53a53f0ea553a4",
 	"C:\\GeolocationNativescriptVue\\platforms\\android\\app\\src\\main\\assets\\app\\vendor.js": "69b5a29e070389feac9bf52e206858934d637802"
 }

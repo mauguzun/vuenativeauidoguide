@@ -377,32 +377,27 @@ let translate = __webpack_require__("./translate.json");
   destroyed() {},
 
   mounted() {
-    console.log("mounted");
-
     _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].vueinst = this;
 
     if (appSettings.getString("points")) {
       _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points = JSON.parse(appSettings.getString("points"));
       _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].printData();
-     
     }
 
-    if (appSettings.getString("lang")) {
-      this.translate = translate[appSettings.getString("lang")];
-    }
+    this.translate = translate[appSettings.getString("lang", "en")];
 
-    if (appSettings.getString("cityTitle")) {
-      this.cityTitle = appSettings.getString("cityTitle");
-    } else {
-      this.cityTitle = this.translate.global.title;
-    }
-
-    // lets continue work
     if (appSettings.getBoolean("play") == true) {
       this.featurePoints = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].featurePoints;
       this.showPlayer = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current;
       this.startPlay();
-    }  
+    }
+
+    this.cityTitle = appSettings.getString(
+      "cityTitle",
+      this.translate.global.title
+    );
+
+    // lets continue work
   },
 
   watch: {
@@ -441,6 +436,7 @@ let translate = __webpack_require__("./translate.json");
 
   data() {
     return {
+      circle: null,
       cityTitle: null,
       isBackground: false,
       frontLocation: null,
@@ -497,9 +493,6 @@ let translate = __webpack_require__("./translate.json");
       nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1__["getCurrentLocation"](res => {
         let lat = res.latitude;
         let lng = res.longitude;
-
-        this.MAP_setCurrentLocation(lat, lng);
-        //
       });
 
       ///
@@ -558,6 +551,24 @@ let translate = __webpack_require__("./translate.json");
           lng
         );
       }
+
+      if (this.circle == null) {
+        this.circle = new mapsModule.Circle();
+        this.circle.center = new mapsModule.Position.positionFromLatLng(lat, lng);
+        this.circle.radius = _locationSettings__WEBPACK_IMPORTED_MODULE_14__["locationSettings"].pointCanPlaceDistanceKm * 1000;  
+         this.circle.strokeWidth = 1;
+      //  this.circle.strokeColor = "#ff0000"
+
+        try {
+          this.map.view.addCircle(this.circle);
+        } catch (e) {}
+      } else {
+        this.circle.center = new mapsModule.Position.positionFromLatLng(
+          lat,
+          lng
+        );
+      }
+
       this.map.view.latitude = lat;
       this.map.view.longitude = lng;
     },
@@ -686,9 +697,6 @@ let translate = __webpack_require__("./translate.json");
 
       _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].vueinst = this;
     },
-
-
-
 
     openModal(point) {
       confirm({
@@ -2288,12 +2296,12 @@ const locationSettings = {
   updateTime: 5000,
   updateDistanceInMetters: 0.1,
   samePlaceInKm: 0.01,
-  pointCanPlaceDistanceKm: 0.1,
+  pointCanPlaceDistanceKm: 0.05,
   featurePointDistanceKm: 0.6,
   maximumAge: 50000, 
   color: {
     user: "blue",
-    visited: "green",
+    visited: "green", 
     active :"red"
   }
 };
@@ -2612,8 +2620,6 @@ nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.registerElement(
 // Prints Vue logs when --env.production is *NOT* set while building
 // Vue.config.silent = (TNS_ENV === 'production');
 nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.config.silent = true;
-
-
 
 new nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   render: h => h("frame", [h(_components_Master__WEBPACK_IMPORTED_MODULE_1__["default"])])

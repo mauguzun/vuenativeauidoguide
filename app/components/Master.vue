@@ -170,32 +170,27 @@ export default {
   destroyed() {},
 
   mounted() {
-    console.log("mounted");
-
     Singleton.vueinst = this;
 
     if (appSettings.getString("points")) {
       Singleton.points = JSON.parse(appSettings.getString("points"));
       Singleton.printData();
-     
     }
 
-    if (appSettings.getString("lang")) {
-      this.translate = translate[appSettings.getString("lang")];
-    }
+    this.translate = translate[appSettings.getString("lang", "en")];
 
-    if (appSettings.getString("cityTitle")) {
-      this.cityTitle = appSettings.getString("cityTitle");
-    } else {
-      this.cityTitle = this.translate.global.title;
-    }
-
-    // lets continue work
     if (appSettings.getBoolean("play") == true) {
       this.featurePoints = Singleton.featurePoints;
       this.showPlayer = Singleton.current;
       this.startPlay();
-    }  
+    }
+
+    this.cityTitle = appSettings.getString(
+      "cityTitle",
+      this.translate.global.title
+    );
+
+    // lets continue work
   },
 
   watch: {
@@ -234,6 +229,7 @@ export default {
 
   data() {
     return {
+      circle: null,
       cityTitle: null,
       isBackground: false,
       frontLocation: null,
@@ -290,9 +286,6 @@ export default {
       geolocation.getCurrentLocation(res => {
         let lat = res.latitude;
         let lng = res.longitude;
-
-        this.MAP_setCurrentLocation(lat, lng);
-        //
       });
 
       ///
@@ -351,6 +344,24 @@ export default {
           lng
         );
       }
+
+      if (this.circle == null) {
+        this.circle = new mapsModule.Circle();
+        this.circle.center = new mapsModule.Position.positionFromLatLng(lat, lng);
+        this.circle.radius = locationSettings.pointCanPlaceDistanceKm * 1000;  
+         this.circle.strokeWidth = 1;
+      //  this.circle.strokeColor = "#ff0000"
+
+        try {
+          this.map.view.addCircle(this.circle);
+        } catch (e) {}
+      } else {
+        this.circle.center = new mapsModule.Position.positionFromLatLng(
+          lat,
+          lng
+        );
+      }
+
       this.map.view.latitude = lat;
       this.map.view.longitude = lng;
     },
@@ -479,9 +490,6 @@ export default {
 
       Singleton.vueinst = this;
     },
-
-
-
 
     openModal(point) {
       confirm({

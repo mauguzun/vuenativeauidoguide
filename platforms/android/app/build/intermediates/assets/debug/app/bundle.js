@@ -377,30 +377,27 @@ let translate = __webpack_require__("./translate.json");
   destroyed() {},
 
   mounted() {
-    console.log("mounted");
+    _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].vueinst = this;
 
     if (appSettings.getString("points")) {
       _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points = JSON.parse(appSettings.getString("points"));
       _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].printData();
-      console.log("data");
     }
 
-    if (appSettings.getString("lang")) {
-      this.translate = translate[appSettings.getString("lang")];
-    }
+    this.translate = translate[appSettings.getString("lang", "en")];
 
-    if (appSettings.getString("cityTitle")) {
-      this.cityTitle = appSettings.getString("cityTitle");
-    } else {
-      // this.cityTitle = this.translate.global.title;
-    }
-
-    // lets continue work
     if (appSettings.getBoolean("play") == true) {
       this.featurePoints = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].featurePoints;
       this.showPlayer = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current;
       this.startPlay();
     }
+
+    this.cityTitle = appSettings.getString(
+      "cityTitle",
+      this.translate.global.title
+    );
+
+    // lets continue work
   },
 
   watch: {
@@ -439,6 +436,7 @@ let translate = __webpack_require__("./translate.json");
 
   data() {
     return {
+      circle: null,
       cityTitle: null,
       isBackground: false,
       frontLocation: null,
@@ -495,9 +493,6 @@ let translate = __webpack_require__("./translate.json");
       nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1__["getCurrentLocation"](res => {
         let lat = res.latitude;
         let lng = res.longitude;
-
-        this.MAP_setCurrentLocation(lat, lng);
-        //
       });
 
       ///
@@ -547,7 +542,7 @@ let translate = __webpack_require__("./translate.json");
           lat,
           lng
         );
-        this.map.currentLocation.color = "blue";
+        this.map.currentLocation.color = _locationSettings__WEBPACK_IMPORTED_MODULE_14__["locationSettings"].color.user;
         this.map.currentLocation.title = "You are here";
         this.map.view.addMarker(this.map.currentLocation);
       } else {
@@ -556,6 +551,24 @@ let translate = __webpack_require__("./translate.json");
           lng
         );
       }
+
+      if (this.circle == null) {
+        this.circle = new mapsModule.Circle();
+        this.circle.center = new mapsModule.Position.positionFromLatLng(lat, lng);
+        this.circle.radius = _locationSettings__WEBPACK_IMPORTED_MODULE_14__["locationSettings"].pointCanPlaceDistanceKm * 1000;  
+         this.circle.strokeWidth = 1;
+      //  this.circle.strokeColor = "#ff0000"
+
+        try {
+          this.map.view.addCircle(this.circle);
+        } catch (e) {}
+      } else {
+        this.circle.center = new mapsModule.Position.positionFromLatLng(
+          lat,
+          lng
+        );
+      }
+
       this.map.view.latitude = lat;
       this.map.view.longitude = lng;
     },
@@ -627,10 +640,6 @@ let translate = __webpack_require__("./translate.json");
       this.$refs.drawer.nativeView.toggleDrawerState();
     },
 
-    test() {
-      this.$refs.mapContainer.nativeView.height = "80%";
-    },
-
     go(page) {
       this.showmap = page != "map" ? false : true;
       this.currentComp = page != "map" ? page : null;
@@ -657,19 +666,17 @@ let translate = __webpack_require__("./translate.json");
     },
     stopPlay() {
       appSettings.setBoolean("play", false);
-      this.showPlayer = null;
+
       this.play = false;
       this.featurePoints = null;
-      stopBackgroundTap();
+      this.showPlayer = null;
+      this.$forceUpdate();
 
-      try {
-        nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1__["clearWatch"](this.frontLocation);
-      } catch (e) {}
+      stopBackgroundTap();
 
       try {
         _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player = null;
       } catch (e) {}
-      this.$forceUpdate();
     },
     /**
      * this is start service
@@ -680,7 +687,7 @@ let translate = __webpack_require__("./translate.json");
         return;
       }
 
-      this.true = false;
+      this.play = true;
 
       appSettings.setBoolean("play", true);
       this.$forceUpdate();
@@ -688,74 +695,27 @@ let translate = __webpack_require__("./translate.json");
       stopBackgroundTap();
       startBackgroundTap();
 
-      this.frontLocation = nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1__["watchLocation"](
-        res => {
-          let lat = res.latitude;
-          let lng = res.longitude;
+      _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].vueinst = this;
+    },
 
-          this.MAP_setCurrentLocation(lat, lng);
-
-          // Sorting.sortPoints(lat, lng);
-          // for render
-          this.showPlayer = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current;
-          this.featurePoints = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].featurePoints;
-          //
-        },
-        error => console.log(error),
-        {
-          desiredAccuracy: ui_enums__WEBPACK_IMPORTED_MODULE_3__["Accuracy"].high,
-          updateDistance: _locationSettings__WEBPACK_IMPORTED_MODULE_14__["locationSettings"].updateDistanceInMetters,
-          updateTime: _locationSettings__WEBPACK_IMPORTED_MODULE_14__["locationSettings"].updateTime,
-          minimumUpdateTime: _locationSettings__WEBPACK_IMPORTED_MODULE_14__["locationSettings"].minimumUpdateTime
+    openModal(point) {
+      confirm({
+        title: point.title,
+        message: point.title,
+        okButtonText: "Ok",
+        cancelButtonText: "Skip"
+      }).then(result => {
+        if (result == true) {
+          if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current != null) {
+            _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player.stop();
+            _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points.find(x => x.id == point.id);
+            this.showPlayer = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current;
+          }
+        } else {
+          if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current != null) _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].play();
         }
-      );
+      });
     }
-
-    /**
-     * @id = "string"
-     */
-    // play(id) {
-    //   // check
-    //   if (!Singleton.points) {
-    //     return;
-    //   }
-
-    //   let playPoint = Singleton.points.find(x => x.id == id);
-
-    //   if (!playPoint | (playPoint.active == false)) {
-    //     return;
-    //   }
-
-    //   // we cant play
-    //   if (Singleton.player != null) {
-    //     if (Singleton.progress > 0 && Singleton.progress < 100) {
-    //       this.openModal(playPoint);
-    //       return;
-    //     }
-    //   }
-
-    //   Singleton.current = Singleton.points.find(x => x.id == id);
-    //   this.current = Singleton.current;
-    // },
-
-    // openModal(point) {
-    //   confirm({
-    //     title: point.title,
-    //     message: point.title,
-    //     okButtonText: "Ok",
-    //     cancelButtonText: "Skip"
-    //   }).then(result => {
-    //     if (result == true) {
-    //       if (Singleton.current != null) {
-    //         Singleton.player.stop();
-    //         Singleton.current = Singleton.points.find(x => x.id == point.id);
-    //         this.showPlayer = Singleton.current;
-    //       }
-    //     } else {
-    //       if (Singleton.current != null) Singleton.play();
-    //     }
-    //   });
-    // }
   }
 
   ////////
@@ -1144,9 +1104,394 @@ const appSettings = __webpack_require__("../node_modules/tns-core-modules/applic
 /***/ }),
 
 /***/ "../node_modules/vue-loader/lib/loaders/templateLoader.js?!../node_modules/vue-loader/lib/index.js?!./components/Master.vue?vue&type=template&id=2b32067d&":
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-throw new Error("Module build failed (from ../node_modules/vue-loader/lib/loaders/templateLoader.js):\nSyntaxError: Unexpected token (1:698)\n    at Parser.pp$4.raise (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:2610:13)\n    at Parser.pp.unexpected (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:637:8)\n    at Parser.pp.expect (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:631:26)\n    at Parser.parseObj (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:4439:16)\n    at Parser.pp$3.parseExprAtom (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:2077:17)\n    at Parser.parseExprAtom (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:4372:24)\n    at Parser.pp$3.parseExprSubscripts (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:1955:19)\n    at Parser.pp$3.parseMaybeUnary (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:1932:17)\n    at Parser.pp$3.parseExprOps (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:1874:19)\n    at Parser.pp$3.parseMaybeConditional (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:1857:19)\n    at Parser.pp$3.parseMaybeAssign (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:1832:19)\n    at Parser.pp$3.parsePropertyValue (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:2310:87)\n    at Parser.parseObj (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:4472:14)\n    at Parser.pp$3.parseExprAtom (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:2077:17)\n    at Parser.parseExprAtom (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:4372:24)\n    at Parser.pp$3.parseExprSubscripts (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:1955:19)\n    at Parser.pp$3.parseMaybeUnary (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:1932:17)\n    at Parser.pp$3.parseExprOps (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:1874:19)\n    at Parser.pp$3.parseMaybeConditional (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:1857:19)\n    at Parser.pp$3.parseMaybeAssign (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:1832:19)\n    at Parser.pp$3.parseExprList (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:2528:20)\n    at Parser.pp$3.parseSubscripts (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:1983:29)\n    at Parser.pp$3.parseExprSubscripts (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:1958:21)\n    at Parser.pp$3.parseMaybeUnary (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:1932:17)\n    at Parser.pp$3.parseExprOps (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:1874:19)\n    at Parser.pp$3.parseMaybeConditional (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:1857:19)\n    at Parser.pp$3.parseMaybeAssign (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:1832:19)\n    at Parser.pp$3.parseExprList (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:2528:20)\n    at Parser.pp$3.parseExprAtom (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:2073:26)\n    at Parser.parseExprAtom (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:4372:24)\n    at Parser.pp$3.parseExprSubscripts (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:1955:19)\n    at Parser.pp$3.parseMaybeUnary (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:1932:17)\n    at Parser.pp$3.parseExprOps (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:1874:19)\n    at Parser.pp$3.parseMaybeConditional (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:1857:19)\n    at Parser.pp$3.parseMaybeAssign (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:1832:19)\n    at Parser.pp$3.parseExprList (C:\\GeolocationNativescriptVue\\node_modules\\vue-template-es2015-compiler\\buble.js:2528:20)");
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "Page",
+    { staticClass: "page" },
+    [
+      _c(
+        "ActionBar",
+        { attrs: { title: "Hello World" } },
+        [
+          _c(
+            "StackLayout",
+            {
+              staticClass: "actionBarContainer",
+              attrs: {
+                orientation: "horizontal",
+                height: "38",
+                alignItems: "left"
+              }
+            },
+            [
+              _c(
+                "StackLayout",
+                {
+                  staticClass: "HLeft",
+                  staticStyle: { marginTop: "10" },
+                  on: {
+                    tap: function($event) {
+                      _vm.toggleDrawer()
+                    }
+                  }
+                },
+                [
+                  _c("Label", {
+                    staticClass: "font-awesome",
+                    staticStyle: { fontSize: "27", color: "#333" },
+                    attrs: { text: "☰" }
+                  })
+                ],
+                1
+              ),
+              _c(
+                "StackLayout",
+                { staticClass: "HMid" },
+                [_c("Label", { attrs: { text: _vm.cityTitle } })],
+                1
+              ),
+              _c(
+                "StackLayout",
+                { staticClass: "HRight", on: { tap: _vm.switchPlay } },
+                [
+                  _c("Label", {
+                    staticStyle: { fontSize: "27", color: "#333" },
+                    attrs: { text: _vm.play == true ? "◼" : "▶" }
+                  }),
+                  _vm._v("\\\n      ")
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _c(
+        "RadSideDrawer",
+        {
+          ref: "drawer",
+          on: {
+            drawerOpened: function($event) {
+              _vm.onDrawerOpened()
+            },
+            drawerClosed: function($event) {
+              _vm.onDrawerClosed()
+            }
+          }
+        },
+        [
+          _c(
+            "StackLayout",
+            {
+              directives: [
+                {
+                  name: "view",
+                  rawName: "v-view:drawerContent",
+                  arg: "drawerContent",
+                  modifiers: {}
+                }
+              ],
+              attrs: { backgroundColor: "#eee" }
+            },
+            [
+              _c("StackLayout", { attrs: { height: "15%" } }),
+              _c(
+                "StackLayout",
+                {},
+                [
+                  _c("Label", {
+                    staticClass: "drawerItemText font-awesome",
+                    attrs: {
+                      text: _vm.translate.menu.settings,
+                      paddingLeft: "30%",
+                      color: "black",
+                      margin: "10"
+                    },
+                    on: {
+                      tap: function($event) {
+                        _vm.go("settings")
+                      }
+                    }
+                  }),
+                  _c("Label", {
+                    staticClass: "drawerItemText font-awesome",
+                    attrs: {
+                      text: "Set all active",
+                      paddingLeft: "30%",
+                      color: "black",
+                      margin: "10"
+                    },
+                    on: { tap: _vm.setAllAsActive }
+                  }),
+                  _c("Label", {
+                    staticClass: "drawerItemText font-awesome",
+                    attrs: {
+                      text: _vm.translate.menu.map,
+                      paddingLeft: "30%",
+                      color: "black",
+                      margin: "10"
+                    },
+                    on: {
+                      tap: function($event) {
+                        _vm.go("map")
+                      }
+                    }
+                  }),
+                  _c("Label", {
+                    staticClass: "drawerItemText font-awesome",
+                    attrs: {
+                      text: _vm.translate.menu.about,
+                      paddingLeft: "30%",
+                      color: "black",
+                      margin: "10"
+                    },
+                    on: {
+                      tap: function($event) {
+                        _vm.go("about")
+                      }
+                    }
+                  }),
+                  _c("Label", {
+                    staticClass: "drawerItemText font-awesome",
+                    attrs: {
+                      text: "test",
+                      paddingLeft: "30%",
+                      color: "black",
+                      margin: "10"
+                    },
+                    on: { tap: _vm.test }
+                  })
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _c(
+            "StackLayout",
+            {
+              directives: [
+                {
+                  name: "view",
+                  rawName: "v-view:mainContent",
+                  arg: "mainContent",
+                  modifiers: {}
+                }
+              ]
+            },
+            [
+              _c(
+                "DockLayout",
+                [
+                  _c(
+                    "StackLayout",
+                    { attrs: { dock: "top", width: "100%" } },
+                    [
+                      _c(
+                        "StackLayout",
+                        { attrs: { width: "100%", dock: "top" } },
+                        [
+                          _vm.showPlayer != null
+                            ? _c("audioplayer", {
+                                ref: "audio",
+                                attrs: { point: _vm.showPlayer }
+                              })
+                            : _vm._e(),
+                          _c(
+                            "ScrollView",
+                            [
+                              _c(_vm.currentComp, {
+                                tag: "component",
+                                attrs: { translate: _vm.translate },
+                                on: { settingSaved: _vm.settingsDone }
+                              })
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _c(
+                        "ScrollView",
+                        [
+                          _c(
+                            "StackLayout",
+                            {
+                              directives: [
+                                {
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value: _vm.showmap,
+                                  expression: "showmap"
+                                }
+                              ],
+                              ref: "mapContainer",
+                              attrs: {
+                                width: "100%",
+                                dock: "top",
+                                height: "100%"
+                              }
+                            },
+                            [
+                              _c("MapView", {
+                                ref: "map",
+                                attrs: {
+                                  width: "100%",
+                                  height: "100%",
+                                  dock: "top",
+                                  zoom: _vm.map.zoom,
+                                  latitude: _vm.map.latitude,
+                                  longitude: _vm.map.longitude,
+                                  bearing: "180",
+                                  tilt: "35"
+                                },
+                                on: { mapReady: _vm.MAP_mapReady }
+                              })
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm.featurePoints != null
+                        ? _c(
+                            "StackLayout",
+                            {
+                              attrs: {
+                                dock: "top",
+                                height: "100%",
+                                width: "100%"
+                              }
+                            },
+                            [
+                              _c(
+                                "ScrollView",
+                                [
+                                  _c(
+                                    "ListView",
+                                    {
+                                      key: _vm.index,
+                                      attrs: {
+                                        height: "100%",
+                                        separatorColor: "transparent",
+                                        id: "listView",
+                                        items: _vm.featurePoints,
+                                        "+alias": "item"
+                                      }
+                                    },
+                                    [
+                                      _c("v-template", {
+                                        scopedSlots: _vm._u([
+                                          {
+                                            key: "default",
+                                            fn: function(ref) {
+                                              var item = ref.item
+                                              var $index = ref.$index
+                                              var $even = ref.$even
+                                              var $odd = ref.$odd
+                                              return _c(
+                                                "StackLayout",
+                                                {
+                                                  staticStyle: {
+                                                    borderBottomWidth: "1",
+                                                    borderBottomColor: "#E4E4E4"
+                                                  },
+                                                  attrs: {
+                                                    orientation: "horizontal",
+                                                    padding: "10"
+                                                  },
+                                                  on: {
+                                                    tap: function($event) {
+                                                      _vm.playFeature(item)
+                                                    }
+                                                  }
+                                                },
+                                                [
+                                                  _c(
+                                                    "StackLayout",
+                                                    { attrs: { width: "20%" } },
+                                                    [
+                                                      _c("Image", {
+                                                        staticClass: "conImg",
+                                                        attrs: {
+                                                          src: item.img,
+                                                          stretch: "aspectFill"
+                                                        }
+                                                      })
+                                                    ],
+                                                    1
+                                                  ),
+                                                  _c(
+                                                    "StackLayout",
+                                                    {
+                                                      attrs: {
+                                                        marginLeft: "10",
+                                                        paddingTop: "3",
+                                                        width: "50%"
+                                                      }
+                                                    },
+                                                    [
+                                                      _c("Label", {
+                                                        attrs: {
+                                                          text: item.title
+                                                        }
+                                                      }),
+                                                      _c("Label", {
+                                                        attrs: {
+                                                          text: item.distance
+                                                        }
+                                                      })
+                                                    ],
+                                                    1
+                                                  )
+                                                ],
+                                                1
+                                              )
+                                            }
+                                          }
+                                        ])
+                                      })
+                                    ],
+                                    1
+                                  )
+                                ],
+                                1
+                              )
+                            ],
+                            1
+                          )
+                        : _vm._e()
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
 
 /***/ }),
 
@@ -1251,6 +1596,10 @@ var render = function() {
                   _c("Label", {
                     staticClass: "postDateSmall",
                     attrs: { text: _vm.point.title }
+                  }),
+                  _c("Progress", {
+                    staticClass: "postDateSmall",
+                    attrs: { value: _vm.progress }
                   })
                 ],
                 1
@@ -1436,8 +1785,10 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Master_vue_vue_type_template_id_2b32067d___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../node_modules/vue-loader/lib/loaders/templateLoader.js?!../node_modules/vue-loader/lib/index.js?!./components/Master.vue?vue&type=template&id=2b32067d&");
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Master_vue_vue_type_template_id_2b32067d___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Master_vue_vue_type_template_id_2b32067d___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Master_vue_vue_type_template_id_2b32067d___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Master_vue_vue_type_template_id_2b32067d___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Master_vue_vue_type_template_id_2b32067d___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Master_vue_vue_type_template_id_2b32067d___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
 
 
 /***/ }),
@@ -1457,6 +1808,8 @@ __webpack_require__.r(__webpack_exports__);
 const appSettings = __webpack_require__("../node_modules/tns-core-modules/application-settings/application-settings.js");
 
 const Singleton = {
+
+  vueinst : null,
   points: null,
   _featurePoints: null,
 
@@ -1465,6 +1818,11 @@ const Singleton = {
   },
   set featurePoints(value) {
     this._featurePoints = value;
+
+    if (this.vueinst) {
+      this.vueinst.featurePoints = this._featurePoints;
+    }
+    
     this.savePoints();
   },
   /**
@@ -1482,10 +1840,18 @@ const Singleton = {
   },
 
   set current(value) {
-    this._current = null;   
+    
+    this._current = null;  
+    
     this.points.find(x => x.id == value.id).active = false;
-    this._current = value;
     this.savePoints();
+
+    this._current = value;
+
+    if (this.vueinst) {
+      this.vueinst.showPlayer = this._current;
+    }
+   
   },
 
   printData() {
@@ -1617,6 +1983,7 @@ const Sorting = {
       console.log("not moved :( ");
       return;
     }
+
     if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points == null) {
       alert("Please load  points");
       return;
@@ -1662,41 +2029,43 @@ const Sorting = {
         return 0;
       });
 
-    console.log("ssssssssssss");
     for (let a in clear) {
       console.log(`${a}->${clear[a].title} in ${clear[a].distance}`);
     }
-    console.log(`${0}->${clear[0].title} in ${clear[0].distance}`);
+    if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].vueinst) {
+      _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].vueinst.MAP_setCurrentLocation(currentLat, currentLng);
+    }
 
     if (clear.length > 0) {
       if (clear[0].distance < _locationSettings_js__WEBPACK_IMPORTED_MODULE_1__["locationSettings"].pointCanPlaceDistanceKm) {
         _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].printData();
         if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player != null) {
-
-          if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].isPlaying &&   !_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].beebeepDone.includes(_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current.id)) {
-            
+          if (
+            _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].isPlaying &&
+            !_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].beebeepDone.includes(_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current.id)
+          ) {
             _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player.pause();
-                _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].beebeepDone.push(_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current.id);
-                // Singleton.player.resume();
-                Object(_beep__WEBPACK_IMPORTED_MODULE_2__["beep"])();    
-                setTimeout(e => {
-                  try {
-                    _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player.resume();
-                  } catch (e) { 
-                    alert(e)
-                  }
-                  
-                }, 2000);
+            _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].beebeepDone.push(_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current.id);
+            // Singleton.player.resume();
+            Object(_beep__WEBPACK_IMPORTED_MODULE_2__["beep"])();
+            setTimeout(e => {
+              try {
+                _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player.resume();
+              } catch (e) {}
+            }, 2000);
+          } else if (
+            !_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].isPlaying && // is not played && stoped 
+             _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].progress == 100
+          ) {
+            _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current = clear[0];
+            _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].setup();
           }
-
-
-        } else  {
+        } else {
           _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].current = clear[0];
           _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].setup();
         }
       }
     }
-
 
     _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].featurePoints = clear.length > 0 ? clear : null;
 
@@ -1743,7 +2112,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "address", function() { return address; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "langList", function() { return langList; });
 const apiAddress = "https://audio.tricypolitain.com/api/";
-
 function apiCall(arg ,data={}) {
 
   let postData = Object.entries(data).map(([key, val]) => `${key}=${val}`).join('&');
@@ -1928,12 +2296,12 @@ const locationSettings = {
   updateTime: 5000,
   updateDistanceInMetters: 0.1,
   samePlaceInKm: 0.01,
-  pointCanPlaceDistanceKm: 0.1,
+  pointCanPlaceDistanceKm: 0.05,
   featurePointDistanceKm: 0.6,
   maximumAge: 50000, 
   color: {
     user: "blue",
-    visited: "green",
+    visited: "green", 
     active :"red"
   }
 };
@@ -2252,8 +2620,6 @@ nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.registerElement(
 // Prints Vue logs when --env.production is *NOT* set while building
 // Vue.config.silent = (TNS_ENV === 'production');
 nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.config.silent = true;
-
-
 
 new nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   render: h => h("frame", [h(_components_Master__WEBPACK_IMPORTED_MODULE_1__["default"])])

@@ -17,8 +17,6 @@ Vue.registerElement(
 // Vue.config.silent = (TNS_ENV === 'production');
 Vue.config.silent = true;
 
-
-
 new Vue({
   render: h => h("frame", [h(Master)])
 }).$start();
