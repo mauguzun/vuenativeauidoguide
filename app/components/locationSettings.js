@@ -3,7 +3,7 @@ export const locationSettings = {
   updateTime: 5000,
   updateDistanceInMetters: 0.1,
   samePlaceInKm: 0.01,
-  pointCanPlaceDistanceKm: 0.05,
+  pointCanPlaceDistanceKm: 0.07,
   featurePointDistanceKm: 0.6,
   maximumAge: 50000, 
   color: {

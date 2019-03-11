@@ -1,6 +1,7 @@
 import { Singleton } from "./Singleton.js";
 import { locationSettings } from "./locationSettings.js";
 import { beep } from "./beep";
+import { LocalNotifications } from "nativescript-local-notifications";
 
 export const Sorting = {
   prevLocation: {
@@ -88,6 +89,7 @@ export const Sorting = {
             !Singleton.beebeepDone.includes(Singleton.current.id)
           ) {
             Singleton.player.pause();
+            this.showNotify(clear[0])
             Singleton.beebeepDone.push(Singleton.current.id);
             // Singleton.player.resume();
             beep();
@@ -115,6 +117,36 @@ export const Sorting = {
     //   this.prevLocation.lat = currentLat;
     //   this.prevLocation.lng = currentLng;
   },
+
+
+  showNotify(point) {
+    LocalNotifications.schedule([{
+      id: Number.parseInt( point.id),
+      title: point.title   ,
+      body: point.distance,
+      ticker: point.title,
+      color: "red",
+      badge: 1,
+      groupSummary:point.title, //android only
+      ongoing: true, // makes the notification ongoing (Android only)
+      icon: 'res://heart',
+      image: point.image,
+      thumbnail: true,
+      forceShowWhenInForeground:true,
+      interval: 'minute',
+      channel: 'My Channel', // default: 'Channel'
+      sound: "customsound-ios.wav", // falls back to the default sound on Android
+      at: new Date(new Date().getTime() + ( 500)) // 10 seconds from now
+    }]).then(
+        function() {
+          // Singleton.vueinst.openModal(point)
+        },
+        function(error) {
+          console.log("scheduling error: " + error);
+        }
+    )
+  },
+
 
   /**
    *

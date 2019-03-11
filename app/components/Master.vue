@@ -58,15 +58,6 @@
             class="drawerItemText font-awesome"
             margin="10"
           />
-
-          <Label
-            text="test"
-            @tap="test"
-            paddingLeft="30%"
-            color="black"
-            class="drawerItemText font-awesome"
-            margin="10"
-          />
         </StackLayout>
       </StackLayout>
 
@@ -151,7 +142,6 @@ let locationService = require("./backgroundServices");
 
 import Settings from "./pages/Settings";
 import About from "./pages/About";
-import PageMap from "./pages/PageMap.vue";
 import Player from "./pages/Player";
 import { Image } from "tns-core-modules/ui/image";
 import { Sorting } from "./Sorting";
@@ -171,6 +161,7 @@ export default {
 
   mounted() {
     Singleton.vueinst = this;
+
 
     if (appSettings.getString("points")) {
       Singleton.points = JSON.parse(appSettings.getString("points"));
@@ -224,7 +215,7 @@ export default {
   components: {
     settings: Settings,
     about: About,
-    audioplayer: Player
+    audioplayer: Player  
   },
 
   data() {
@@ -284,8 +275,10 @@ export default {
 
       ////
       geolocation.getCurrentLocation(res => {
+       
         let lat = res.latitude;
         let lng = res.longitude;
+        this.MAP_setCurrentLocation(lat,lng) 
       });
 
       ///
@@ -347,10 +340,13 @@ export default {
 
       if (this.circle == null) {
         this.circle = new mapsModule.Circle();
-        this.circle.center = new mapsModule.Position.positionFromLatLng(lat, lng);
-        this.circle.radius = locationSettings.pointCanPlaceDistanceKm * 1000;  
-         this.circle.strokeWidth = 1;
-      //  this.circle.strokeColor = "#ff0000"
+        this.circle.center = new mapsModule.Position.positionFromLatLng(
+          lat,
+          lng
+        );
+        this.circle.radius = locationSettings.pointCanPlaceDistanceKm * 1000;
+        this.circle.strokeWidth = 3;
+        //  this.circle.strokeColor = "#ff0000"
 
         try {
           this.map.view.addCircle(this.circle);

@@ -5,8 +5,8 @@ import * as platform from "tns-core-modules/platform";
 import * as Toast from "nativescript-toast";
 import { Sorting } from "./Sorting";
 import { locationSettings } from "./locationSettings";
+const appSettings = require("tns-core-modules/application-settings");
 
-let prevLocation = { lat: null, lng: null };
 
 if (application.android) {
   const { sdkVersion } = platform.device;
@@ -61,12 +61,13 @@ function watchLocation(comp) {
         function(loc) {
           if (loc) {
             // we thinka bout later
-            let toast = Toast.makeText(loc.latitude + "  " + loc.longitude);
-            toast.setDuration(1000 * 20);
+            // let toast = Toast.makeText(loc.latitude + "  " + loc.longitude);
+            let toast = Toast.makeText(appSettings.getString("cityTitle"));
+            toast.setDuration(1000);
             toast.show();
                 
-           
-             Sorting.sortPoints(loc.latitude, loc.longitude);
+        
+            Sorting.sortPoints(loc.latitude, loc.longitude);
    
             // fetch("https://audio.tricypolitain.com/ping?text=newtest" + counter)
             //   .then(e => {})
