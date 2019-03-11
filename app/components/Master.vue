@@ -14,9 +14,7 @@
           <Label :text="cityTitle"/>
         </StackLayout>
         <StackLayout @tap="switchPlay" class="HRight">
-          <Label :text="play == true ?  '◼' : '▶' " style="font-size:27;color:#333;"/>
-
-          \
+          <Label :text="play == true ?  '◼' : '▶' " style="font-size:27;color:#333;"/>\
         </StackLayout>
       </StackLayout>
     </ActionBar>
@@ -174,10 +172,12 @@ export default {
   mounted() {
     console.log("mounted");
 
+    Singleton.vueinst = this;
+
     if (appSettings.getString("points")) {
       Singleton.points = JSON.parse(appSettings.getString("points"));
       Singleton.printData();
-      console.log("data");
+     
     }
 
     if (appSettings.getString("lang")) {
@@ -187,7 +187,7 @@ export default {
     if (appSettings.getString("cityTitle")) {
       this.cityTitle = appSettings.getString("cityTitle");
     } else {
-      // this.cityTitle = this.translate.global.title;
+      this.cityTitle = this.translate.global.title;
     }
 
     // lets continue work
@@ -195,7 +195,7 @@ export default {
       this.featurePoints = Singleton.featurePoints;
       this.showPlayer = Singleton.current;
       this.startPlay();
-    }
+    }  
   },
 
   watch: {
@@ -342,7 +342,7 @@ export default {
           lat,
           lng
         );
-        this.map.currentLocation.color = "blue";
+        this.map.currentLocation.color = locationSettings.color.user;
         this.map.currentLocation.title = "You are here";
         this.map.view.addMarker(this.map.currentLocation);
       } else {
@@ -422,10 +422,6 @@ export default {
       this.$refs.drawer.nativeView.toggleDrawerState();
     },
 
-    test() {
-      this.$refs.mapContainer.nativeView.height = "80%";
-    },
-
     go(page) {
       this.showmap = page != "map" ? false : true;
       this.currentComp = page != "map" ? page : null;
@@ -454,20 +450,15 @@ export default {
       appSettings.setBoolean("play", false);
 
       this.play = false;
-     
       this.featurePoints = null;
       this.showPlayer = null;
       this.$forceUpdate();
-      stopBackgroundTap();
 
-      try {
-        geolocation.clearWatch(this.frontLocation);
-      } catch (e) {}
+      stopBackgroundTap();
 
       try {
         Singleton.player = null;
       } catch (e) {}
-      
     },
     /**
      * this is start service
@@ -486,74 +477,30 @@ export default {
       stopBackgroundTap();
       startBackgroundTap();
 
-      this.frontLocation = geolocation.watchLocation(
-        res => {
-          let lat = res.latitude;
-          let lng = res.longitude;
+      Singleton.vueinst = this;
+    },
 
-          this.MAP_setCurrentLocation(lat, lng);
 
-          // Sorting.sortPoints(lat, lng);
-          // for render
-          this.showPlayer = Singleton.current;
-          this.featurePoints = Singleton.featurePoints;
-          //
-        },
-        error => console.log(error),
-        {
-          desiredAccuracy: Accuracy.high,
-          updateDistance: locationSettings.updateDistanceInMetters,
-          updateTime: locationSettings.updateTime,
-          minimumUpdateTime: locationSettings.minimumUpdateTime
+
+
+    openModal(point) {
+      confirm({
+        title: point.title,
+        message: point.title,
+        okButtonText: "Ok",
+        cancelButtonText: "Skip"
+      }).then(result => {
+        if (result == true) {
+          if (Singleton.current != null) {
+            Singleton.player.stop();
+            Singleton.current = Singleton.points.find(x => x.id == point.id);
+            this.showPlayer = Singleton.current;
+          }
+        } else {
+          if (Singleton.current != null) Singleton.play();
         }
-      );
+      });
     }
-
-    /**
-     * @id = "string"
-     */
-    // play(id) {
-    //   // check
-    //   if (!Singleton.points) {
-    //     return;
-    //   }
-
-    //   let playPoint = Singleton.points.find(x => x.id == id);
-
-    //   if (!playPoint | (playPoint.active == false)) {
-    //     return;
-    //   }
-
-    //   // we cant play
-    //   if (Singleton.player != null) {
-    //     if (Singleton.progress > 0 && Singleton.progress < 100) {
-    //       this.openModal(playPoint);
-    //       return;
-    //     }
-    //   }
-
-    //   Singleton.current = Singleton.points.find(x => x.id == id);
-    //   this.current = Singleton.current;
-    // },
-
-    // openModal(point) {
-    //   confirm({
-    //     title: point.title,
-    //     message: point.title,
-    //     okButtonText: "Ok",
-    //     cancelButtonText: "Skip"
-    //   }).then(result => {
-    //     if (result == true) {
-    //       if (Singleton.current != null) {
-    //         Singleton.player.stop();
-    //         Singleton.current = Singleton.points.find(x => x.id == point.id);
-    //         this.showPlayer = Singleton.current;
-    //       }
-    //     } else {
-    //       if (Singleton.current != null) Singleton.play();
-    //     }
-    //   });
-    // }
   }
 
   ////////
@@ -655,8 +602,6 @@ function buttonClearTap() {
 </script>
   
 <style>
-
-
 .btn {
   font-size: 18;
 }

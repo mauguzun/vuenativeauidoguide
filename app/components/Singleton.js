@@ -3,6 +3,8 @@ import { TNSPlayer } from "nativescript-audio";
 const appSettings = require("tns-core-modules/application-settings");
 
 export const Singleton = {
+
+  vueinst : null,
   points: null,
   _featurePoints: null,
 
@@ -11,6 +13,11 @@ export const Singleton = {
   },
   set featurePoints(value) {
     this._featurePoints = value;
+
+    if (this.vueinst) {
+      this.vueinst.featurePoints = this._featurePoints;
+    }
+    
     this.savePoints();
   },
   /**
@@ -28,10 +35,17 @@ export const Singleton = {
   },
 
   set current(value) {
-    this._current = null;   
+    
+    this._current = null;  
+    
     this.points.find(x => x.id == value.id).active = false;
     this.savePoints();
+
     this._current = value;
+
+    if (this.vueinst) {
+      this.vueinst.showPlayer = this._current;
+    }
    
   },
 

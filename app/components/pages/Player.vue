@@ -5,9 +5,9 @@
         <Image :src="point.img" stretch="aspectFill" class="postImageSmall"/>
         <StackLayout>
           <Label :text="point.title" class="postDateSmall"/>
-          <!-- <Progress class="postDateSmall" :value="progress"/> -->
+          <Progress class="postDateSmall" :value="progress"/> 
           <!-- <Label :text="isPlaying ? '⏸' : '▶'" class="postDateSmall"/> -->
-        </StackLayout>
+        </StackLayout>  
       </StackLayout>
     </StackLayout>
   </StackLayout>
