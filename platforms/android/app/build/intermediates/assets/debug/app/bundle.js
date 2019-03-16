@@ -361,6 +361,7 @@ let translate = __webpack_require__("./translate.json");
   mounted() {
     _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].vueinst = this;
 
+
     if (appSettings.getString("points")) {
       _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points = JSON.parse(appSettings.getString("points"));
       _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].printData();
@@ -817,28 +818,24 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 
+const appSettings = __webpack_require__("../node_modules/tns-core-modules/application-settings/application-settings.js");
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data() {
     return {
-      code: "<div><h1>HtmlView >>>????? </h1></div>"
+      code: "<div><h1 </h1></div>"
     };
-  },  
+  },
   mounted() {
-    console.log("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW:");
     Object(_api_js__WEBPACK_IMPORTED_MODULE_0__["apiCall"])("code", {
       page_name: "about",
       lang: appSettings.getString("lang", "en")
-    })
-      .then(res => {
-        console.log(res);
-        return res.json();
-      })
-      .then(res => {
-        console.log(res);
-        this.code = res.code;
+    }).then(res => {
+      return res.json().then(e => {
+        this.code = e.code;
       });
-  }  
+    });
+  }
 });
 
 
@@ -1406,7 +1403,10 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("HtmlView", { attrs: { html: _vm.code } })
+  return _c("HtmlView", {
+    staticStyle: { padding: "10" },
+    attrs: { html: _vm.code }
+  })
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -2187,11 +2187,11 @@ function beep() {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "locationSettings", function() { return locationSettings; });
 const locationSettings = {
-  minimumUpdateTime: 5000,
-  updateTime: 5000,
+  minimumUpdateTime: 5000,//  5 sec
+  updateTime: 5000, //  5 sec
   updateDistanceInMetters: 0.1,
-  samePlaceInKm: 0.01,
-  pointCanPlaceDistanceKm: 0.07,
+  samePlaceInKm: 0.001, // 10 me
+  pointCanPlaceDistanceKm: 0.05, // 50 metter
   featurePointDistanceKm: 0.6,
   maximumAge: 50000, 
   color: {
