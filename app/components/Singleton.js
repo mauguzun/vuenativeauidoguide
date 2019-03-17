@@ -38,8 +38,10 @@ export const Singleton = {
     
     this._current = null;  
     
+    
     this.points.find(x => x.id == value.id).active = false;
     this.savePoints();
+
 
     this._current = value;
 

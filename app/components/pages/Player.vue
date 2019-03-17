@@ -5,9 +5,9 @@
         <Image :src="point.img" stretch="aspectFill" class="postImageSmall"/>
         <StackLayout>
           <Label :text="point.title" class="postDateSmall"/>
-          <Progress class="postDateSmall" :value="progress"/> 
+          <Progress class="postDateSmall" :value="progress"/>
           <!-- <Label :text="isPlaying ? '⏸' : '▶'" class="postDateSmall"/> -->
-        </StackLayout>  
+        </StackLayout>
       </StackLayout>
     </StackLayout>
   </StackLayout>
@@ -24,6 +24,7 @@ export default {
     point(val) {
       this.point = val;
       this.setup();
+
     }
   },
   data() {
@@ -32,7 +33,7 @@ export default {
       isPlaying: false
     };
   },
-  mounted() {  
+  mounted() {
     this.setup();
   },
   destroyed() {
@@ -40,7 +41,7 @@ export default {
   },
   methods: {
     setup() {
-       this.isPlaying = true;
+      this.isPlaying = true;
 
       this._checkInterval = setInterval(() => {
         this.progress = Singleton.progress;
@@ -59,7 +60,7 @@ export default {
       } catch (e) {}
     },
     stop() {
-      try {  
+      try {
         Singleton.player.pause();
       } catch (e) {}
     }

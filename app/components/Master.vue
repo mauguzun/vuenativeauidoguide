@@ -11,10 +11,10 @@
           <Label text="☰" style="font-size:27;color:#333;" class="font-awesome"/>
         </StackLayout>
         <StackLayout class="HMid">
-          <Label :text="cityTitle"/>
+          <Label :text="cityTitle + play"/>
         </StackLayout>
         <StackLayout @tap="switchPlay" class="HRight">
-          <Label :text="play == true ?  '◼' : '▶' " style="font-size:27;color:#333;"/>\
+          <Label :text="play ?  iconPlay : iconStop " style="font-size:27;color:#333;"/>\
         </StackLayout>
       </StackLayout>
     </ActionBar>
@@ -65,6 +65,7 @@
         <DockLayout>
           <StackLayout dock="top" width="100%">
             <StackLayout width="100%" dock="top">
+           
               <audioplayer v-if="showPlayer != null" ref="audio" :point="showPlayer"></audioplayer>
               <ScrollView>
                 <component @settingSaved="settingsDone" :translate="translate" :is="currentComp"></component>
@@ -162,7 +163,6 @@ export default {
   mounted() {
     Singleton.vueinst = this;
 
-
     if (appSettings.getString("points")) {
       Singleton.points = JSON.parse(appSettings.getString("points"));
       Singleton.printData();
@@ -188,6 +188,9 @@ export default {
     showPlayer(value) {
       this.showPlayer = value;
 
+      if(value == null)
+      return;
+
       if (Singleton.points == null) {
         Singleton.points.find(x => x.id == value.id).active = false;
         Singleton.savePoints();
@@ -203,6 +206,11 @@ export default {
       }
     },
 
+    play(value) {
+      this.play = value;
+      this.$forceUpdate();
+    },
+
     featurePoints(value) {
       if (value == null) {
         this.$refs.mapContainer.nativeView.height = "100%";
@@ -215,11 +223,15 @@ export default {
   components: {
     settings: Settings,
     about: About,
-    audioplayer: Player  
+    audioplayer: Player
   },
 
   data() {
     return {
+
+      iconPlay:'▶',
+      iconStop:'◼',
+
       circle: null,
       cityTitle: null,
       isBackground: false,
@@ -275,10 +287,9 @@ export default {
 
       ////
       geolocation.getCurrentLocation(res => {
-       
         let lat = res.latitude;
         let lng = res.longitude;
-        this.MAP_setCurrentLocation(lat,lng) 
+        this.MAP_setCurrentLocation(lat, lng);
       });
 
       ///
@@ -455,17 +466,25 @@ export default {
     },
     stopPlay() {
       appSettings.setBoolean("play", false);
-
       this.play = false;
-      this.featurePoints = null;
-      this.showPlayer = null;
-      this.$forceUpdate();
 
       stopBackgroundTap();
 
-      try {
-        Singleton.player = null;
-      } catch (e) {}
+      Singleton._current = null;
+      try{
+        Singleton.clear();
+      }catch(e){
+        
+      }
+    
+      Singleton.featurePoints = null;
+  
+
+
+      this.featurePoints = null;
+      this.showPlayer = null;   
+
+      this.$forceUpdate();
     },
     /**
      * this is start service
