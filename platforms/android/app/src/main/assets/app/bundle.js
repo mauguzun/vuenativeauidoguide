@@ -329,7 +329,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 
 
@@ -673,9 +672,9 @@ let translate = __webpack_require__("./translate.json");
       try{
         _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].clear();
       }catch(e){
-        
+
       }
-    
+      
       _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].featurePoints = null;
   
 
@@ -1298,7 +1297,6 @@ var render = function() {
                                   _c(
                                     "ListView",
                                     {
-                                      key: _vm.index,
                                       attrs: {
                                         height: "100%",
                                         separatorColor: "transparent",
@@ -1869,6 +1867,10 @@ const Sorting = {
       return;
     }
 
+    if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].vueinst) {
+      _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].vueinst.MAP_setCurrentLocation(currentLat, currentLng);
+    }
+
     if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points == null) {
       alert("Please load  points");
       return;
@@ -1917,9 +1919,7 @@ const Sorting = {
     for (let a in clear) {
       console.log(`${a}->${clear[a].title} in ${clear[a].distance}`);
     }
-    if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].vueinst) {
-      _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].vueinst.MAP_setCurrentLocation(currentLat, currentLng);
-    }
+   
 
     if (clear.length > 0) {
       if (clear[0].distance < _locationSettings_js__WEBPACK_IMPORTED_MODULE_1__["locationSettings"].pointCanPlaceDistanceKm) {

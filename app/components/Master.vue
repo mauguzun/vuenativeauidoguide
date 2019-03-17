@@ -98,7 +98,6 @@
               <ScrollView>
                 <ListView
                   for="item in featurePoints"
-                  :key="index"
                   height="100%"
                   separatorColor="transparent"
                   id="listView"
@@ -474,9 +473,9 @@ export default {
       try{
         Singleton.clear();
       }catch(e){
-        
+
       }
-    
+      
       Singleton.featurePoints = null;
   
 

@@ -28,6 +28,10 @@ export const Sorting = {
       return;
     }
 
+    if (Singleton.vueinst) {
+      Singleton.vueinst.MAP_setCurrentLocation(currentLat, currentLng);
+    }
+
     if (Singleton.points == null) {
       alert("Please load  points");
       return;
@@ -76,9 +80,7 @@ export const Sorting = {
     for (let a in clear) {
       console.log(`${a}->${clear[a].title} in ${clear[a].distance}`);
     }
-    if (Singleton.vueinst) {
-      Singleton.vueinst.MAP_setCurrentLocation(currentLat, currentLng);
-    }
+   
 
     if (clear.length > 0) {
       if (clear[0].distance < locationSettings.pointCanPlaceDistanceKm) {
