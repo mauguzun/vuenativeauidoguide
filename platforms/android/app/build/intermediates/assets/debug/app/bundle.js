@@ -361,7 +361,6 @@ let translate = __webpack_require__("./translate.json");
   mounted() {
     _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].vueinst = this;
 
-
     if (appSettings.getString("points")) {
       _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points = JSON.parse(appSettings.getString("points"));
       _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].printData();
@@ -387,6 +386,9 @@ let translate = __webpack_require__("./translate.json");
     showPlayer(value) {
       this.showPlayer = value;
 
+      if(value == null)
+      return;
+
       if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points == null) {
         _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points.find(x => x.id == value.id).active = false;
         _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].savePoints();
@@ -402,6 +404,11 @@ let translate = __webpack_require__("./translate.json");
       }
     },
 
+    play(value) {
+      this.play = value;
+      this.$forceUpdate();
+    },
+
     featurePoints(value) {
       if (value == null) {
         this.$refs.mapContainer.nativeView.height = "100%";
@@ -414,11 +421,15 @@ let translate = __webpack_require__("./translate.json");
   components: {
     settings: _pages_Settings__WEBPACK_IMPORTED_MODULE_5__["default"],
     about: _pages_About__WEBPACK_IMPORTED_MODULE_6__["default"],
-    audioplayer: _pages_Player__WEBPACK_IMPORTED_MODULE_7__["default"]  
+    audioplayer: _pages_Player__WEBPACK_IMPORTED_MODULE_7__["default"]
   },
 
   data() {
     return {
+
+      iconPlay:'▶',
+      iconStop:'◼',
+
       circle: null,
       cityTitle: null,
       isBackground: false,
@@ -474,10 +485,9 @@ let translate = __webpack_require__("./translate.json");
 
       ////
       nativescript_geolocation__WEBPACK_IMPORTED_MODULE_1__["getCurrentLocation"](res => {
-       
         let lat = res.latitude;
         let lng = res.longitude;
-        this.MAP_setCurrentLocation(lat,lng) 
+        this.MAP_setCurrentLocation(lat, lng);
       });
 
       ///
@@ -654,17 +664,25 @@ let translate = __webpack_require__("./translate.json");
     },
     stopPlay() {
       appSettings.setBoolean("play", false);
-
       this.play = false;
-      this.featurePoints = null;
-      this.showPlayer = null;
-      this.$forceUpdate();
 
       stopBackgroundTap();
 
-      try {
-        _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].player = null;
-      } catch (e) {}
+      _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"]._current = null;
+      try{
+        _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].clear();
+      }catch(e){
+
+      }
+      
+      _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].featurePoints = null;
+  
+
+
+      this.featurePoints = null;
+      this.showPlayer = null;   
+
+      this.$forceUpdate();
     },
     /**
      * this is start service
@@ -877,6 +895,7 @@ __webpack_require__.r(__webpack_exports__);
     point(val) {
       this.point = val;
       this.setup();
+
     }
   },
   data() {
@@ -885,7 +904,7 @@ __webpack_require__.r(__webpack_exports__);
       isPlaying: false
     };
   },
-  mounted() {  
+  mounted() {
     this.setup();
   },
   destroyed() {
@@ -893,7 +912,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     setup() {
-       this.isPlaying = true;
+      this.isPlaying = true;
 
       this._checkInterval = setInterval(() => {
         this.progress = _Singleton__WEBPACK_IMPORTED_MODULE_2__["Singleton"].progress;
@@ -912,7 +931,7 @@ __webpack_require__.r(__webpack_exports__);
       } catch (e) {}
     },
     stop() {
-      try {  
+      try {
         _Singleton__WEBPACK_IMPORTED_MODULE_2__["Singleton"].player.pause();
       } catch (e) {}
     }
@@ -1063,7 +1082,7 @@ var render = function() {
               _c(
                 "StackLayout",
                 { staticClass: "HMid" },
-                [_c("Label", { attrs: { text: _vm.cityTitle } })],
+                [_c("Label", { attrs: { text: _vm.cityTitle + _vm.play } })],
                 1
               ),
               _c(
@@ -1072,7 +1091,7 @@ var render = function() {
                 [
                   _c("Label", {
                     staticStyle: { fontSize: "27", color: "#333" },
-                    attrs: { text: _vm.play == true ? "◼" : "▶" }
+                    attrs: { text: _vm.play ? _vm.iconPlay : _vm.iconStop }
                   }),
                   _vm._v("\\\n      ")
                 ],
@@ -1278,7 +1297,6 @@ var render = function() {
                                   _c(
                                     "ListView",
                                     {
-                                      key: _vm.index,
                                       attrs: {
                                         height: "100%",
                                         separatorColor: "transparent",
@@ -1703,8 +1721,10 @@ const Singleton = {
     
     this._current = null;  
     
+    
     this.points.find(x => x.id == value.id).active = false;
     this.savePoints();
+
 
     this._current = value;
 
@@ -1847,6 +1867,10 @@ const Sorting = {
       return;
     }
 
+    if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].vueinst) {
+      _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].vueinst.MAP_setCurrentLocation(currentLat, currentLng);
+    }
+
     if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points == null) {
       alert("Please load  points");
       return;
@@ -1895,9 +1919,7 @@ const Sorting = {
     for (let a in clear) {
       console.log(`${a}->${clear[a].title} in ${clear[a].distance}`);
     }
-    if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].vueinst) {
-      _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].vueinst.MAP_setCurrentLocation(currentLat, currentLng);
-    }
+   
 
     if (clear.length > 0) {
       if (clear[0].distance < _locationSettings_js__WEBPACK_IMPORTED_MODULE_1__["locationSettings"].pointCanPlaceDistanceKm) {
@@ -2443,7 +2465,7 @@ nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.registerElement(
   
 // Prints Vue logs when --env.production is *NOT* set while building
 // Vue.config.silent = (TNS_ENV === 'production');
-nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.config.silent = true;
+nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.config.silent = false;
 
 new nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   render: h => h("frame", [h(_components_Master__WEBPACK_IMPORTED_MODULE_1__["default"])])

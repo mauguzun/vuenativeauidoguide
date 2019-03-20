@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Tue Mar 12 12:50:17 EET 2019
+#Sun Mar 17 12:00:19 EET 2019
 4.path=lib/armeabi-v7a/libNativeScript.so
 13.baseType=DIRECTORY
 8.set=NATIVE_RESOURCE

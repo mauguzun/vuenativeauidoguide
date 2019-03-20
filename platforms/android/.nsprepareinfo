@@ -20,8 +20,8 @@
 	},
 	"release": false,
 	"bundle": true,
-	"changesRequireBuild": false,
-	"time": "Sun Mar 17 2019 11:35:56 GMT+0200 (Eastern European Standard Time)",
-	"changesRequireBuildTime": "Tue Mar 12 2019 12:47:37 GMT+0200 (Eastern European Standard Time)",
+	"changesRequireBuild": true,
+	"time": "Sun Mar 17 2019 11:58:00 GMT+0200 (Eastern European Standard Time)",
+	"changesRequireBuildTime": "Sun Mar 17 2019 11:58:00 GMT+0200 (Eastern European Standard Time)",
 	"projectFileHash": "5c9ac9187169eb30be3798ad074a9f164a16851489fb25d95d27083b23eff6d9"
 }
