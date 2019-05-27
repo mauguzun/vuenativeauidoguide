@@ -110,7 +110,7 @@
                       @tap="playFeature(item)"
                     >
                       <StackLayout width="20%">
-                        <Image :src="item.img" stretch="aspectFill" class="conImg"/>
+                        <Image :src="item.img[0]" stretch="aspectFill" class="conImg"/>
                       </StackLayout>
                       <StackLayout marginLeft="10" paddingTop="3" width="50%">
                         <Label :text="item.title"/>

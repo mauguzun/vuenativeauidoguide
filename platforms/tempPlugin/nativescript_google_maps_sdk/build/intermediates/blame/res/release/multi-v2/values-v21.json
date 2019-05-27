@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\GeolocationNativescriptVue\\platforms\\tempPlugin\\nativescript_google_maps_sdk\\build\\intermediates\\incremental\\mergeReleaseResources\\merged.dir\\values-v21\\values-v21.xml",
+            "outputFile": "C:\\native\\vuenativeauidoguide\\platforms\\tempPlugin\\nativescript_google_maps_sdk\\build\\intermediates\\res\\merged\\release\\values-v21\\values-v21.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\maugu\\.gradle\\caches\\transforms-1\\files-1.1\\support-media-compat-26.1.0.aar\\7c879c791efb1be89ef25c712c558960\\res\\values-v21\\values-v21.xml",
+                    "source": "C:\\Users\\mauguzun\\.gradle\\caches\\transforms-1\\files-1.1\\support-media-compat-28.0.0.aar\\70fe4263ec09f0cd1666590768a5b093\\res\\values-v21\\values-v21.xml",
                     "from": {
                         "startLines": "2,5,8,11",
                         "startColumns": "4,4,4,4",
@@ -23,7 +23,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\maugu\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-26.1.0.aar\\bd4aa0dce82ed98f399a77ad479ad5e4\\res\\values-v21\\values-v21.xml",
+                    "source": "C:\\Users\\mauguzun\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-28.0.0.aar\\a2831eea0380d460e3b687f26d97c71e\\res\\values-v21\\values-v21.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,13",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4",
@@ -44,10 +44,10 @@
             ]
         },
         {
-            "outputFile": "C:\\GeolocationNativescriptVue\\platforms\\tempPlugin\\nativescript_google_maps_sdk\\build\\intermediates\\res\\merged\\release\\values-v21\\values-v21.xml",
+            "outputFile": "C:\\native\\vuenativeauidoguide\\platforms\\tempPlugin\\nativescript_google_maps_sdk\\build\\intermediates\\incremental\\mergeReleaseResources\\merged.dir\\values-v21\\values-v21.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\maugu\\.gradle\\caches\\transforms-1\\files-1.1\\support-media-compat-26.1.0.aar\\7c879c791efb1be89ef25c712c558960\\res\\values-v21\\values-v21.xml",
+                    "source": "C:\\Users\\mauguzun\\.gradle\\caches\\transforms-1\\files-1.1\\support-media-compat-28.0.0.aar\\70fe4263ec09f0cd1666590768a5b093\\res\\values-v21\\values-v21.xml",
                     "from": {
                         "startLines": "2,5,8,11",
                         "startColumns": "4,4,4,4",
@@ -66,7 +66,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\maugu\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-26.1.0.aar\\bd4aa0dce82ed98f399a77ad479ad5e4\\res\\values-v21\\values-v21.xml",
+                    "source": "C:\\Users\\mauguzun\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-28.0.0.aar\\a2831eea0380d460e3b687f26d97c71e\\res\\values-v21\\values-v21.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,13",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4",

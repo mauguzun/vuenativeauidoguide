@@ -1340,7 +1340,7 @@ var render = function() {
                                                       _c("Image", {
                                                         staticClass: "conImg",
                                                         attrs: {
-                                                          src: item.img,
+                                                          src: item.img[0],
                                                           stretch: "aspectFill"
                                                         }
                                                       })
@@ -1466,7 +1466,7 @@ var render = function() {
             [
               _c("Image", {
                 staticClass: "postImageSmall",
-                attrs: { src: _vm.point.img, stretch: "aspectFill" }
+                attrs: { src: _vm.point.img[0], stretch: "aspectFill" }
               }),
               _c(
                 "StackLayout",
@@ -2210,10 +2210,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "locationSettings", function() { return locationSettings; });
 const locationSettings = {
   minimumUpdateTime: 5000,//  5 sec
-  updateTime: 5000, //  5 sec
+  updateTime: 15000, //  5 sec
   updateDistanceInMetters: 0.1,
   samePlaceInKm: 0.001, // 10 me
-  pointCanPlaceDistanceKm: 0.05, // 50 metter
+  pointCanPlaceDistanceKm: 0.04, // 50 metter
   featurePointDistanceKm: 0.6,
   maximumAge: 50000, 
   color: {

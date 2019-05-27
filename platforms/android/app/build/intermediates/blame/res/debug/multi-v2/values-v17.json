@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\GeolocationNativescriptVue\\platforms\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v17\\values-v17.xml",
+            "outputFile": "C:\\native\\vuenativeauidoguide\\platforms\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v17\\values-v17.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\maugu\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.0.1.aar\\87143907b936473098d02a2375170020\\res\\values-v17\\values-v17.xml",
+                    "source": "C:\\Users\\mauguzun\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.0.1.aar\\67dad1b317e6c524314ce7d003ab14fc\\res\\values-v17\\values-v17.xml",
                     "from": {
                         "startLines": "2,5,9,12,15,18,22,26,29,32,35,39,42,46",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4",

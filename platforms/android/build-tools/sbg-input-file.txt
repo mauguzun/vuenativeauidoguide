@@ -1,1 +1,1 @@
-C:\GeolocationNativescriptVue\platforms\android\app/src/main/assets/app
+C:\native\vuenativeauidoguide\platforms\android\app/src/main/assets/app

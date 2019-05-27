@@ -1,4 +1,4 @@
-C:\GeolocationNativescriptVue\platforms\android\app\src\main\assets\app\bundle.js
-C:\GeolocationNativescriptVue\platforms\android\app\src\main\assets\app\starter.js
-C:\GeolocationNativescriptVue\platforms\android\app\src\main\assets\app\tns-java-classes.js
-C:\GeolocationNativescriptVue\platforms\android\app\src\main\assets\app\vendor.js
+C:\native\vuenativeauidoguide\platforms\android\app\src\main\assets\app\bundle.js
+C:\native\vuenativeauidoguide\platforms\android\app\src\main\assets\app\starter.js
+C:\native\vuenativeauidoguide\platforms\android\app\src\main\assets\app\tns-java-classes.js
+C:\native\vuenativeauidoguide\platforms\android\app\src\main\assets\app\vendor.js

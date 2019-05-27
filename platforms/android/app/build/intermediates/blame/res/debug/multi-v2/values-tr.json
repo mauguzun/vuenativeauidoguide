@@ -1,44 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\GeolocationNativescriptVue\\platforms\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-tr\\values-tr.xml",
+            "outputFile": "C:\\native\\vuenativeauidoguide\\platforms\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-tr\\values-tr.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\maugu\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.0.1.aar\\87143907b936473098d02a2375170020\\res\\values-tr\\values-tr.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "105,210,309,421,506,612,732,811,887,966,1073,1178,1274,1381,1483,1591,1747,1845",
-                        "endColumns": "104,98,111,84,105,119,78,75,78,106,104,95,106,101,107,155,97,78",
-                        "endOffsets": "205,304,416,501,607,727,806,882,961,1068,1173,1269,1376,1478,1586,1742,1840,1919"
-                    },
-                    "to": {
-                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,37",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "105,210,309,421,506,612,732,811,887,966,1073,1178,1274,1381,1483,1591,1747,4585",
-                        "endColumns": "104,98,111,84,105,119,78,75,78,106,104,95,106,101,107,155,97,78",
-                        "endOffsets": "205,304,416,501,607,727,806,882,961,1068,1173,1269,1376,1478,1586,1742,1840,4659"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\maugu\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-27.0.1.aar\\6447ea0615d926cd3edb596d333fb6ea\\res\\values-tr\\values-tr.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endColumns": "100",
-                        "endOffsets": "151"
-                    },
-                    "to": {
-                        "startLines": "38",
-                        "startColumns": "4",
-                        "startOffsets": "4664",
-                        "endColumns": "100",
-                        "endOffsets": "4760"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\maugu\\.gradle\\caches\\transforms-1\\files-1.1\\play-services-base-12.0.1.aar\\a751e534d7268262a847457e75fb7ae2\\res\\values-tr\\values.xml",
+                    "source": "C:\\Users\\mauguzun\\.gradle\\caches\\transforms-1\\files-1.1\\play-services-base-12.0.1.aar\\5f46fa895d967e53395c24df91cc9b9a\\res\\values-tr\\values.xml",
                     "from": {
                         "startLines": "4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20",
                         "startColumns": "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",
@@ -55,7 +21,24 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\maugu\\.gradle\\caches\\transforms-1\\files-1.1\\play-services-basement-12.0.1.aar\\4fe18b5e92a272156f339a654e2d6d6f\\res\\values-tr\\values.xml",
+                    "source": "C:\\Users\\mauguzun\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-27.0.1.aar\\a0d28987efa411e0837e233329f57728\\res\\values-tr\\values-tr.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    },
+                    "to": {
+                        "startLines": "38",
+                        "startColumns": "4",
+                        "startOffsets": "4664",
+                        "endColumns": "100",
+                        "endOffsets": "4760"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\mauguzun\\.gradle\\caches\\transforms-1\\files-1.1\\play-services-basement-12.0.1.aar\\e0d3052b905861c636048375782b0fe7\\res\\values-tr\\values.xml",
                     "from": {
                         "startLines": "4",
                         "startColumns": "0",
@@ -69,6 +52,23 @@
                         "startOffsets": "3019",
                         "endColumns": "205",
                         "endOffsets": "3220"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\mauguzun\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.0.1.aar\\67dad1b317e6c524314ce7d003ab14fc\\res\\values-tr\\values-tr.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,210,309,421,506,612,732,811,887,966,1073,1178,1274,1381,1483,1591,1747,1845",
+                        "endColumns": "104,98,111,84,105,119,78,75,78,106,104,95,106,101,107,155,97,78",
+                        "endOffsets": "205,304,416,501,607,727,806,882,961,1068,1173,1269,1376,1478,1586,1742,1840,1919"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,37",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,210,309,421,506,612,732,811,887,966,1073,1178,1274,1381,1483,1591,1747,4585",
+                        "endColumns": "104,98,111,84,105,119,78,75,78,106,104,95,106,101,107,155,97,78",
+                        "endOffsets": "205,304,416,501,607,727,806,882,961,1068,1173,1269,1376,1478,1586,1742,1840,4659"
                     }
                 }
             ]

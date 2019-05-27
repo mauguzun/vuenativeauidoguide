@@ -1,39 +1,39 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\GeolocationNativescriptVue\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:2:1-5:12
-INJECTED from C:\GeolocationNativescriptVue\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:2:1-5:12
-INJECTED from C:\GeolocationNativescriptVue\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:2:1-5:12
-INJECTED from C:\GeolocationNativescriptVue\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:2:1-5:12
-INJECTED from C:\GeolocationNativescriptVue\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:2:1-5:12
-INJECTED from C:\GeolocationNativescriptVue\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:2:1-5:12
-INJECTED from C:\GeolocationNativescriptVue\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:2:1-5:12
+ADDED from C:\native\vuenativeauidoguide\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:2:1-5:12
+INJECTED from C:\native\vuenativeauidoguide\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:2:1-5:12
+INJECTED from C:\native\vuenativeauidoguide\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:2:1-5:12
+INJECTED from C:\native\vuenativeauidoguide\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:2:1-5:12
+INJECTED from C:\native\vuenativeauidoguide\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:2:1-5:12
+INJECTED from C:\native\vuenativeauidoguide\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:2:1-5:12
+INJECTED from C:\native\vuenativeauidoguide\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:2:1-5:12
 	package
-		ADDED from C:\GeolocationNativescriptVue\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:2:70-118
-		INJECTED from C:\GeolocationNativescriptVue\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml
-		INJECTED from C:\GeolocationNativescriptVue\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml
+		ADDED from C:\native\vuenativeauidoguide\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:2:70-118
+		INJECTED from C:\native\vuenativeauidoguide\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml
+		INJECTED from C:\native\vuenativeauidoguide\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml
 	android:versionName
-		INJECTED from C:\GeolocationNativescriptVue\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml
-		ADDED from C:\GeolocationNativescriptVue\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:2:1-5:12
-		INJECTED from C:\GeolocationNativescriptVue\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml
+		INJECTED from C:\native\vuenativeauidoguide\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml
+		ADDED from C:\native\vuenativeauidoguide\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:2:1-5:12
+		INJECTED from C:\native\vuenativeauidoguide\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml
 	android:versionCode
-		INJECTED from C:\GeolocationNativescriptVue\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml
-		ADDED from C:\GeolocationNativescriptVue\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:2:1-5:12
-		INJECTED from C:\GeolocationNativescriptVue\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml
+		INJECTED from C:\native\vuenativeauidoguide\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml
+		ADDED from C:\native\vuenativeauidoguide\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:2:1-5:12
+		INJECTED from C:\native\vuenativeauidoguide\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml
 	xmlns:android
-		ADDED from C:\GeolocationNativescriptVue\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:2:11-69
+		ADDED from C:\native\vuenativeauidoguide\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:2:11-69
 uses-permission#android.permission.ACCESS_NETWORK_STATE
-ADDED from C:\GeolocationNativescriptVue\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:3:3-76
+ADDED from C:\native\vuenativeauidoguide\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:3:3-76
 	android:name
-		ADDED from C:\GeolocationNativescriptVue\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:3:20-74
+		ADDED from C:\native\vuenativeauidoguide\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:3:20-74
 uses-permission#com.google.android.providers.gsf.permission.READ_GSERVICES
-ADDED from C:\GeolocationNativescriptVue\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:4:3-95
+ADDED from C:\native\vuenativeauidoguide\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:4:3-95
 	android:name
-		ADDED from C:\GeolocationNativescriptVue\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:4:20-93
+		ADDED from C:\native\vuenativeauidoguide\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml:4:20-93
 uses-sdk
-INJECTED from C:\GeolocationNativescriptVue\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from C:\GeolocationNativescriptVue\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml
-INJECTED from C:\GeolocationNativescriptVue\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml
+INJECTED from C:\native\vuenativeauidoguide\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\native\vuenativeauidoguide\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml
+INJECTED from C:\native\vuenativeauidoguide\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml
 	android:targetSdkVersion
-		INJECTED from C:\GeolocationNativescriptVue\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml
-		ADDED from C:\GeolocationNativescriptVue\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml
-		INJECTED from C:\GeolocationNativescriptVue\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml
+		INJECTED from C:\native\vuenativeauidoguide\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml
+		ADDED from C:\native\vuenativeauidoguide\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml
+		INJECTED from C:\native\vuenativeauidoguide\platforms\tempPlugin\nativescript_google_maps_sdk\src\main\AndroidManifest.xml

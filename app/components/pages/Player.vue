@@ -2,7 +2,7 @@
   <StackLayout width="100%" horizontalAlignment="center" verticalAlignment="top">
     <StackLayout>
       <StackLayout orientation="horizontal" padding="1" @tap="playPause">
-        <Image :src="point.img" stretch="aspectFill" class="postImageSmall"/>
+        <Image :src="point.img[0]" stretch="aspectFill" class="postImageSmall"/>
         <StackLayout>
           <Label :text="point.title" class="postDateSmall"/>
           <Progress class="postDateSmall" :value="progress"/>

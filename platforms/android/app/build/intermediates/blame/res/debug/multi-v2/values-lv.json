@@ -1,27 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\GeolocationNativescriptVue\\platforms\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-lv\\values-lv.xml",
+            "outputFile": "C:\\native\\vuenativeauidoguide\\platforms\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-lv\\values-lv.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\maugu\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.0.1.aar\\87143907b936473098d02a2375170020\\res\\values-lv\\values-lv.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "105,225,333,442,528,632,754,836,918,1003,1112,1224,1323,1434,1543,1648,1822,1921",
-                        "endColumns": "119,107,108,85,103,121,81,81,84,108,111,98,110,108,104,173,98,81",
-                        "endOffsets": "220,328,437,523,627,749,831,913,998,1107,1219,1318,1429,1538,1643,1817,1916,1998"
-                    },
-                    "to": {
-                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,37",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "105,225,333,442,528,632,754,836,918,1003,1112,1224,1323,1434,1543,1648,1822,4714",
-                        "endColumns": "119,107,108,85,103,121,81,81,84,108,111,98,110,108,104,173,98,81",
-                        "endOffsets": "220,328,437,523,627,749,831,913,998,1107,1219,1318,1429,1538,1643,1817,1916,4791"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\maugu\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-27.0.1.aar\\6447ea0615d926cd3edb596d333fb6ea\\res\\values-lv\\values-lv.xml",
+                    "source": "C:\\Users\\mauguzun\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-27.0.1.aar\\a0d28987efa411e0837e233329f57728\\res\\values-lv\\values-lv.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -38,7 +21,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\maugu\\.gradle\\caches\\transforms-1\\files-1.1\\play-services-base-12.0.1.aar\\a751e534d7268262a847457e75fb7ae2\\res\\values-lv\\values.xml",
+                    "source": "C:\\Users\\mauguzun\\.gradle\\caches\\transforms-1\\files-1.1\\play-services-base-12.0.1.aar\\5f46fa895d967e53395c24df91cc9b9a\\res\\values-lv\\values.xml",
                     "from": {
                         "startLines": "4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20",
                         "startColumns": "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",
@@ -55,7 +38,24 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\maugu\\.gradle\\caches\\transforms-1\\files-1.1\\play-services-basement-12.0.1.aar\\4fe18b5e92a272156f339a654e2d6d6f\\res\\values-lv\\values.xml",
+                    "source": "C:\\Users\\mauguzun\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-27.0.1.aar\\67dad1b317e6c524314ce7d003ab14fc\\res\\values-lv\\values-lv.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,225,333,442,528,632,754,836,918,1003,1112,1224,1323,1434,1543,1648,1822,1921",
+                        "endColumns": "119,107,108,85,103,121,81,81,84,108,111,98,110,108,104,173,98,81",
+                        "endOffsets": "220,328,437,523,627,749,831,913,998,1107,1219,1318,1429,1538,1643,1817,1916,1998"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,37",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,225,333,442,528,632,754,836,918,1003,1112,1224,1323,1434,1543,1648,1822,4714",
+                        "endColumns": "119,107,108,85,103,121,81,81,84,108,111,98,110,108,104,173,98,81",
+                        "endOffsets": "220,328,437,523,627,749,831,913,998,1107,1219,1318,1429,1538,1643,1817,1916,4791"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\mauguzun\\.gradle\\caches\\transforms-1\\files-1.1\\play-services-basement-12.0.1.aar\\e0d3052b905861c636048375782b0fe7\\res\\values-lv\\values.xml",
                     "from": {
                         "startLines": "4",
                         "startColumns": "0",
