@@ -11,7 +11,7 @@
           <Label text="☰" style="font-size:27;color:#333;" class="font-awesome"/>
         </StackLayout>
         <StackLayout class="HMid">
-          <Label :text="cityTitle + play"/>
+          <Label :text="cityTitle + play +'ss2'"/>
         </StackLayout>
         <StackLayout @tap="switchPlay" class="HRight">
           <Label :text="play ?  iconPlay : iconStop " style="font-size:27;color:#333;"/>\
@@ -65,7 +65,6 @@
         <DockLayout>
           <StackLayout dock="top" width="100%">
             <StackLayout width="100%" dock="top">
-           
               <audioplayer v-if="showPlayer != null" ref="audio" :point="showPlayer"></audioplayer>
               <ScrollView>
                 <component @settingSaved="settingsDone" :translate="translate" :is="currentComp"></component>
@@ -127,6 +126,10 @@
         </DockLayout>
       </StackLayout>
     </RadSideDrawer>
+  
+    <AbsoluteLayout width="100%" height="100%" backgroundColor="white">
+      <Image src="https://www.davidwygant.com/wp-content/uploads/2017/10/ajax-loader.gif" />
+    </AbsoluteLayout>
   </Page>
 </template>
 
@@ -187,8 +190,7 @@ export default {
     showPlayer(value) {
       this.showPlayer = value;
 
-      if(value == null)
-      return;
+      if (value == null) return;
 
       if (Singleton.points == null) {
         Singleton.points.find(x => x.id == value.id).active = false;
@@ -227,9 +229,8 @@ export default {
 
   data() {
     return {
-
-      iconPlay:'▶',
-      iconStop:'◼',
+      iconPlay: "▶",
+      iconStop: "◼",
 
       circle: null,
       cityTitle: null,
@@ -470,18 +471,14 @@ export default {
       stopBackgroundTap();
 
       Singleton._current = null;
-      try{
+      try {
         Singleton.clear();
-      }catch(e){
+      } catch (e) {}
 
-      }
-      
       Singleton.featurePoints = null;
-  
-
 
       this.featurePoints = null;
-      this.showPlayer = null;   
+      this.showPlayer = null;
 
       this.$forceUpdate();
     },
