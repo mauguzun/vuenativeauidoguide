@@ -19,117 +19,143 @@
       </StackLayout>
     </ActionBar>
 
-    <RadSideDrawer ref="drawer" @drawerOpened="onDrawerOpened()" @drawerClosed="onDrawerClosed()">
-      <StackLayout ~drawerContent backgroundColor="#eee">
-        <StackLayout height="15%"></StackLayout>
-        <StackLayout class>
-          <Label
-            :text="translate.menu.settings"
-            @tap="go('settings')"
-            paddingLeft="30%"
-            color="black"
-            class="drawerItemText font-awesome"
-            margin="10"
-          />
+    <GridLayout>
+      <GridLayout>
+        <RadSideDrawer
+          ref="drawer"
+          @drawerOpened="onDrawerOpened()"
+          @drawerClosed="onDrawerClosed()"
+        >
+          <StackLayout ~drawerContent backgroundColor="#eee">
+            <StackLayout height="15%"></StackLayout>
+            <StackLayout class>
+              <Label
+                :text="translate.menu.settings"
+                @tap="go('settings')"
+                paddingLeft="30%"
+                color="black"
+                class="drawerItemText font-awesome"
+                margin="10"
+              />
 
-          <Label
-            text="Set all active"
-            @tap="setAllAsActive"
-            paddingLeft="30%"
-            color="black"
-            class="drawerItemText font-awesome"
-            margin="10"
-          />
+              <Label
+                text="Set all active"
+                @tap="setAllAsActive"
+                paddingLeft="30%"
+                color="black"
+                class="drawerItemText font-awesome"
+                margin="10"
+              />
 
-          <Label
-            :text=" translate.menu.map"
-            @tap="go('map')"
-            paddingLeft="30%"
-            color="black"
-            class="drawerItemText font-awesome"
-            margin="10"
-          />
+              <Label
+                :text=" translate.menu.map"
+                @tap="go('map')"
+                paddingLeft="30%"
+                color="black"
+                class="drawerItemText font-awesome"
+                margin="10"
+              />
 
-          <Label
-            :text="translate.menu.about"
-            @tap="go('about')"
-            paddingLeft="30%"
-            color="black"
-            class="drawerItemText font-awesome"
-            margin="10"
-          />
-        </StackLayout>
-      </StackLayout>
-
-      <StackLayout ~mainContent>
-        <DockLayout>
-          <StackLayout dock="top" width="100%">
-            <StackLayout width="100%" dock="top">
-              <audioplayer v-if="showPlayer != null" ref="audio" :point="showPlayer"></audioplayer>
-              <ScrollView>
-                <component @settingSaved="settingsDone" :translate="translate" :is="currentComp"></component>
-              </ScrollView>
+              <Label
+                :text="translate.menu.about"
+                @tap="go('about')"
+                paddingLeft="30%"
+                color="black"
+                class="drawerItemText font-awesome"
+                margin="10"
+              />
             </StackLayout>
-
-            <ScrollView>
-              <StackLayout
-                width="100%"
-                v-show="showmap"
-                dock="top"
-                ref="mapContainer"
-                height="100%"
-              >
-                <MapView
-                  width="100%"
-                  height="100%"
-                  @mapReady="MAP_mapReady"
-                  dock="top"
-                  ref="map"
-                  :zoom="map.zoom"
-                  :latitude="map.latitude"
-                  :longitude="map.longitude"
-                  bearing="180"
-                  tilt="35"
-                />
-              </StackLayout>
-            </ScrollView>
-            <StackLayout v-if="featurePoints != null" dock="top" height="100%" width="100%" style>
-              <ScrollView>
-                <ListView
-                  for="item in featurePoints"
-                  height="100%"
-                  separatorColor="transparent"
-                  id="listView"
-                >
-                  <v-template>
-                    <StackLayout
-                      orientation="horizontal"
-                      style="border-bottom-width:1;border-bottom-color:#E4E4E4;"
-                      padding="10"
-                      @tap="playFeature(item)"
-                    >
-                      <StackLayout width="20%">
-                        <Image :src="item.img[0]" stretch="aspectFill" class="conImg"/>
-                      </StackLayout>
-                      <StackLayout marginLeft="10" paddingTop="3" width="50%">
-                        <Label :text="item.title"/>
-                        <Label :text="item.distance"/>
-                      </StackLayout>
-                    </StackLayout>
-                  </v-template>
-                </ListView>
-              </ScrollView>
-            </StackLayout>
-
-            <!-- points near -->
           </StackLayout>
-        </DockLayout>
-      </StackLayout>
-    </RadSideDrawer>
-  
-    <AbsoluteLayout width="100%" height="100%" backgroundColor="white">
-      <Image src="https://www.davidwygant.com/wp-content/uploads/2017/10/ajax-loader.gif" />
-    </AbsoluteLayout>
+
+          <StackLayout ~mainContent>
+            <DockLayout>
+              <StackLayout dock="top" width="100%">
+                <StackLayout width="100%" dock="top">
+                  <audioplayer v-if="showPlayer != null" ref="audio" :point="showPlayer"></audioplayer>
+                  <ScrollView>
+                    <component
+                      @settingSaved="settingsDone"
+                      :translate="translate"
+                      :is="currentComp"
+                    ></component>
+                  </ScrollView>
+                </StackLayout>
+
+                <ScrollView>
+                  <StackLayout
+                    width="100%"
+                    v-show="showmap"
+                    dock="top"
+                    ref="mapContainer"
+                    height="100%"
+                  >
+                    <MapView
+                      width="100%"
+                      height="100%"
+                      @mapReady="MAP_mapReady"
+                      dock="top"
+                      ref="map"
+                      :zoom="map.zoom"
+                      :latitude="map.latitude"
+                      :longitude="map.longitude"
+                      bearing="180"
+                      tilt="35"
+                    />
+                  </StackLayout>
+                </ScrollView>
+                <StackLayout
+                  v-if="featurePoints != null"
+                  dock="top"
+                  height="100%"
+                  width="100%"
+                  style
+                >
+                  <ScrollView>
+                    <ListView
+                      for="item in featurePoints"
+                      height="100%"
+                      separatorColor="transparent"
+                      id="listView"
+                    >
+                      <v-template>
+                        <StackLayout
+                          orientation="horizontal"
+                          style="border-bottom-width:1;border-bottom-color:#E4E4E4;"
+                          padding="10"
+                          @tap="playFeature(item)"
+                        >
+                          <StackLayout width="20%">
+                            <Image :src="item.img[0]" stretch="aspectFill" class="conImg"/>
+                          </StackLayout>
+                          <StackLayout marginLeft="10" paddingTop="3" width="50%">
+                            <Label :text="item.title"/>
+                            <Label :text="item.distance"/>
+                          </StackLayout>
+                        </StackLayout>
+                      </v-template>
+                    </ListView>
+                  </ScrollView>
+                </StackLayout>
+
+                <!-- points near -->
+              </StackLayout>
+            </DockLayout>
+          </StackLayout>
+        </RadSideDrawer>
+      </GridLayout>
+
+      <!-- <AbsoluteLayout id="loader" >
+        <StackLayout class="dialog" width="100%" height="100%" backgroundColor="black">
+          <Label class="h3" textWrap="true" text="Get a heavy things "></Label>
+        </StackLayout>
+      </AbsoluteLayout> -->
+
+      <AbsoluteLayout id="loader" v-if="loader">
+        <StackLayout class="dialog" width="100%" height="100%" backgroundColor="white">
+          <ActivityIndicator busy="true" width="50%" height="100%"/>
+        </StackLayout>
+      </AbsoluteLayout>
+    </GridLayout>
   </Page>
 </template>
 
@@ -146,6 +172,8 @@ let locationService = require("./backgroundServices");
 import Settings from "./pages/Settings";
 import About from "./pages/About";
 import Player from "./pages/Player";
+import Modal from "./pages/Modal";
+
 import { Image } from "tns-core-modules/ui/image";
 import { Sorting } from "./Sorting";
 
@@ -153,6 +181,7 @@ import { beep } from "./beep.js";
 import { apiCall } from "./api.js";
 import { getString } from "tns-core-modules/application-settings/application-settings";
 import { locationSettings } from "./locationSettings";
+import { convertString } from "tns-core-modules/utils/utils";
 
 let mapsModule = require("nativescript-google-maps-sdk");
 const appSettings = require("tns-core-modules/application-settings");
@@ -208,6 +237,10 @@ export default {
     },
 
     play(value) {
+      if (value === true) {
+        this.loader = true;
+      }
+
       this.play = value;
       this.$forceUpdate();
     },
@@ -232,6 +265,7 @@ export default {
       iconPlay: "▶",
       iconStop: "◼",
 
+      loader: false,
       circle: null,
       cityTitle: null,
       isBackground: false,
@@ -239,6 +273,7 @@ export default {
       showPlayer: null,
       featurePoints: null,
       points: null,
+      modal: null,
       play: false,
       drawerToggle: false,
       currentComp: null,
@@ -329,6 +364,7 @@ export default {
     },
 
     MAP_setCurrentLocation(lat, lng) {
+      this.loader = false;
       if (this.map.view == null) {
         return;
       }
@@ -437,6 +473,7 @@ export default {
       this.drawerToggle = true;
     },
     toggleDrawer() {
+      this.loader = false;
       this.$refs.drawer.nativeView.toggleDrawerState();
     },
 

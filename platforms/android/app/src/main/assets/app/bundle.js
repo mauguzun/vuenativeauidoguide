@@ -165,6 +165,13 @@ module.exports =
 
 /***/ }),
 
+/***/ "../node_modules/mini-css-extract-plugin/dist/loader.js!../node_modules/css-loader/index.js?!../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../node_modules/vue-loader/lib/index.js?!./components/pages/Modal.vue?vue&type=style&index=0&lang=css&":
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+
 /***/ "../node_modules/mini-css-extract-plugin/dist/loader.js!../node_modules/css-loader/index.js?!../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../node_modules/vue-loader/lib/index.js?!./components/pages/Settings.vue?vue&type=style&index=0&lang=css&":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -189,14 +196,43 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _pages_Settings__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__("./components/pages/Settings.vue");
 /* harmony import */ var _pages_About__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__("./components/pages/About.vue");
 /* harmony import */ var _pages_Player__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__("./components/pages/Player.vue");
-/* harmony import */ var tns_core_modules_ui_image__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__("../node_modules/tns-core-modules/ui/image/image.js");
-/* harmony import */ var tns_core_modules_ui_image__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(tns_core_modules_ui_image__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _Sorting__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__("./components/Sorting.js");
-/* harmony import */ var _beep_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__("./components/beep.js");
-/* harmony import */ var _api_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__("./components/api.js");
-/* harmony import */ var tns_core_modules_application_settings_application_settings__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__("../node_modules/tns-core-modules/application-settings/application-settings.js");
-/* harmony import */ var tns_core_modules_application_settings_application_settings__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(tns_core_modules_application_settings_application_settings__WEBPACK_IMPORTED_MODULE_12__);
-/* harmony import */ var _locationSettings__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__("./components/locationSettings.js");
+/* harmony import */ var _pages_Modal__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__("./components/pages/Modal.vue");
+/* harmony import */ var tns_core_modules_ui_image__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__("../node_modules/tns-core-modules/ui/image/image.js");
+/* harmony import */ var tns_core_modules_ui_image__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(tns_core_modules_ui_image__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _Sorting__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__("./components/Sorting.js");
+/* harmony import */ var _beep_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__("./components/beep.js");
+/* harmony import */ var _api_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__("./components/api.js");
+/* harmony import */ var tns_core_modules_application_settings_application_settings__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__("../node_modules/tns-core-modules/application-settings/application-settings.js");
+/* harmony import */ var tns_core_modules_application_settings_application_settings__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(tns_core_modules_application_settings_application_settings__WEBPACK_IMPORTED_MODULE_13__);
+/* harmony import */ var _locationSettings__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__("./components/locationSettings.js");
+/* harmony import */ var tns_core_modules_utils_utils__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__("../node_modules/tns-core-modules/utils/utils.js");
+/* harmony import */ var tns_core_modules_utils_utils__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(tns_core_modules_utils_utils__WEBPACK_IMPORTED_MODULE_15__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -353,6 +389,9 @@ let locationService = __webpack_require__("./components/backgroundServices.js");
 
 
 
+
+
+
 let mapsModule = __webpack_require__("../node_modules/nativescript-google-maps-sdk/map-view.js");
 const appSettings = __webpack_require__("../node_modules/tns-core-modules/application-settings/application-settings.js");
 let translate = __webpack_require__("./translate.json");
@@ -402,11 +441,15 @@ let translate = __webpack_require__("./translate.json");
         this.map.markers.find(x => x.userData.id == value.id)
       ) {
         this.map.markers.find(x => x.userData.id == value.id).color =
-          _locationSettings__WEBPACK_IMPORTED_MODULE_13__["locationSettings"].color.visited;
+          _locationSettings__WEBPACK_IMPORTED_MODULE_14__["locationSettings"].color.visited;
       }
     },
 
     play(value) {
+      if (value === true) {
+        this.loader = true;
+      }
+
       this.play = value;
       this.$forceUpdate();
     },
@@ -431,6 +474,7 @@ let translate = __webpack_require__("./translate.json");
       iconPlay: "▶",
       iconStop: "◼",
 
+      loader: false,
       circle: null,
       cityTitle: null,
       isBackground: false,
@@ -438,6 +482,7 @@ let translate = __webpack_require__("./translate.json");
       showPlayer: null,
       featurePoints: null,
       points: null,
+      modal: null,
       play: false,
       drawerToggle: false,
       currentComp: null,
@@ -513,8 +558,8 @@ let translate = __webpack_require__("./translate.json");
         marker.userData = { id: _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points[x].id };
 
         marker.color = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points[x].active
-          ? _locationSettings__WEBPACK_IMPORTED_MODULE_13__["locationSettings"].color.active
-          : _locationSettings__WEBPACK_IMPORTED_MODULE_13__["locationSettings"].color.visited;
+          ? _locationSettings__WEBPACK_IMPORTED_MODULE_14__["locationSettings"].color.active
+          : _locationSettings__WEBPACK_IMPORTED_MODULE_14__["locationSettings"].color.visited;
 
         this.map.view.addMarker(marker);
         this.map.markers.push(marker);
@@ -528,6 +573,7 @@ let translate = __webpack_require__("./translate.json");
     },
 
     MAP_setCurrentLocation(lat, lng) {
+      this.loader = false;
       if (this.map.view == null) {
         return;
       }
@@ -538,7 +584,7 @@ let translate = __webpack_require__("./translate.json");
           lat,
           lng
         );
-        this.map.currentLocation.color = _locationSettings__WEBPACK_IMPORTED_MODULE_13__["locationSettings"].color.user;
+        this.map.currentLocation.color = _locationSettings__WEBPACK_IMPORTED_MODULE_14__["locationSettings"].color.user;
         this.map.currentLocation.title = "You are here";
         this.map.view.addMarker(this.map.currentLocation);
       } else {
@@ -554,7 +600,7 @@ let translate = __webpack_require__("./translate.json");
           lat,
           lng
         );
-        this.circle.radius = _locationSettings__WEBPACK_IMPORTED_MODULE_13__["locationSettings"].pointCanPlaceDistanceKm * 1000;
+        this.circle.radius = _locationSettings__WEBPACK_IMPORTED_MODULE_14__["locationSettings"].pointCanPlaceDistanceKm * 1000;
         this.circle.strokeWidth = 3;
         //  this.circle.strokeColor = "#ff0000"
 
@@ -605,7 +651,7 @@ let translate = __webpack_require__("./translate.json");
       this.translate = translate[appSettings.getString("lang")];
     },
     laodPointsFromApi() {
-      Object(_api_js__WEBPACK_IMPORTED_MODULE_11__["apiCall"])("points", {
+      Object(_api_js__WEBPACK_IMPORTED_MODULE_12__["apiCall"])("points", {
         city: appSettings.getString("city", "5"),
         lang: appSettings.getString("lang", "en")
       })
@@ -636,6 +682,7 @@ let translate = __webpack_require__("./translate.json");
       this.drawerToggle = true;
     },
     toggleDrawer() {
+      this.loader = false;
       this.$refs.drawer.nativeView.toggleDrawerState();
     },
 
@@ -851,6 +898,33 @@ const appSettings = __webpack_require__("../node_modules/tns-core-modules/applic
       });
     });
   }
+});
+
+
+/***/ }),
+
+/***/ "../node_modules/vue-loader/lib/index.js?!./components/pages/Modal.vue?vue&type=script&lang=js&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data() {
+    return {};
+  },
+  methods: {
+    close() {
+      this.$modal.close();
+    }
+  },
+ 
 });
 
 
@@ -1105,289 +1179,318 @@ var render = function() {
         1
       ),
       _c(
-        "RadSideDrawer",
-        {
-          ref: "drawer",
-          on: {
-            drawerOpened: function($event) {
-              _vm.onDrawerOpened()
-            },
-            drawerClosed: function($event) {
-              _vm.onDrawerClosed()
-            }
-          }
-        },
+        "GridLayout",
         [
           _c(
-            "StackLayout",
-            {
-              directives: [
-                {
-                  name: "view",
-                  rawName: "v-view:drawerContent",
-                  arg: "drawerContent",
-                  modifiers: {}
-                }
-              ],
-              attrs: { backgroundColor: "#eee" }
-            },
-            [
-              _c("StackLayout", { attrs: { height: "15%" } }),
-              _c(
-                "StackLayout",
-                {},
-                [
-                  _c("Label", {
-                    staticClass: "drawerItemText font-awesome",
-                    attrs: {
-                      text: _vm.translate.menu.settings,
-                      paddingLeft: "30%",
-                      color: "black",
-                      margin: "10"
-                    },
-                    on: {
-                      tap: function($event) {
-                        _vm.go("settings")
-                      }
-                    }
-                  }),
-                  _c("Label", {
-                    staticClass: "drawerItemText font-awesome",
-                    attrs: {
-                      text: "Set all active",
-                      paddingLeft: "30%",
-                      color: "black",
-                      margin: "10"
-                    },
-                    on: { tap: _vm.setAllAsActive }
-                  }),
-                  _c("Label", {
-                    staticClass: "drawerItemText font-awesome",
-                    attrs: {
-                      text: _vm.translate.menu.map,
-                      paddingLeft: "30%",
-                      color: "black",
-                      margin: "10"
-                    },
-                    on: {
-                      tap: function($event) {
-                        _vm.go("map")
-                      }
-                    }
-                  }),
-                  _c("Label", {
-                    staticClass: "drawerItemText font-awesome",
-                    attrs: {
-                      text: _vm.translate.menu.about,
-                      paddingLeft: "30%",
-                      color: "black",
-                      margin: "10"
-                    },
-                    on: {
-                      tap: function($event) {
-                        _vm.go("about")
-                      }
-                    }
-                  })
-                ],
-                1
-              )
-            ],
-            1
-          ),
-          _c(
-            "StackLayout",
-            {
-              directives: [
-                {
-                  name: "view",
-                  rawName: "v-view:mainContent",
-                  arg: "mainContent",
-                  modifiers: {}
-                }
-              ]
-            },
+            "GridLayout",
             [
               _c(
-                "DockLayout",
+                "RadSideDrawer",
+                {
+                  ref: "drawer",
+                  on: {
+                    drawerOpened: function($event) {
+                      _vm.onDrawerOpened()
+                    },
+                    drawerClosed: function($event) {
+                      _vm.onDrawerClosed()
+                    }
+                  }
+                },
                 [
                   _c(
                     "StackLayout",
-                    { attrs: { dock: "top", width: "100%" } },
+                    {
+                      directives: [
+                        {
+                          name: "view",
+                          rawName: "v-view:drawerContent",
+                          arg: "drawerContent",
+                          modifiers: {}
+                        }
+                      ],
+                      attrs: { backgroundColor: "#eee" }
+                    },
                     [
+                      _c("StackLayout", { attrs: { height: "15%" } }),
                       _c(
                         "StackLayout",
-                        { attrs: { width: "100%", dock: "top" } },
+                        {},
                         [
-                          _vm.showPlayer != null
-                            ? _c("audioplayer", {
-                                ref: "audio",
-                                attrs: { point: _vm.showPlayer }
-                              })
-                            : _vm._e(),
-                          _c(
-                            "ScrollView",
-                            [
-                              _c(_vm.currentComp, {
-                                tag: "component",
-                                attrs: { translate: _vm.translate },
-                                on: { settingSaved: _vm.settingsDone }
-                              })
-                            ],
-                            1
-                          )
+                          _c("Label", {
+                            staticClass: "drawerItemText font-awesome",
+                            attrs: {
+                              text: _vm.translate.menu.settings,
+                              paddingLeft: "30%",
+                              color: "black",
+                              margin: "10"
+                            },
+                            on: {
+                              tap: function($event) {
+                                _vm.go("settings")
+                              }
+                            }
+                          }),
+                          _c("Label", {
+                            staticClass: "drawerItemText font-awesome",
+                            attrs: {
+                              text: "Set all active",
+                              paddingLeft: "30%",
+                              color: "black",
+                              margin: "10"
+                            },
+                            on: { tap: _vm.setAllAsActive }
+                          }),
+                          _c("Label", {
+                            staticClass: "drawerItemText font-awesome",
+                            attrs: {
+                              text: _vm.translate.menu.map,
+                              paddingLeft: "30%",
+                              color: "black",
+                              margin: "10"
+                            },
+                            on: {
+                              tap: function($event) {
+                                _vm.go("map")
+                              }
+                            }
+                          }),
+                          _c("Label", {
+                            staticClass: "drawerItemText font-awesome",
+                            attrs: {
+                              text: _vm.translate.menu.about,
+                              paddingLeft: "30%",
+                              color: "black",
+                              margin: "10"
+                            },
+                            on: {
+                              tap: function($event) {
+                                _vm.go("about")
+                              }
+                            }
+                          })
                         ],
                         1
-                      ),
+                      )
+                    ],
+                    1
+                  ),
+                  _c(
+                    "StackLayout",
+                    {
+                      directives: [
+                        {
+                          name: "view",
+                          rawName: "v-view:mainContent",
+                          arg: "mainContent",
+                          modifiers: {}
+                        }
+                      ]
+                    },
+                    [
                       _c(
-                        "ScrollView",
+                        "DockLayout",
                         [
                           _c(
                             "StackLayout",
-                            {
-                              directives: [
-                                {
-                                  name: "show",
-                                  rawName: "v-show",
-                                  value: _vm.showmap,
-                                  expression: "showmap"
-                                }
-                              ],
-                              ref: "mapContainer",
-                              attrs: {
-                                width: "100%",
-                                dock: "top",
-                                height: "100%"
-                              }
-                            },
-                            [
-                              _c("MapView", {
-                                ref: "map",
-                                attrs: {
-                                  width: "100%",
-                                  height: "100%",
-                                  dock: "top",
-                                  zoom: _vm.map.zoom,
-                                  latitude: _vm.map.latitude,
-                                  longitude: _vm.map.longitude,
-                                  bearing: "180",
-                                  tilt: "35"
-                                },
-                                on: { mapReady: _vm.MAP_mapReady }
-                              })
-                            ],
-                            1
-                          )
-                        ],
-                        1
-                      ),
-                      _vm.featurePoints != null
-                        ? _c(
-                            "StackLayout",
-                            {
-                              attrs: {
-                                dock: "top",
-                                height: "100%",
-                                width: "100%"
-                              }
-                            },
+                            { attrs: { dock: "top", width: "100%" } },
                             [
                               _c(
-                                "ScrollView",
+                                "StackLayout",
+                                { attrs: { width: "100%", dock: "top" } },
                                 [
+                                  _vm.showPlayer != null
+                                    ? _c("audioplayer", {
+                                        ref: "audio",
+                                        attrs: { point: _vm.showPlayer }
+                                      })
+                                    : _vm._e(),
                                   _c(
-                                    "ListView",
-                                    {
-                                      attrs: {
-                                        height: "100%",
-                                        separatorColor: "transparent",
-                                        id: "listView",
-                                        items: _vm.featurePoints,
-                                        "+alias": "item"
-                                      }
-                                    },
+                                    "ScrollView",
                                     [
-                                      _c("v-template", {
-                                        scopedSlots: _vm._u([
-                                          {
-                                            key: "default",
-                                            fn: function(ref) {
-                                              var item = ref.item
-                                              var $index = ref.$index
-                                              var $even = ref.$even
-                                              var $odd = ref.$odd
-                                              return _c(
-                                                "StackLayout",
-                                                {
-                                                  staticStyle: {
-                                                    borderBottomWidth: "1",
-                                                    borderBottomColor: "#E4E4E4"
-                                                  },
-                                                  attrs: {
-                                                    orientation: "horizontal",
-                                                    padding: "10"
-                                                  },
-                                                  on: {
-                                                    tap: function($event) {
-                                                      _vm.playFeature(item)
-                                                    }
-                                                  }
-                                                },
-                                                [
-                                                  _c(
-                                                    "StackLayout",
-                                                    { attrs: { width: "20%" } },
-                                                    [
-                                                      _c("Image", {
-                                                        staticClass: "conImg",
-                                                        attrs: {
-                                                          src: item.img[0],
-                                                          stretch: "aspectFill"
-                                                        }
-                                                      })
-                                                    ],
-                                                    1
-                                                  ),
-                                                  _c(
-                                                    "StackLayout",
-                                                    {
-                                                      attrs: {
-                                                        marginLeft: "10",
-                                                        paddingTop: "3",
-                                                        width: "50%"
-                                                      }
-                                                    },
-                                                    [
-                                                      _c("Label", {
-                                                        attrs: {
-                                                          text: item.title
-                                                        }
-                                                      }),
-                                                      _c("Label", {
-                                                        attrs: {
-                                                          text: item.distance
-                                                        }
-                                                      })
-                                                    ],
-                                                    1
-                                                  )
-                                                ],
-                                                1
-                                              )
-                                            }
-                                          }
-                                        ])
+                                      _c(_vm.currentComp, {
+                                        tag: "component",
+                                        attrs: { translate: _vm.translate },
+                                        on: { settingSaved: _vm.settingsDone }
                                       })
                                     ],
                                     1
                                   )
                                 ],
                                 1
-                              )
+                              ),
+                              _c(
+                                "ScrollView",
+                                [
+                                  _c(
+                                    "StackLayout",
+                                    {
+                                      directives: [
+                                        {
+                                          name: "show",
+                                          rawName: "v-show",
+                                          value: _vm.showmap,
+                                          expression: "showmap"
+                                        }
+                                      ],
+                                      ref: "mapContainer",
+                                      attrs: {
+                                        width: "100%",
+                                        dock: "top",
+                                        height: "100%"
+                                      }
+                                    },
+                                    [
+                                      _c("MapView", {
+                                        ref: "map",
+                                        attrs: {
+                                          width: "100%",
+                                          height: "100%",
+                                          dock: "top",
+                                          zoom: _vm.map.zoom,
+                                          latitude: _vm.map.latitude,
+                                          longitude: _vm.map.longitude,
+                                          bearing: "180",
+                                          tilt: "35"
+                                        },
+                                        on: { mapReady: _vm.MAP_mapReady }
+                                      })
+                                    ],
+                                    1
+                                  )
+                                ],
+                                1
+                              ),
+                              _vm.featurePoints != null
+                                ? _c(
+                                    "StackLayout",
+                                    {
+                                      attrs: {
+                                        dock: "top",
+                                        height: "100%",
+                                        width: "100%"
+                                      }
+                                    },
+                                    [
+                                      _c(
+                                        "ScrollView",
+                                        [
+                                          _c(
+                                            "ListView",
+                                            {
+                                              attrs: {
+                                                height: "100%",
+                                                separatorColor: "transparent",
+                                                id: "listView",
+                                                items: _vm.featurePoints,
+                                                "+alias": "item"
+                                              }
+                                            },
+                                            [
+                                              _c("v-template", {
+                                                scopedSlots: _vm._u([
+                                                  {
+                                                    key: "default",
+                                                    fn: function(ref) {
+                                                      var item = ref.item
+                                                      var $index = ref.$index
+                                                      var $even = ref.$even
+                                                      var $odd = ref.$odd
+                                                      return _c(
+                                                        "StackLayout",
+                                                        {
+                                                          staticStyle: {
+                                                            borderBottomWidth:
+                                                              "1",
+                                                            borderBottomColor:
+                                                              "#E4E4E4"
+                                                          },
+                                                          attrs: {
+                                                            orientation:
+                                                              "horizontal",
+                                                            padding: "10"
+                                                          },
+                                                          on: {
+                                                            tap: function(
+                                                              $event
+                                                            ) {
+                                                              _vm.playFeature(
+                                                                item
+                                                              )
+                                                            }
+                                                          }
+                                                        },
+                                                        [
+                                                          _c(
+                                                            "StackLayout",
+                                                            {
+                                                              attrs: {
+                                                                width: "20%"
+                                                              }
+                                                            },
+                                                            [
+                                                              _c("Image", {
+                                                                staticClass:
+                                                                  "conImg",
+                                                                attrs: {
+                                                                  src:
+                                                                    item.img[0],
+                                                                  stretch:
+                                                                    "aspectFill"
+                                                                }
+                                                              })
+                                                            ],
+                                                            1
+                                                          ),
+                                                          _c(
+                                                            "StackLayout",
+                                                            {
+                                                              attrs: {
+                                                                marginLeft:
+                                                                  "10",
+                                                                paddingTop: "3",
+                                                                width: "50%"
+                                                              }
+                                                            },
+                                                            [
+                                                              _c("Label", {
+                                                                attrs: {
+                                                                  text:
+                                                                    item.title
+                                                                }
+                                                              }),
+                                                              _c("Label", {
+                                                                attrs: {
+                                                                  text:
+                                                                    item.distance
+                                                                }
+                                                              })
+                                                            ],
+                                                            1
+                                                          )
+                                                        ],
+                                                        1
+                                                      )
+                                                    }
+                                                  }
+                                                ])
+                                              })
+                                            ],
+                                            1
+                                          )
+                                        ],
+                                        1
+                                      )
+                                    ],
+                                    1
+                                  )
+                                : _vm._e()
                             ],
                             1
                           )
-                        : _vm._e()
+                        ],
+                        1
+                      )
                     ],
                     1
                   )
@@ -1396,20 +1499,33 @@ var render = function() {
               )
             ],
             1
-          )
-        ],
-        1
-      ),
-      _c(
-        "AbsoluteLayout",
-        { attrs: { width: "100%", height: "100%", backgroundColor: "white" } },
-        [
-          _c("Image", {
-            attrs: {
-              src:
-                "https://www.davidwygant.com/wp-content/uploads/2017/10/ajax-loader.gif"
-            }
-          })
+          ),
+          _vm.loader
+            ? _c(
+                "AbsoluteLayout",
+                { attrs: { id: "loader" } },
+                [
+                  _c(
+                    "StackLayout",
+                    {
+                      staticClass: "dialog",
+                      attrs: {
+                        width: "100%",
+                        height: "100%",
+                        backgroundColor: "white"
+                      }
+                    },
+                    [
+                      _c("ActivityIndicator", {
+                        attrs: { busy: "true", width: "50%", height: "100%" }
+                      })
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            : _vm._e()
         ],
         1
       )
@@ -1438,6 +1554,28 @@ var render = function() {
   return _c("HtmlView", {
     staticStyle: { padding: "10" },
     attrs: { html: _vm.code }
+  })
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "../node_modules/vue-loader/lib/loaders/templateLoader.js?!../node_modules/vue-loader/lib/index.js?!./components/pages/Modal.vue?vue&type=template&id=e79094d2&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("StackLayout", {
+    attrs: { width: "100%", height: "100%", backgroundColor: "white" }
   })
 }
 var staticRenderFns = []
@@ -1867,6 +2005,7 @@ const Sorting = {
    * @param {number} currentLng
    */
   sortPoints(currentLat, currentLng) {
+   
     console.log(currentLat, currentLng);
     if (
       this.prevLocation.lat != null &&
@@ -2311,6 +2450,77 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./components/pages/Modal.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Modal_vue_vue_type_template_id_e79094d2___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("./components/pages/Modal.vue?vue&type=template&id=e79094d2&");
+/* harmony import */ var _Modal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("./components/pages/Modal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _Modal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("./components/pages/Modal.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("../node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _Modal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Modal_vue_vue_type_template_id_e79094d2___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Modal_vue_vue_type_template_id_e79094d2___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "components/pages/Modal.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./components/pages/Modal.vue?vue&type=script&lang=js&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_index_js_vue_loader_options_Modal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../node_modules/vue-loader/lib/index.js?!./components/pages/Modal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_vue_loader_lib_index_js_vue_loader_options_Modal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./components/pages/Modal.vue?vue&type=style&index=0&lang=css&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_mini_css_extract_plugin_dist_loader_js_node_modules_css_loader_index_js_ref_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_Modal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../node_modules/mini-css-extract-plugin/dist/loader.js!../node_modules/css-loader/index.js?!../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../node_modules/vue-loader/lib/index.js?!./components/pages/Modal.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_mini_css_extract_plugin_dist_loader_js_node_modules_css_loader_index_js_ref_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_Modal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_mini_css_extract_plugin_dist_loader_js_node_modules_css_loader_index_js_ref_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_Modal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_mini_css_extract_plugin_dist_loader_js_node_modules_css_loader_index_js_ref_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_Modal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_mini_css_extract_plugin_dist_loader_js_node_modules_css_loader_index_js_ref_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_Modal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_mini_css_extract_plugin_dist_loader_js_node_modules_css_loader_index_js_ref_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_Modal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./components/pages/Modal.vue?vue&type=template&id=e79094d2&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Modal_vue_vue_type_template_id_e79094d2___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../node_modules/vue-loader/lib/loaders/templateLoader.js?!../node_modules/vue-loader/lib/index.js?!./components/pages/Modal.vue?vue&type=template&id=e79094d2&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Modal_vue_vue_type_template_id_e79094d2___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Modal_vue_vue_type_template_id_e79094d2___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./components/pages/Player.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2476,6 +2686,7 @@ nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.registerElement(
 );  
   
     
+  
   
 // Prints Vue logs when --env.production is *NOT* set while building
 // Vue.config.silent = (TNS_ENV === 'production');

@@ -329,6 +329,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 
@@ -386,8 +389,7 @@ let translate = __webpack_require__("./translate.json");
     showPlayer(value) {
       this.showPlayer = value;
 
-      if(value == null)
-      return;
+      if (value == null) return;
 
       if (_Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points == null) {
         _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points.find(x => x.id == value.id).active = false;
@@ -426,9 +428,8 @@ let translate = __webpack_require__("./translate.json");
 
   data() {
     return {
-
-      iconPlay:'▶',
-      iconStop:'◼',
+      iconPlay: "▶",
+      iconStop: "◼",
 
       circle: null,
       cityTitle: null,
@@ -669,18 +670,14 @@ let translate = __webpack_require__("./translate.json");
       stopBackgroundTap();
 
       _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"]._current = null;
-      try{
+      try {
         _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].clear();
-      }catch(e){
+      } catch (e) {}
 
-      }
-      
       _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].featurePoints = null;
-  
-
 
       this.featurePoints = null;
-      this.showPlayer = null;   
+      this.showPlayer = null;
 
       this.$forceUpdate();
     },
@@ -1082,7 +1079,11 @@ var render = function() {
               _c(
                 "StackLayout",
                 { staticClass: "HMid" },
-                [_c("Label", { attrs: { text: _vm.cityTitle + _vm.play } })],
+                [
+                  _c("Label", {
+                    attrs: { text: _vm.cityTitle + _vm.play + "ss2" }
+                  })
+                ],
                 1
               ),
               _c(
@@ -1397,6 +1398,12 @@ var render = function() {
             1
           )
         ],
+        1
+      ),
+      _c(
+        "AbsoluteLayout",
+        { attrs: { width: "100%", height: "100%", backgroundColor: "white" } },
+        [_c("ActivityIndicator", { attrs: { busy: "true" } })],
         1
       )
     ],
@@ -2210,7 +2217,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "locationSettings", function() { return locationSettings; });
 const locationSettings = {
   minimumUpdateTime: 5000,//  5 sec
-  updateTime: 15000, //  5 sec
+  updateTime: 10000, //  5 sec
   updateDistanceInMetters: 0.1,
   samePlaceInKm: 0.001, // 10 me
   pointCanPlaceDistanceKm: 0.04, // 50 metter
@@ -2452,6 +2459,8 @@ __webpack_require__("../node_modules/tns-core-modules/ui/frame/activity.js");
 
 
 
+
+
 nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.registerElement(
   "RadSideDrawer",
   () => __webpack_require__("../node_modules/nativescript-ui-sidedrawer/ui-sidedrawer.js").RadSideDrawer
@@ -2461,7 +2470,8 @@ nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.registerElement(
   () => __webpack_require__("../node_modules/nativescript-google-maps-sdk/map-view.js").MapView
 );  
   
-    
+  
+  
   
 // Prints Vue logs when --env.production is *NOT* set while building
 // Vue.config.silent = (TNS_ENV === 'production');

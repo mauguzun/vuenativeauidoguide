@@ -14,6 +14,7 @@ export const Sorting = {
    * @param {number} currentLng
    */
   sortPoints(currentLat, currentLng) {
+   
     console.log(currentLat, currentLng);
     if (
       this.prevLocation.lat != null &&
