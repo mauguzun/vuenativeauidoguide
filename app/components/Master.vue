@@ -71,7 +71,7 @@
             <DockLayout>
               <StackLayout dock="top" width="100%">
                 <StackLayout width="100%" dock="top">
-                  <audioplayer v-if="showPlayer != null" ref="audio" :point="showPlayer"></audioplayer>
+                  <!-- <audioplayer v-if="showPlayer != null" ref="audio" :point="showPlayer"></audioplayer> -->
                   <ScrollView>
                     <component
                       @settingSaved="settingsDone"
@@ -144,17 +144,9 @@
         </RadSideDrawer>
       </GridLayout>
 
-      <!-- <AbsoluteLayout id="loader" >
-        <StackLayout class="dialog" width="100%" height="100%" backgroundColor="black">
-          <Label class="h3" textWrap="true" text="Get a heavy things "></Label>
-        </StackLayout>
-      </AbsoluteLayout> -->
-
-      <AbsoluteLayout id="loader" v-if="loader">
-        <StackLayout class="dialog" width="100%" height="100%" backgroundColor="white">
-          <ActivityIndicator busy="true" width="50%" height="100%"/>
-        </StackLayout>
-      </AbsoluteLayout>
+    
+       <detail  v-if="showPlayer != null" ref="audio" :point="showPlayer" ></detail>   
+      <loader v-if="showLoader"></loader>  
     </GridLayout>
   </Page>
 </template>
@@ -171,8 +163,9 @@ let locationService = require("./backgroundServices");
 
 import Settings from "./pages/Settings";
 import About from "./pages/About";
-import Player from "./pages/Player";
-import Modal from "./pages/Modal";
+// import Player from "./pages/Player";
+import Loader from "./pages/Loader";
+import Detail from "./pages/Detail";
 
 import { Image } from "tns-core-modules/ui/image";
 import { Sorting } from "./Sorting";
@@ -238,7 +231,7 @@ export default {
 
     play(value) {
       if (value === true) {
-        this.loader = true;
+        this.showLoader = true;
       }
 
       this.play = value;
@@ -257,7 +250,9 @@ export default {
   components: {
     settings: Settings,
     about: About,
-    audioplayer: Player
+    // audioplayer: Player,
+    loader: Loader,
+    detail: Detail
   },
 
   data() {
@@ -265,7 +260,7 @@ export default {
       iconPlay: "▶",
       iconStop: "◼",
 
-      loader: false,
+      showLoader: false,
       circle: null,
       cityTitle: null,
       isBackground: false,
@@ -364,7 +359,7 @@ export default {
     },
 
     MAP_setCurrentLocation(lat, lng) {
-      this.loader = false;
+      this.showLoader = false;
       if (this.map.view == null) {
         return;
       }
@@ -473,7 +468,7 @@ export default {
       this.drawerToggle = true;
     },
     toggleDrawer() {
-      this.loader = false;
+      this.showLoader = false;
       this.$refs.drawer.nativeView.toggleDrawerState();
     },
 
@@ -571,7 +566,7 @@ function startBackgroundTap() {
         context,
         com.ciriscr.geotest.location.BackgroundService.class
       );
-      console.log("startService");
+
       context.startService(intent);
     } else {
       const component = new android.content.ComponentName(
