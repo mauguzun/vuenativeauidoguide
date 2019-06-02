@@ -1,0 +1,271 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+    <meta name="viewport" content="target-densitydpi=device-dpi, width = 540, user-scalable = 0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <title>Simple Circle</title>
+    <style>
+        /* 
+    Position of POI-radar
+    We advise you to use an absolute position for the element which will be referred to the radar container.
+    Keep in mind: In case the DOM element is updated on the fly via jQuery or responsive design use
+    'AR.radar.notifyUpdateRadarPosition();' to force radar position/size updates, otherwise the very first position/size
+    will be used.
+*/
+        .radarContainer_left {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+    <!-- Include the ARchitect library -->
+    <script src="https://www.wikitude.com/libs/architect.js"></script>
+
+
+    <script src="js/marker.js"></script>
+    <script src="js/radar.js"></script>
+    <script>
+
+        function createCircle() {
+            AR.logger.activateDebugMode();
+
+ 
+            var circle = new AR.Circle(2, { style: { fillColor: '#8F45FF' } });
+
+            var drawableLocation = new AR.RelativeLocation(null, 10, 0);
+            var geoObject = new AR.GeoObject(myGeoLocation, { drawables: { cam: circle } });
+
+            AR.logger.info("circle created");
+        }
+
+        function sendCloseARViewRequest() {
+            // hideButton?status=hide could be anything, you just have to know what to do with the url in the PhoneGap world.
+            document.location = 'architectsdk://hideButton?status=hide';
+        }
+
+        function setup() {
+            AR.context.onLocationChanged = World.locationChanged;
+        }
+
+        var World = {
+            /* True once data was fetched. */
+            initiallyLoadedData: false,
+
+            /* Different POI-Marker assets. */
+            markerDrawableIdle: null,
+            markerDrawableSelected: null,
+
+            /* List of AR.GeoObjects that are currently shown in the scene / World. */
+            markerList: [],
+
+            /* the last selected marker. */
+            currentMarker: null,
+
+            /* Called to inject new POI data. */
+            loadPoisFromJsonData: function loadPoisFromJsonDataFn(poiData) {
+                /* Empty list of visible markers. */
+                World.markerList = [];
+
+                /* Start loading marker assets. */
+                World.markerDrawableIdle = new AR.ImageResource("https://raw.githubusercontent.com/Wikitude/wikitude-sdk-samples/master/08_PointOfInterest_3_MultiplePois/assets/marker_idle.png", {
+                    onError: World.onError
+                });
+                World.markerDrawableSelected = new AR.ImageResource("https://raw.githubusercontent.com/Wikitude/wikitude-sdk-samples/master/08_PointOfInterest_3_MultiplePois/assets/marker_selected.png", {
+                    onError: World.onError
+                });
+
+                /* Loop through POI-information and create an AR.GeoObject (=Marker) per POI. */
+                for (var currentPlaceNr = 0; currentPlaceNr < poiData.length; currentPlaceNr++) {
+                    var singlePoi = {
+                        "id": poiData[currentPlaceNr].id,
+                        "latitude": parseFloat(poiData[currentPlaceNr].latitude),
+                        "longitude": parseFloat(poiData[currentPlaceNr].longitude),
+                        "altitude": parseFloat(poiData[currentPlaceNr].altitude),
+                        "title": poiData[currentPlaceNr].name,
+                        "description": poiData[currentPlaceNr].description
+                    };
+
+                    /*
+                        To be able to deselect a marker while the user taps on the empty screen, the World object holds an
+                         array that contains each marker.
+                    */
+                    World.markerList.push(new Marker(singlePoi));
+                }
+                PoiRadar.show();
+                World.updateStatusMessage(currentPlaceNr + ' places loaded');
+            },
+
+            /* Updates status message shown in small "i"-button aligned bottom center. */
+            updateStatusMessage: function updateStatusMessageFn(message, isWarning) {
+
+                var themeToUse = isWarning ? "e" : "c";
+                var iconToUse = isWarning ? "alert" : "info";
+                alert(message)
+                // $("#status-message").html(message);
+                // $("#popupInfoButton").buttonMarkup({
+                //     theme: themeToUse,
+                //     icon: iconToUse
+                // });
+            },
+
+            /* Location updates, fired every time you call architectView.setLocation() in native environment. */
+            locationChanged: function locationChangedFn(lat, lon, alt, acc) {
+
+                /*
+                    The custom function World.onLocationChanged checks with the flag World.initiallyLoadedData if the
+                    function was already called. With the first call of World.onLocationChanged an object that contains geo
+                    information will be created which will be later used to create a marker using the
+                    World.loadPoisFromJsonData function.
+                */
+                if (!World.initiallyLoadedData) {
+                    /*
+                        requestDataFromLocal with the geo information as parameters (latitude, longitude) creates different
+                        poi data to a random location in the user's vicinity.
+                    */
+                    World.requestDataFromLocal(lat, lon);
+                    World.initiallyLoadedData = true;
+                }
+            },
+
+            /* Fired when user pressed maker in cam. */
+            onMarkerSelected: function onMarkerSelectedFn(marker) {
+
+                /* Deselect previous marker. */
+                if (World.currentMarker) {
+                    if (World.currentMarker.poiData.id === marker.poiData.id) {
+                        return;
+                    }
+                    World.currentMarker.setDeselected(World.currentMarker);
+                }
+
+                if (undefined === marker.distanceToUser) {
+                    marker.distanceToUser = marker.markerObject.locations[0].distanceToUser();
+                }
+
+                var distanceToUserValue = (marker.distanceToUser > 999) ?
+                    ((marker.distanceToUser / 1000).toFixed(2) + " km") :
+                    (Math.round(marker.distanceToUser) + " m");
+
+
+                alert(marker.poiData.title + marker.poiData.description)
+
+
+                /* Highlight current one. */
+                marker.setSelected(marker);
+                World.currentMarker = marker;
+            },
+
+            /* Screen was clicked but no geo-object was hit. */
+            onScreenClick: function onScreenClickFn() {
+                if (World.currentMarker) {
+                    World.currentMarker.setDeselected(World.currentMarker);
+                }
+            },
+
+            /* Request POI data. */
+            requestDataFromLocal: function requestDataFromLocalFn(centerPointLatitude, centerPointLongitude) {
+                var poisToCreate = 20;
+                var poiData = [];
+
+                for (var i = 0; i < poisToCreate; i++) {
+                    poiData.push({
+                        "id": (i + 1),
+                        "longitude": (centerPointLongitude + (Math.random() / 5 - 0.1)),
+                        "latitude": (centerPointLatitude + (Math.random() / 5 - 0.1)),
+                        "description": ("This is the description of POI#" + (i + 1)),
+                        "altitude": "100.0",
+                        "name": ("POI#" + (i + 1))
+                    });
+                }
+                World.loadPoisFromJsonData(poiData);
+            },
+
+            onError: function onErrorFn(error) {
+                alert(error);
+            }
+        };
+
+
+        Marker.prototype.getOnClickTrigger = function (marker) {
+
+            /*
+                The setSelected and setDeselected functions are prototype Marker functions.
+                Both functions perform the same steps but inverted, hence only one function (setSelected) is covered in
+                detail. Three steps are necessary to select the marker. First the state will be set appropriately. Second
+                the background drawable will be enabled and the standard background disabled. This is done by setting the
+                opacity property to 1.0 for the visible state and to 0.0 for an invisible state. Third the onClick function
+                is set only for the background drawable of the selected marker.
+            */
+
+            return function () {
+
+                if (marker.isSelected) {
+
+                    Marker.prototype.setDeselected(marker);
+
+                } else {
+                    Marker.prototype.setSelected(marker);
+                    try {
+                        World.onMarkerSelected(marker);
+                    } catch (err) {
+                        alert(err);
+                    }
+
+                }
+
+                return true;
+            };
+        };
+
+        Marker.prototype.setSelected = function (marker) {
+
+            marker.isSelected = true;
+
+            marker.markerDrawableIdle.opacity = 0.0;
+            marker.markerDrawableSelected.opacity = 1.0;
+            marker.markerDrawableIdle.onClick = null;
+            marker.markerDrawableSelected.onClick = Marker.prototype.getOnClickTrigger(marker);
+        };
+
+        Marker.prototype.setDeselected = function (marker) {
+
+            marker.isSelected = false;
+
+            marker.markerDrawableIdle.opacity = 1.0;
+            marker.markerDrawableSelected.opacity = 0.0;
+
+            marker.markerDrawableIdle.onClick = Marker.prototype.getOnClickTrigger(marker);
+            marker.markerDrawableSelected.onClick = null;
+        };
+
+        /* Will truncate all strings longer than given max-length "n". e.g. "foobar".trunc(3) -> "foo...". */
+        String.prototype.trunc = function (n) {
+            return this.substr(0, n - 1) + (this.length > n ? '...' : '');
+        };
+        AR.context.onLocationChanged = World.locationChanged;
+
+
+        AR.context.onScreenClick = World.onScreenClick;
+        /*
+            Set a custom function where location changes are forwarded to. There is also a possibility to set
+            AR.context.onLocationChanged to null. In this case the function will not be called anymore and no further
+            location updates will be received.
+        */
+
+    </script>
+</head>
+
+<body>
+    <div class="radarContainer_left" id="radar"></div>
+
+    <!-- <button value="Create ARchitectObj" type="button" onclick="createCircle()">Create Circle</button>
+
+    <button value="Close" type="button" onclick="sendCloseARViewRequest()">Close</button>
+ -->
+
+</body>
+
+</html>

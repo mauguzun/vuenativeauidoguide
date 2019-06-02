@@ -363,9 +363,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
-
-var wikitudeLicense = "palPJoYwNfx9BvX2y08jjF8j56sM0mk4IH3KcjCU+6/qkZa1rez8lOrp9ng/N+KdovrmYnY7r7zL4z+GtUkDUdL4uq7tJfE2PplDomlg2QuWvzm22Pdp++f3nvEXmBWF9Fg0cAgW6vE6i/RpQAcvr5nfBmKiC5hdE9tvUXIWnbxTYWx0ZWRfXzgIG3VLe4aZydUxxDq818R0yE0+RU2sxr0nvdjldDyxYmab/QJpukGLz99SvG/1WwyyvzymW6IF/hZyUSfoCn7Gm5EPCfeaVG9qJDmtOOSf9pAl0MFIDGtZCItufEehpyY9I04LMb/tH4fkqVyOkbGF/we4nQ7BUd4WUDATjlpwqV5HJ6vJ+GtpQDqK112a/t2vCmRauM08/ArqFA5fkcr7agQTaC7TFtwP6C+2AxkDcOiZF2l8ChjFoAmYYuAsZ6YoL1iDwQZco8xzur2tQ+kQF8e05JqdLwNjDet84oiJ73m2F2nV5sI2FzGs6cHRmeRfgib66eaCvfTQoChNluAu1kQdRTrEsej023O7trkTd4CpOV7l+5D+q9AHOL/1pzx/fR8L/GFUcxtzhWSX6j4jSl1AXHx8YkQ03Tk5U3SMOKuhbmGUdvxktW1TopNY3CCIxBI0d2mopzx+tJrHfX2dd1b7lKg/5dAhg0CkY53718I5UGBOyGGtCrlAJKmEgF4RrLBD46Atq2R6iB9Mp8aSa0lrqNS3W/Aun9QPHiyGKHCZaAtEtzTTdYp0dRpccGKq6Jnfthk4"
 
 
 
@@ -394,8 +398,6 @@ let mapsModule = __webpack_require__("../node_modules/nativescript-google-maps-s
 const appSettings = __webpack_require__("../node_modules/tns-core-modules/application-settings/application-settings.js");
 let translate = __webpack_require__("./translate.json");
 ///
-
-var  wikitudeLicense  = "palPJoYwNfx9BvX2y08jjF8j56sM0mk4IH3KcjCU+6/qkZa1rez8lOrp9ng/N+KdovrmYnY7r7zL4z+GtUkDUdL4uq7tJfE2PplDomlg2QuWvzm22Pdp++f3nvEXmBWF9Fg0cAgW6vE6i/RpQAcvr5nfBmKiC5hdE9tvUXIWnbxTYWx0ZWRfXzgIG3VLe4aZydUxxDq818R0yE0+RU2sxr0nvdjldDyxYmab/QJpukGLz99SvG/1WwyyvzymW6IF/hZyUSfoCn7Gm5EPCfeaVG9qJDmtOOSf9pAl0MFIDGtZCItufEehpyY9I04LMb/tH4fkqVyOkbGF/we4nQ7BUd4WUDATjlpwqV5HJ6vJ+GtpQDqK112a/t2vCmRauM08/ArqFA5fkcr7agQTaC7TFtwP6C+2AxkDcOiZF2l8ChjFoAmYYuAsZ6YoL1iDwQZco8xzur2tQ+kQF8e05JqdLwNjDet84oiJ73m2F2nV5sI2FzGs6cHRmeRfgib66eaCvfTQoChNluAu1kQdRTrEsej023O7trkTd4CpOV7l+5D+q9AHOL/1pzx/fR8L/GFUcxtzhWSX6j4jSl1AXHx8YkQ03Tk5U3SMOKuhbmGUdvxktW1TopNY3CCIxBI0d2mopzx+tJrHfX2dd1b7lKg/5dAhg0CkY53718I5UGBOyGGtCrlAJKmEgF4RrLBD46Atq2R6iB9Mp8aSa0lrqNS3W/Aun9QPHiyGKHCZaAtEtzTTdYp0dRpccGKq6Jnfthk4"
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   destroyed() {},
@@ -475,7 +477,7 @@ var  wikitudeLicense  = "palPJoYwNfx9BvX2y08jjF8j56sM0mk4IH3KcjCU+6/qkZa1rez8lOr
     return {
       iconPlay: "▶",
       iconStop: "◼",
-
+      hideWiki: false,
       showLoader: false,
       circle: null,
       cityTitle: null,
@@ -507,6 +509,25 @@ var  wikitudeLicense  = "palPJoYwNfx9BvX2y08jjF8j56sM0mk4IH3KcjCU+6/qkZa1rez8lOr
   },
   methods: {
     ////////
+
+    wikiLoaded($event) {
+      alert("laoded");
+      let wiki = $event.object;
+
+      wiki.toggleFlash();
+      wiki.captureScreen()
+     // wiki.enableLocationProvider()
+     wiki.setLocation(56.9501006,24.201796,10,1)
+      wiki.captureScreen()
+    
+    },
+
+    wikiError() {
+      alert("error");
+    },
+    wikiJson() {
+      alert("sjon ");
+    },
 
     setAllAsActive() {
       for (let x in _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points) {
@@ -1221,7 +1242,12 @@ var render = function() {
                 { staticClass: "HMid" },
                 [
                   _c("Label", {
-                    attrs: { text: _vm.cityTitle + _vm.play + "ss2" }
+                    attrs: { text: _vm.cityTitle + _vm.play },
+                    on: {
+                      tap: function($event) {
+                        _vm.hideWiki = !_vm.hideWiki
+                      }
+                    }
                   })
                 ],
                 1
@@ -1234,7 +1260,7 @@ var render = function() {
                     staticStyle: { fontSize: "27", color: "#333" },
                     attrs: { text: _vm.play ? _vm.iconPlay : _vm.iconStop }
                   }),
-                  _vm._v("\\\n        ")
+                  _vm._v("\\\n      ")
                 ],
                 1
               )
@@ -1560,7 +1586,26 @@ var render = function() {
             ],
             1
           ),
-          _c("Wikitude"),
+          !_vm.hideWiki
+            ? _c("Wikitude", {
+                ref: "wiki",
+                attrs: { url: "http://asl.nl.eu.org/wiki/test.html" },
+                on: {
+                  ScreenCaptureFail: function($event) {
+                    _vm.wikiError()
+                  },
+                  WorldLoadFail: function($event) {
+                    _vm.wikiError()
+                  },
+                  JSONReceived: function($event) {
+                    _vm.wikiJson()
+                  },
+                  WorldLoadSuccess: function($event) {
+                    _vm.wikiLoaded($event)
+                  }
+                }
+              })
+            : _vm._e(),
           _vm.showPlayer != null
             ? _c("detail", { ref: "audio", attrs: { point: _vm.showPlayer } })
             : _vm._e(),
@@ -2772,6 +2817,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var nativescript_wikitude__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(nativescript_wikitude__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _styles_scss__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("./styles.scss");
 /* harmony import */ var _styles_scss__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_styles_scss__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var nativescript_camera__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__("../node_modules/nativescript-camera/camera.js");
+/* harmony import */ var nativescript_camera__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(nativescript_camera__WEBPACK_IMPORTED_MODULE_4__);
 
         if (!global["__snapshot"]) {
             __webpack_require__("../node_modules/tns-core-modules/ui/frame/frame.js");
@@ -2791,9 +2838,8 @@ __webpack_require__("../node_modules/tns-core-modules/ui/frame/activity.js");
 
 
 
-var application = __webpack_require__("../node_modules/tns-core-modules/application/application.js");
-application.wikitudeLicense = "palPJoYwNfx9BvX2y08jjF8j56sM0mk4IH3KcjCU+6/qkZa1rez8lOrp9ng/N+KdovrmYnY7r7zL4z+GtUkDUdL4uq7tJfE2PplDomlg2QuWvzm22Pdp++f3nvEXmBWF9Fg0cAgW6vE6i/RpQAcvr5nfBmKiC5hdE9tvUXIWnbxTYWx0ZWRfXzgIG3VLe4aZydUxxDq818R0yE0+RU2sxr0nvdjldDyxYmab/QJpukGLz99SvG/1WwyyvzymW6IF/hZyUSfoCn7Gm5EPCfeaVG9qJDmtOOSf9pAl0MFIDGtZCItufEehpyY9I04LMb/tH4fkqVyOkbGF/we4nQ7BUd4WUDATjlpwqV5HJ6vJ+GtpQDqK112a/t2vCmRauM08/ArqFA5fkcr7agQTaC7TFtwP6C+2AxkDcOiZF2l8ChjFoAmYYuAsZ6YoL1iDwQZco8xzur2tQ+kQF8e05JqdLwNjDet84oiJ73m2F2nV5sI2FzGs6cHRmeRfgib66eaCvfTQoChNluAu1kQdRTrEsej023O7trkTd4CpOV7l+5D+q9AHOL/1pzx/fR8L/GFUcxtzhWSX6j4jSl1AXHx8YkQ03Tk5U3SMOKuhbmGUdvxktW1TopNY3CCIxBI0d2mopzx+tJrHfX2dd1b7lKg/5dAhg0CkY53718I5UGBOyGGtCrlAJKmEgF4RrLBD46Atq2R6iB9Mp8aSa0lrqNS3W/Aun9QPHiyGKHCZaAtEtzTTdYp0dRpccGKq6Jnfthk4"
-  
+
+nativescript_camera__WEBPACK_IMPORTED_MODULE_4__["requestPermissions"]();
 // import { Wikitude } from 'nativescript-wikitude';
 nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.registerElement(
   "RadSideDrawer",
@@ -2805,11 +2851,10 @@ nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.registerElement(
 );  
 nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.registerElement(
   "Wikitude",
-  () =>nativescript_wikitude__WEBPACK_IMPORTED_MODULE_2__["Wikitude"] 
+  () =>nativescript_wikitude__WEBPACK_IMPORTED_MODULE_2__["Wikitude"]
 );    
       
 
-nativescript_wikitude__WEBPACK_IMPORTED_MODULE_2__["Wikitude"].licenseKey = "palPJoYwNfx9BvX2y08jjF8j56sM0mk4IH3KcjCU+6/qkZa1rez8lOrp9ng/N+KdovrmYnY7r7zL4z+GtUkDUdL4uq7tJfE2PplDomlg2QuWvzm22Pdp++f3nvEXmBWF9Fg0cAgW6vE6i/RpQAcvr5nfBmKiC5hdE9tvUXIWnbxTYWx0ZWRfXzgIG3VLe4aZydUxxDq818R0yE0+RU2sxr0nvdjldDyxYmab/QJpukGLz99SvG/1WwyyvzymW6IF/hZyUSfoCn7Gm5EPCfeaVG9qJDmtOOSf9pAl0MFIDGtZCItufEehpyY9I04LMb/tH4fkqVyOkbGF/we4nQ7BUd4WUDATjlpwqV5HJ6vJ+GtpQDqK112a/t2vCmRauM08/ArqFA5fkcr7agQTaC7TFtwP6C+2AxkDcOiZF2l8ChjFoAmYYuAsZ6YoL1iDwQZco8xzur2tQ+kQF8e05JqdLwNjDet84oiJ73m2F2nV5sI2FzGs6cHRmeRfgib66eaCvfTQoChNluAu1kQdRTrEsej023O7trkTd4CpOV7l+5D+q9AHOL/1pzx/fR8L/GFUcxtzhWSX6j4jSl1AXHx8YkQ03Tk5U3SMOKuhbmGUdvxktW1TopNY3CCIxBI0d2mopzx+tJrHfX2dd1b7lKg/5dAhg0CkY53718I5UGBOyGGtCrlAJKmEgF4RrLBD46Atq2R6iB9Mp8aSa0lrqNS3W/Aun9QPHiyGKHCZaAtEtzTTdYp0dRpccGKq6Jnfthk4"
 // Prints Vue logs when --env.production is *NOT* set while building
 // Vue.config.silent = (TNS_ENV === 'production');
 nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.config.silent = false;

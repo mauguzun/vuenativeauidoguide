@@ -11,7 +11,7 @@
           <Label text="☰" style="font-size:27;color:#333;" class="font-awesome"/>
         </StackLayout>
         <StackLayout class="HMid">
-          <Label :text="cityTitle + play +'ss2'"/>
+          <Label @tap="hideWiki = !hideWiki" :text="cityTitle + play "/>
         </StackLayout>
         <StackLayout @tap="switchPlay" class="HRight">
           <Label :text="play ?  iconPlay : iconStop " style="font-size:27;color:#333;"/>\
@@ -143,20 +143,24 @@
           </StackLayout>
         </RadSideDrawer>
       </GridLayout>
-      
-<Wikitude>
-             
-    </Wikitude>
-    
-     <detail  v-if="showPlayer != null" ref="audio" :point="showPlayer" ></detail>   
-      <loader v-if="showLoader"></loader>   
+
+      <Wikitude
+        ref="wiki"
+        v-if="!hideWiki"
+        @ScreenCaptureFail="wikiError()"
+        @WorldLoadFail="wikiError()"
+        @JSONReceived="wikiJson()"
+        @WorldLoadSuccess="wikiLoaded($event)"
+        url="http://asl.nl.eu.org/wiki/test.html"
+      ></Wikitude>
+
+      <detail v-if="showPlayer != null" ref="audio" :point="showPlayer"></detail>
+      <loader v-if="showLoader"></loader>
     </GridLayout>
   </Page>
 </template>
 
 <script>
-
-var wikitudeLicense = "palPJoYwNfx9BvX2y08jjF8j56sM0mk4IH3KcjCU+6/qkZa1rez8lOrp9ng/N+KdovrmYnY7r7zL4z+GtUkDUdL4uq7tJfE2PplDomlg2QuWvzm22Pdp++f3nvEXmBWF9Fg0cAgW6vE6i/RpQAcvr5nfBmKiC5hdE9tvUXIWnbxTYWx0ZWRfXzgIG3VLe4aZydUxxDq818R0yE0+RU2sxr0nvdjldDyxYmab/QJpukGLz99SvG/1WwyyvzymW6IF/hZyUSfoCn7Gm5EPCfeaVG9qJDmtOOSf9pAl0MFIDGtZCItufEehpyY9I04LMb/tH4fkqVyOkbGF/we4nQ7BUd4WUDATjlpwqV5HJ6vJ+GtpQDqK112a/t2vCmRauM08/ArqFA5fkcr7agQTaC7TFtwP6C+2AxkDcOiZF2l8ChjFoAmYYuAsZ6YoL1iDwQZco8xzur2tQ+kQF8e05JqdLwNjDet84oiJ73m2F2nV5sI2FzGs6cHRmeRfgib66eaCvfTQoChNluAu1kQdRTrEsej023O7trkTd4CpOV7l+5D+q9AHOL/1pzx/fR8L/GFUcxtzhWSX6j4jSl1AXHx8YkQ03Tk5U3SMOKuhbmGUdvxktW1TopNY3CCIxBI0d2mopzx+tJrHfX2dd1b7lKg/5dAhg0CkY53718I5UGBOyGGtCrlAJKmEgF4RrLBD46Atq2R6iB9Mp8aSa0lrqNS3W/Aun9QPHiyGKHCZaAtEtzTTdYp0dRpccGKq6Jnfthk4"
 import { Singleton } from "./Singleton.js";
 
 import * as geolocation from "nativescript-geolocation";
@@ -185,8 +189,6 @@ let mapsModule = require("nativescript-google-maps-sdk");
 const appSettings = require("tns-core-modules/application-settings");
 let translate = require("./../translate.json");
 ///
-
-var  wikitudeLicense  = "palPJoYwNfx9BvX2y08jjF8j56sM0mk4IH3KcjCU+6/qkZa1rez8lOrp9ng/N+KdovrmYnY7r7zL4z+GtUkDUdL4uq7tJfE2PplDomlg2QuWvzm22Pdp++f3nvEXmBWF9Fg0cAgW6vE6i/RpQAcvr5nfBmKiC5hdE9tvUXIWnbxTYWx0ZWRfXzgIG3VLe4aZydUxxDq818R0yE0+RU2sxr0nvdjldDyxYmab/QJpukGLz99SvG/1WwyyvzymW6IF/hZyUSfoCn7Gm5EPCfeaVG9qJDmtOOSf9pAl0MFIDGtZCItufEehpyY9I04LMb/tH4fkqVyOkbGF/we4nQ7BUd4WUDATjlpwqV5HJ6vJ+GtpQDqK112a/t2vCmRauM08/ArqFA5fkcr7agQTaC7TFtwP6C+2AxkDcOiZF2l8ChjFoAmYYuAsZ6YoL1iDwQZco8xzur2tQ+kQF8e05JqdLwNjDet84oiJ73m2F2nV5sI2FzGs6cHRmeRfgib66eaCvfTQoChNluAu1kQdRTrEsej023O7trkTd4CpOV7l+5D+q9AHOL/1pzx/fR8L/GFUcxtzhWSX6j4jSl1AXHx8YkQ03Tk5U3SMOKuhbmGUdvxktW1TopNY3CCIxBI0d2mopzx+tJrHfX2dd1b7lKg/5dAhg0CkY53718I5UGBOyGGtCrlAJKmEgF4RrLBD46Atq2R6iB9Mp8aSa0lrqNS3W/Aun9QPHiyGKHCZaAtEtzTTdYp0dRpccGKq6Jnfthk4"
 
 export default {
   destroyed() {},
@@ -266,7 +268,7 @@ export default {
     return {
       iconPlay: "▶",
       iconStop: "◼",
-
+      hideWiki: false,
       showLoader: false,
       circle: null,
       cityTitle: null,
@@ -298,6 +300,25 @@ export default {
   },
   methods: {
     ////////
+
+    wikiLoaded($event) {
+      alert("laoded");
+      let wiki = $event.object;
+
+      wiki.toggleFlash();
+      wiki.captureScreen()
+     // wiki.enableLocationProvider()
+     wiki.setLocation(56.9501006,24.201796,10,1)
+      wiki.captureScreen()
+    
+    },
+
+    wikiError() {
+      alert("error");
+    },
+    wikiJson() {
+      alert("sjon ");
+    },
 
     setAllAsActive() {
       for (let x in Singleton.points) {
