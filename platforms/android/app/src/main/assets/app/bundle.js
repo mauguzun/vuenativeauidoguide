@@ -365,6 +365,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 
+var wikitudeLicense = "palPJoYwNfx9BvX2y08jjF8j56sM0mk4IH3KcjCU+6/qkZa1rez8lOrp9ng/N+KdovrmYnY7r7zL4z+GtUkDUdL4uq7tJfE2PplDomlg2QuWvzm22Pdp++f3nvEXmBWF9Fg0cAgW6vE6i/RpQAcvr5nfBmKiC5hdE9tvUXIWnbxTYWx0ZWRfXzgIG3VLe4aZydUxxDq818R0yE0+RU2sxr0nvdjldDyxYmab/QJpukGLz99SvG/1WwyyvzymW6IF/hZyUSfoCn7Gm5EPCfeaVG9qJDmtOOSf9pAl0MFIDGtZCItufEehpyY9I04LMb/tH4fkqVyOkbGF/we4nQ7BUd4WUDATjlpwqV5HJ6vJ+GtpQDqK112a/t2vCmRauM08/ArqFA5fkcr7agQTaC7TFtwP6C+2AxkDcOiZF2l8ChjFoAmYYuAsZ6YoL1iDwQZco8xzur2tQ+kQF8e05JqdLwNjDet84oiJ73m2F2nV5sI2FzGs6cHRmeRfgib66eaCvfTQoChNluAu1kQdRTrEsej023O7trkTd4CpOV7l+5D+q9AHOL/1pzx/fR8L/GFUcxtzhWSX6j4jSl1AXHx8YkQ03Tk5U3SMOKuhbmGUdvxktW1TopNY3CCIxBI0d2mopzx+tJrHfX2dd1b7lKg/5dAhg0CkY53718I5UGBOyGGtCrlAJKmEgF4RrLBD46Atq2R6iB9Mp8aSa0lrqNS3W/Aun9QPHiyGKHCZaAtEtzTTdYp0dRpccGKq6Jnfthk4"
+
 
 
 
@@ -392,6 +394,8 @@ let mapsModule = __webpack_require__("../node_modules/nativescript-google-maps-s
 const appSettings = __webpack_require__("../node_modules/tns-core-modules/application-settings/application-settings.js");
 let translate = __webpack_require__("./translate.json");
 ///
+
+var  wikitudeLicense  = "palPJoYwNfx9BvX2y08jjF8j56sM0mk4IH3KcjCU+6/qkZa1rez8lOrp9ng/N+KdovrmYnY7r7zL4z+GtUkDUdL4uq7tJfE2PplDomlg2QuWvzm22Pdp++f3nvEXmBWF9Fg0cAgW6vE6i/RpQAcvr5nfBmKiC5hdE9tvUXIWnbxTYWx0ZWRfXzgIG3VLe4aZydUxxDq818R0yE0+RU2sxr0nvdjldDyxYmab/QJpukGLz99SvG/1WwyyvzymW6IF/hZyUSfoCn7Gm5EPCfeaVG9qJDmtOOSf9pAl0MFIDGtZCItufEehpyY9I04LMb/tH4fkqVyOkbGF/we4nQ7BUd4WUDATjlpwqV5HJ6vJ+GtpQDqK112a/t2vCmRauM08/ArqFA5fkcr7agQTaC7TFtwP6C+2AxkDcOiZF2l8ChjFoAmYYuAsZ6YoL1iDwQZco8xzur2tQ+kQF8e05JqdLwNjDet84oiJ73m2F2nV5sI2FzGs6cHRmeRfgib66eaCvfTQoChNluAu1kQdRTrEsej023O7trkTd4CpOV7l+5D+q9AHOL/1pzx/fR8L/GFUcxtzhWSX6j4jSl1AXHx8YkQ03Tk5U3SMOKuhbmGUdvxktW1TopNY3CCIxBI0d2mopzx+tJrHfX2dd1b7lKg/5dAhg0CkY53718I5UGBOyGGtCrlAJKmEgF4RrLBD46Atq2R6iB9Mp8aSa0lrqNS3W/Aun9QPHiyGKHCZaAtEtzTTdYp0dRpccGKq6Jnfthk4"
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   destroyed() {},
@@ -2764,8 +2768,10 @@ __webpack_require__.r(__webpack_exports__);
 /* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var nativescript_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../node_modules/nativescript-vue/dist/index.js");
 /* harmony import */ var nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(nativescript_vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _components_Master__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("./components/Master.vue");
-/* harmony import */ var _styles_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("./styles.scss");
-/* harmony import */ var _styles_scss__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_styles_scss__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var nativescript_wikitude__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("../node_modules/nativescript-wikitude/wikitude.js");
+/* harmony import */ var nativescript_wikitude__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(nativescript_wikitude__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _styles_scss__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("./styles.scss");
+/* harmony import */ var _styles_scss__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_styles_scss__WEBPACK_IMPORTED_MODULE_3__);
 
         if (!global["__snapshot"]) {
             __webpack_require__("../node_modules/tns-core-modules/ui/frame/frame.js");
@@ -2783,8 +2789,12 @@ __webpack_require__("../node_modules/tns-core-modules/ui/frame/activity.js");
 
 
 
-// import { Wikitude } from 'nativescript-wikitude';
 
+
+var application = __webpack_require__("../node_modules/tns-core-modules/application/application.js");
+application.wikitudeLicense = "palPJoYwNfx9BvX2y08jjF8j56sM0mk4IH3KcjCU+6/qkZa1rez8lOrp9ng/N+KdovrmYnY7r7zL4z+GtUkDUdL4uq7tJfE2PplDomlg2QuWvzm22Pdp++f3nvEXmBWF9Fg0cAgW6vE6i/RpQAcvr5nfBmKiC5hdE9tvUXIWnbxTYWx0ZWRfXzgIG3VLe4aZydUxxDq818R0yE0+RU2sxr0nvdjldDyxYmab/QJpukGLz99SvG/1WwyyvzymW6IF/hZyUSfoCn7Gm5EPCfeaVG9qJDmtOOSf9pAl0MFIDGtZCItufEehpyY9I04LMb/tH4fkqVyOkbGF/we4nQ7BUd4WUDATjlpwqV5HJ6vJ+GtpQDqK112a/t2vCmRauM08/ArqFA5fkcr7agQTaC7TFtwP6C+2AxkDcOiZF2l8ChjFoAmYYuAsZ6YoL1iDwQZco8xzur2tQ+kQF8e05JqdLwNjDet84oiJ73m2F2nV5sI2FzGs6cHRmeRfgib66eaCvfTQoChNluAu1kQdRTrEsej023O7trkTd4CpOV7l+5D+q9AHOL/1pzx/fR8L/GFUcxtzhWSX6j4jSl1AXHx8YkQ03Tk5U3SMOKuhbmGUdvxktW1TopNY3CCIxBI0d2mopzx+tJrHfX2dd1b7lKg/5dAhg0CkY53718I5UGBOyGGtCrlAJKmEgF4RrLBD46Atq2R6iB9Mp8aSa0lrqNS3W/Aun9QPHiyGKHCZaAtEtzTTdYp0dRpccGKq6Jnfthk4"
+  
+// import { Wikitude } from 'nativescript-wikitude';
 nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.registerElement(
   "RadSideDrawer",
   () => __webpack_require__("../node_modules/nativescript-ui-sidedrawer/ui-sidedrawer.js").RadSideDrawer
@@ -2795,11 +2805,11 @@ nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.registerElement(
 );  
 nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.registerElement(
   "Wikitude",
-  () => __webpack_require__("../node_modules/nativescript-wikitude/wikitude.js").Wikitude
-);
+  () =>nativescript_wikitude__WEBPACK_IMPORTED_MODULE_2__["Wikitude"] 
+);    
       
-  
-  
+
+nativescript_wikitude__WEBPACK_IMPORTED_MODULE_2__["Wikitude"].licenseKey = "palPJoYwNfx9BvX2y08jjF8j56sM0mk4IH3KcjCU+6/qkZa1rez8lOrp9ng/N+KdovrmYnY7r7zL4z+GtUkDUdL4uq7tJfE2PplDomlg2QuWvzm22Pdp++f3nvEXmBWF9Fg0cAgW6vE6i/RpQAcvr5nfBmKiC5hdE9tvUXIWnbxTYWx0ZWRfXzgIG3VLe4aZydUxxDq818R0yE0+RU2sxr0nvdjldDyxYmab/QJpukGLz99SvG/1WwyyvzymW6IF/hZyUSfoCn7Gm5EPCfeaVG9qJDmtOOSf9pAl0MFIDGtZCItufEehpyY9I04LMb/tH4fkqVyOkbGF/we4nQ7BUd4WUDATjlpwqV5HJ6vJ+GtpQDqK112a/t2vCmRauM08/ArqFA5fkcr7agQTaC7TFtwP6C+2AxkDcOiZF2l8ChjFoAmYYuAsZ6YoL1iDwQZco8xzur2tQ+kQF8e05JqdLwNjDet84oiJ73m2F2nV5sI2FzGs6cHRmeRfgib66eaCvfTQoChNluAu1kQdRTrEsej023O7trkTd4CpOV7l+5D+q9AHOL/1pzx/fR8L/GFUcxtzhWSX6j4jSl1AXHx8YkQ03Tk5U3SMOKuhbmGUdvxktW1TopNY3CCIxBI0d2mopzx+tJrHfX2dd1b7lKg/5dAhg0CkY53718I5UGBOyGGtCrlAJKmEgF4RrLBD46Atq2R6iB9Mp8aSa0lrqNS3W/Aun9QPHiyGKHCZaAtEtzTTdYp0dRpccGKq6Jnfthk4"
 // Prints Vue logs when --env.production is *NOT* set while building
 // Vue.config.silent = (TNS_ENV === 'production');
 nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.config.silent = false;

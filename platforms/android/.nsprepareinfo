@@ -6,8 +6,8 @@
 		"C:\\native\\vuenativeauidoguide\\app\\assets\\images\\NativeScript-Vue.png": "31f09bdba72293198ee2e2a83c4fe5aa5744bc3d",
 		"C:\\native\\vuenativeauidoguide\\app\\components\\backgroundServices.js": "c33451237374452adb57ce82c441b29609cd5f01",
 		"C:\\native\\vuenativeauidoguide\\app\\components\\beep.js": "3f073799d754b5a8f6fa8dd0ae6b53d4a6ffcf6e",
-		"C:\\native\\vuenativeauidoguide\\app\\components\\Master.vue": "58f33cfec039bef0917463bd91277bbbbc48ee47",
 		"C:\\native\\vuenativeauidoguide\\app\\components\\locationSettings.js": "059143ac20a9617d18e047bcc8b041f4936be553",
+		"C:\\native\\vuenativeauidoguide\\app\\components\\Master.vue": "4b9237b2d0fa4f49bb28e6f25e7396df4598ee53",
 		"C:\\native\\vuenativeauidoguide\\app\\components\\pages\\About.vue": "0804b87f5ad04b54bfb4ac171c2ef7f340a77db7",
 		"C:\\native\\vuenativeauidoguide\\app\\components\\pages\\Detail.vue": "9defc3b0b2d8fb332c8aaa01be5ee1fe08015f51",
 		"C:\\native\\vuenativeauidoguide\\app\\components\\pages\\Loader.vue": "1984e3508d15aa45c957d0e858e93e3ecb27a6c0",
@@ -16,14 +16,14 @@
 		"C:\\native\\vuenativeauidoguide\\app\\components\\Singleton.js": "b9546f6557e00e348a62417265c362aa0ce1868e",
 		"C:\\native\\vuenativeauidoguide\\app\\components\\Sorting.js": "41dff4fd8a7c857d46c954bedfcb8b263bf81c69",
 		"C:\\native\\vuenativeauidoguide\\app\\package.json": "e36f4008ca56ecdfa46c87945ac8672e78be9e02",
-		"C:\\native\\vuenativeauidoguide\\app\\main.js": "7d2da0cd6b5823b08ff2f7710ed161c8bdc8c604",
 		"C:\\native\\vuenativeauidoguide\\app\\styles.scss": "deba82fdfd28ec09cac2596f7bf17c13017d4867",
+		"C:\\native\\vuenativeauidoguide\\app\\main.js": "ec1b9a4d2bfd27a2d213f1c73f0a4247f72750af",
 		"C:\\native\\vuenativeauidoguide\\app\\translate.json": "e6660c0a91d1c4b710a367a7b14f7af27b22ad21"
 	},
 	"release": false,
 	"bundle": true,
 	"changesRequireBuild": false,
-	"time": "Sun Jun 02 2019 15:01:38 GMT+0300 (Eastern European Summer Time)",
+	"time": "Sun Jun 02 2019 16:27:45 GMT+0300 (Eastern European Summer Time)",
 	"changesRequireBuildTime": "Sun Jun 02 2019 14:48:39 GMT+0300 (Eastern European Summer Time)",
 	"projectFileHash": "fae4fe9fb029bccef8d514c935d6204b2b4dea8421740dc840a88392de253451"
 }
