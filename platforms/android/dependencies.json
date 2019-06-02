@@ -8,6 +8,10 @@
         "directory": "..\\..\\node_modules\\nativescript-audioplay"
     },
     {
+        "name": "nativescript-camera",
+        "directory": "..\\..\\node_modules\\nativescript-camera"
+    },
+    {
         "name": "nativescript-geolocation",
         "directory": "..\\..\\node_modules\\nativescript-geolocation"
     },
@@ -38,6 +42,10 @@
     {
         "name": "nativescript-vue",
         "directory": "..\\..\\node_modules\\nativescript-vue"
+    },
+    {
+        "name": "nativescript-wikitude",
+        "directory": "..\\..\\node_modules\\nativescript-wikitude"
     },
     {
         "name": "tns-core-modules",

@@ -17988,6 +17988,773 @@ module.exports = Vue;
 
 /***/ }),
 
+/***/ "../node_modules/nativescript-wikitude/wikitude.common.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var content_view_1 = __webpack_require__("../node_modules/tns-core-modules/ui/content-view/content-view.js");
+var image_source_1 = __webpack_require__("../node_modules/tns-core-modules/image-source/image-source.js");
+var platform_1 = __webpack_require__("../node_modules/tns-core-modules/platform/platform.js");
+var Common = (function (_super) {
+    __extends(Common, _super);
+    function Common() {
+        return _super.call(this) || this;
+    }
+    Object.defineProperty(Common.prototype, "nativeView", {
+        get: function () {
+            if (platform_1.isIOS) {
+                return this.ios;
+            }
+            else {
+                return this.android;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Common.prototype.onUnloaded = function () {
+        this.log('OnUnloaded');
+        content_view_1.ContentView.prototype.onUnloaded.call(this);
+    };
+    Common.prototype.onWorldLoadSuccess = function (nav) {
+        this.log("[EVENT]", Common.EVENTS.WORLD_LOAD_SUCCESS, 'Loaded : ', nav);
+        this.notify({
+            eventName: Common.EVENTS.WORLD_LOAD_SUCCESS,
+            object: this,
+            data: {
+                navigation: nav,
+            }
+        });
+    };
+    Common.prototype.onWorldLoadFailed = function (nav, error) {
+        this.log("[EVENT]", Common.EVENTS.WORLD_LOAD_FAIL, 'Fired : ', nav);
+        this.log("[EVENT]", Common.EVENTS.WORLD_LOAD_FAIL, error);
+        this.notify({
+            eventName: Common.EVENTS.WORLD_LOAD_FAIL,
+            object: this,
+            data: {
+                navigation: nav,
+                error: error
+            }
+        });
+    };
+    Common.prototype.onJSONObjectReceived = function (data) {
+        this.log('JSON Received', data);
+        this.notify({
+            eventName: Common.EVENTS.JSON_OBJECT_RECEIVED,
+            object: this,
+            data: {
+                json: data
+            }
+        });
+    };
+    Common.prototype.onCameraOpen = function () {
+        this.log('Camera Open');
+        this.notify({
+            eventName: Common.EVENTS.CAMERA_OPENED,
+            object: this,
+        });
+    };
+    Common.prototype.onCameraClose = function () {
+        this.log('Camera Closed');
+        this.notify({
+            eventName: Common.EVENTS.CAMERA_CLOSED,
+            object: this,
+            data: {}
+        });
+    };
+    Common.prototype.onCameraAborted = function () {
+        this.log('[EVENT]', 'Camera Aborted');
+        this.notify({
+            eventName: Common.EVENTS.CAMERA_ABORTED,
+            object: this,
+            data: {}
+        });
+    };
+    Common.prototype.onScreenCaptured = function (bitmap) {
+        this.log('[EVENT]', Common.EVENTS.SCREEN_CAPTURED);
+        this.notify({
+            eventName: Common.EVENTS.SCREEN_CAPTURED,
+            object: this,
+            data: image_source_1.fromNativeSource(bitmap)
+        });
+    };
+    Common.prototype.onScreenCaptureFailed = function (error) {
+        this.log('[EVENT]', Common.EVENTS.SCREEN_CAPTURE_FAIL);
+        this.notify({
+            eventName: Common.EVENTS.SCREEN_CAPTURE_FAIL,
+            object: this,
+            data: {
+                error: error
+            }
+        });
+    };
+    Common.prototype.onCompassAccuracyChanged = function (accuracy) {
+        this.log('[EVENT]', Common.EVENTS.COMPASS_ACCURACY_CHANGE);
+        this.notify({
+            eventName: Common.EVENTS.COMPASS_ACCURACY_CHANGE,
+            object: this,
+            data: {
+                accuracy: accuracy
+            }
+        });
+    };
+    Common.prototype.onSensorServiceStarted = function () {
+        this.log('[EVENT]', Common.EVENTS.SENSOR_SERVICE_STARTED);
+        this.notify({
+            eventName: Common.EVENTS.SENSOR_SERVICE_STARTED,
+            object: this
+        });
+    };
+    Common.prototype.onSensorServiceStopped = function () {
+        this.log('[EVENT]', Common.EVENTS.SENSOR_SERVICE_STOPPED);
+        this.notify({
+            eventName: Common.EVENTS.SENSOR_SERVICE_STOPPED,
+            object: this,
+        });
+    };
+    Common.prototype.log = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        console.log('[nativescript-wikitude]', args.join(' '));
+    };
+    return Common;
+}(content_view_1.ContentView));
+Common.EVENTS = {
+    WORLD_LOAD_FAIL: 'WorldLoadFail',
+    WORLD_LOAD_SUCCESS: 'WorldLoadSuccess',
+    JSON_OBJECT_RECEIVED: 'JSONReceived',
+    SCREEN_CAPTURED: 'ScreenCaptureSuccess',
+    SCREEN_CAPTURE_FAIL: 'ScreenCaptureFail',
+    CAMERA_OPENED: 'CameraOpened',
+    CAMERA_CLOSED: 'CameraClosed',
+    CAMERA_ABORTED: 'CameraAborted',
+    COMPASS_ACCURACY_CHANGE: 'CompassAccuracyChanged',
+    SENSOR_SERVICE_STARTED: 'SensorServiceStarted',
+    SENSOR_SERVICE_STOPPED: 'SensorServiceStopped'
+};
+exports.Common = Common;
+exports.LicenseProperty = new content_view_1.Property({
+    name: 'license'
+});
+exports.LicenseProperty.register(Common);
+exports.UrlProperty = new content_view_1.Property({
+    name: 'url'
+});
+exports.UrlProperty.register(Common);
+exports.FeaturesProperty = new content_view_1.Property({
+    name: 'features'
+});
+exports.FeaturesProperty.register(Common);
+//# sourceMappingURL=wikitude.common.js.map
+
+/***/ }),
+
+/***/ "../node_modules/nativescript-wikitude/wikitude.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global) {
+Object.defineProperty(exports, "__esModule", { value: true });
+var wikitude_common_1 = __webpack_require__("../node_modules/nativescript-wikitude/wikitude.common.js");
+var app = __webpack_require__("../node_modules/tns-core-modules/application/application.js");
+var application_1 = __webpack_require__("../node_modules/tns-core-modules/application/application.js");
+var file_system_1 = __webpack_require__("../node_modules/tns-core-modules/file-system/file-system.js");
+var JsonObjectListener = (function (_super) {
+    __extends(JsonObjectListener, _super);
+    function JsonObjectListener(owner) {
+        var _this = _super.call(this) || this;
+        _this.owner = new WeakRef(owner);
+        return global.__native(_this);
+    }
+    JsonObjectListener.prototype.onJSONObjectReceived = function (JsonObject) {
+        var owner = this.owner.get();
+        var json = JSON.parse(JsonObject);
+        if (owner) {
+            owner.onJSONObjectReceived(json);
+        }
+    };
+    return JsonObjectListener;
+}(java.lang.Object));
+JsonObjectListener = __decorate([
+    Interfaces([com.wikitude.architect.ArchitectJavaScriptInterfaceListener]),
+    __metadata("design:paramtypes", [Wikitude])
+], JsonObjectListener);
+var WorldLoadedListener = (function (_super) {
+    __extends(WorldLoadedListener, _super);
+    function WorldLoadedListener(owner) {
+        var _this = _super.call(this) || this;
+        _this.owner = new WeakRef(owner);
+        return global.__native(_this);
+    }
+    WorldLoadedListener.prototype.worldLoadFailed = function (errorCode, description, failingUrl) {
+        var owner = this.owner.get();
+        if (owner) {
+            owner.log("Error " + errorCode + " while Loading URL: " + failingUrl);
+            owner.log("Error Description is " + description);
+            owner.onWorldLoadFailed(failingUrl, errorCode);
+        }
+    };
+    WorldLoadedListener.prototype.worldWasLoaded = function (url) {
+        var owner = this.owner.get();
+        if (owner) {
+            owner.onWorldLoadSuccess(url);
+        }
+    };
+    return WorldLoadedListener;
+}(java.lang.Object));
+WorldLoadedListener = __decorate([
+    Interfaces([com.wikitude.architect.ArchitectView.ArchitectWorldLoadedListener]),
+    __metadata("design:paramtypes", [Wikitude])
+], WorldLoadedListener);
+var CameraLifecycleListener = (function (_super) {
+    __extends(CameraLifecycleListener, _super);
+    function CameraLifecycleListener(owner) {
+        var _this = _super.call(this) || this;
+        _this.owner = new WeakRef(owner);
+        return global.__native(_this);
+    }
+    CameraLifecycleListener.prototype.onCameraOpen = function () {
+        var owner = this.owner.get();
+        if (owner) {
+            owner.onCameraOpen();
+        }
+    };
+    CameraLifecycleListener.prototype.onCameraOpenAbort = function () {
+        var owner = this.owner.get();
+        if (owner) {
+            owner.onCameraAborted();
+        }
+    };
+    CameraLifecycleListener.prototype.onCameraReleased = function () {
+        var owner = this.owner.get();
+        if (owner) {
+            owner.onCameraClose();
+        }
+        else {
+            console.log('[ERR] owner is falsy on CameraLifecycleListener Instance');
+        }
+    };
+    return CameraLifecycleListener;
+}(java.lang.Object));
+CameraLifecycleListener = __decorate([
+    Interfaces([com.wikitude.architect.services.camera.CameraLifecycleListener]),
+    __metadata("design:paramtypes", [Wikitude])
+], CameraLifecycleListener);
+var SensorAccuracyChangeListener = (function (_super) {
+    __extends(SensorAccuracyChangeListener, _super);
+    function SensorAccuracyChangeListener(owner) {
+        var _this = _super.call(this) || this;
+        _this.owner = new WeakRef(owner);
+        return global.__native(_this);
+    }
+    SensorAccuracyChangeListener.prototype.onCompassAccuracyChanged = function (accuracy) {
+        var owner = this.owner.get();
+        if (owner) {
+            owner.onCompassAccuracyChanged(accuracy);
+        }
+    };
+    return SensorAccuracyChangeListener;
+}(java.lang.Object));
+SensorAccuracyChangeListener = __decorate([
+    Interfaces([com.wikitude.architect.ArchitectView.SensorAccuracyChangeListener]),
+    __metadata("design:paramtypes", [Wikitude])
+], SensorAccuracyChangeListener);
+var CaptureScreenCallback = (function (_super) {
+    __extends(CaptureScreenCallback, _super);
+    function CaptureScreenCallback(owner) {
+        var _this = _super.call(this) || this;
+        _this.owner = new WeakRef(owner);
+        return global.__native(_this);
+    }
+    CaptureScreenCallback.prototype.onScreenCaptured = function (bitmap) {
+        var owner = this.owner.get();
+        if (owner) {
+            owner.onScreenCaptured(bitmap);
+        }
+    };
+    return CaptureScreenCallback;
+}(java.lang.Object));
+CaptureScreenCallback = __decorate([
+    Interfaces([com.wikitude.architect.ArchitectView.CaptureScreenCallback]),
+    __metadata("design:paramtypes", [Wikitude])
+], CaptureScreenCallback);
+var Wikitude = (function (_super) {
+    __extends(Wikitude, _super);
+    function Wikitude() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.hasStarted = false;
+        _this.licenseKey = global.wikitudeLicense || '';
+        _this.defaultFeatures = Features.GeoTracking | Features.ImageTracking | Features.InstantTracking | Features.ObjectTracking;
+        _this.isDummy = false;
+        _this.isFlashEnabled = false;
+        _this.boundStart = _this.start.bind(_this);
+        _this.boundStop = _this.stop.bind(_this);
+        _this.boundLowMemory = _this.onLowMemory.bind(_this);
+        return _this;
+    }
+    Object.defineProperty(Wikitude.prototype, "currentActivity", {
+        get: function () {
+            return app.android.foregroundActivity || app.android.startActivity;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Wikitude.prototype, "context", {
+        get: function () {
+            return app.android.context;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Wikitude.prototype.createNativeView = function () {
+        this.log('creating native view');
+        this.hasLoaded = false;
+        this.isLicensed = false;
+        this.config = new com.wikitude.architect.ArchitectStartupConfiguration();
+        this.config.setOrigin('ORIGIN_NATIVESCRIPT');
+        if (this.features) {
+            this.config.setFeatures(this.features);
+        }
+        else {
+            this.config.setFeatures(com.wikitude.architect.ArchitectStartupConfiguration.Features.Geo
+                | com.wikitude.architect.ArchitectStartupConfiguration.Features.ImageTracking
+                | com.wikitude.architect.ArchitectStartupConfiguration.Features.InstantTracking
+                | com.wikitude.architect.ArchitectStartupConfiguration.Features.ObjectTracking);
+        }
+        if (this.licenseKey) {
+            this.log('License key is being set: ' + this.licenseKey);
+            this.config.setLicenseKey(this.licenseKey);
+            this.isLicensed = true;
+        }
+        this.LocationProvider = new LocationProvider(this, 0, 0);
+        this.jsonObjectListener = this.registerJSONObjectListener();
+        this.worldLoadedListener = this.registerWorldLoadedListener();
+        this.cameraLifecycleListener = this.registerCameraLifecycleListener();
+        this.sensorAccuracyChangeListener = this.registerSensorAccuracyChangeListener();
+        this.captureScreenCallBack = this.registerCaptureScreenCallback();
+        this._android = new com.wikitude.architect.ArchitectView(this.currentActivity);
+        return this._android;
+    };
+    Wikitude.prototype.initNativeView = function () {
+        var _this = this;
+        this.log('Initialing Native View... ');
+        try {
+            this._android.onCreate(this.config);
+            this._android.registerWorldLoadedListener(this.worldLoadedListener);
+            this._android.addArchitectJavaScriptInterfaceListener(this.jsonObjectListener);
+            this._android.onPostCreate();
+        }
+        catch (e) {
+            this.log('Error while Inititating Wikitude', e.message);
+            return;
+        }
+        application_1.on(application_1.resumeEvent, this.boundStart);
+        application_1.on(application_1.suspendEvent, this.boundStop);
+        application_1.on(application_1.lowMemoryEvent, this.boundLowMemory);
+        if (this.url && !this.hasLoaded) {
+            this.log('finished initNativeView, launching url ' + this.url);
+            this.loadUrl(this.url, this.features);
+        }
+        setTimeout(function () { return _this.start(); });
+    };
+    Wikitude.prototype.disposeNativeView = function () {
+        this.log('Disposing Native View');
+        application_1.off(application_1.resumeEvent, this.boundStart);
+        application_1.off(application_1.suspendEvent, this.boundStop);
+        application_1.off(application_1.lowMemoryEvent, this.boundLowMemory);
+        if (this._android) {
+            this.log('onDestroy()');
+            this.clearCache();
+            this._android.onDestroy();
+        }
+    };
+    Wikitude.prototype.onLocationChanged = function (location) {
+        this.log('Location Changed', location);
+        if (location && this._android) {
+            this.log('sending location', location.getLatitude() + ", " + location.getLongitude());
+            if (location.hasAltitude() && location.hasAccuracy() && location.getAccuracy() < 7) {
+                this.setLocation(location.getLatitude(), location.getLongitude(), location.getAltitude(), location.getAccuracy());
+            }
+            else {
+                this.setLocation(location.getLatitude(), location.getLongitude(), location.hasAccuracy ? location.getAccuracy() : 1000);
+            }
+        }
+    };
+    Wikitude.prototype.onLowMemory = function () {
+        this.log('[EVENT]', 'Low Memory event called');
+        this._android.onLowMemory();
+    };
+    Wikitude.prototype.onUnloaded = function () {
+        _super.prototype.onUnloaded.call(this);
+        this.stop();
+    };
+    Wikitude.prototype.start = function () {
+        this.log('Starting Wikitude Plugin', Date.now());
+        if (!this.hasStarted) {
+            this.hasStarted = true;
+            this._android.onResume();
+        }
+        if (!this.LocationProvider) {
+            this.LocationProvider.resume();
+        }
+    };
+    Wikitude.prototype.stop = function () {
+        if (this.LocationProvider) {
+            this.log('Pausing Location Provider');
+            this.LocationProvider.pause();
+        }
+        if (this.hasStarted) {
+            this.log('onPause()');
+            this._android.onPause();
+            this.hasStarted = false;
+        }
+        if (!this.isRunning()) {
+            return;
+        }
+    };
+    Wikitude.prototype.isRunning = function () {
+        return (this.hasStarted && this.hasLoaded && this._android !== null) && !this.isDummy;
+    };
+    Wikitude.prototype.restart = function () {
+        this.log('restarting wikitude ', Date.now());
+        if (this.isRunning()) {
+            this.stop();
+        }
+        this.start();
+    };
+    Wikitude.prototype.setLocation = function (latitude, longitude, altitude, accuracy) {
+        this._android.setLocation(latitude, longitude, altitude, accuracy);
+    };
+    Wikitude.prototype.hasFeature = function (feature) {
+        if (feature === null) {
+            return com.wikitude.architect.ArchitectView.isDeviceSupported(this.currentActivity);
+        }
+        var missingFeatures = com.wikitude.architect.ArchitectView.isDeviceSupported(this.currentActivity, feature);
+        return !missingFeatures.areFeaturesMissing();
+    };
+    Wikitude.prototype.loadUrl = function (urlString, features) {
+        this.log('setting url to ', urlString);
+        this.hasLoaded = false;
+        this.url = urlString;
+        this.features = features;
+        if (!this._android || this.isDummy) {
+            return;
+        }
+        if (urlString.indexOf("~/") === 0) {
+            urlString = urlString.replace("~/", "file://" + file_system_1.knownFolders.currentApp().path + "/");
+        }
+        this.log('Loading Url :', urlString);
+        this._android.load(urlString);
+        this.hasLoaded = true;
+    };
+    Wikitude.prototype.reload = function () {
+        if (!this.url) {
+            throw new Error("URL is null");
+        }
+        this.loadUrl(this.url, this.features);
+    };
+    Wikitude.prototype.runJavascript = function (jsString) {
+        this._android.callJavascript(jsString);
+    };
+    Wikitude.prototype.clearCache = function () {
+        this._android.clearCache();
+    };
+    Wikitude.prototype.toggleFlash = function () {
+        this.isFlashEnabled = !this.isFlashEnabled;
+        this._android.setFlashEnabled(this.isFlashEnabled);
+    };
+    Wikitude.prototype.captureScreen = function (captureWebViewContent) {
+        if (captureWebViewContent === void 0) { captureWebViewContent = false; }
+        var captureMode;
+        if (captureWebViewContent) {
+            captureMode = com.wikitude.architect.ArchitectView.CaptureScreenCallback.CAPTURE_MODE_CAM_AND_WEBVIEW;
+        }
+        else {
+            captureMode = com.wikitude.architect.ArchitectView.CaptureScreenCallback.CAPTURE_MODE_CAM;
+        }
+        try {
+            this._android.captureScreen(captureMode, this.captureScreenCallBack);
+        }
+        catch (e) {
+            this.onScreenCaptureFailed(e);
+        }
+    };
+    Wikitude.prototype.switchCamera = function () {
+        var newCameraPosition = null;
+        var currentCameraPosition = this._android.getCurrentCamera();
+        if (currentCameraPosition === com.wikitude.common.camera.CameraSettings.CameraPosition.FRONT) {
+            newCameraPosition = com.wikitude.common.camera.CameraSettings.CameraPosition.BACK;
+        }
+        else if (currentCameraPosition === com.wikitude.common.camera.CameraSettings.CameraPosition.BACK) {
+            newCameraPosition = com.wikitude.common.camera.CameraSettings.CameraPosition.FRONT;
+        }
+        else {
+            newCameraPosition = com.wikitude.common.camera.CameraSettings.CameraPosition.DEFAULT;
+        }
+        this._android.setCameraPositionSimple(newCameraPosition);
+    };
+    Wikitude.prototype.disableLocationProvider = function () {
+        this.log('Disabling Default Location Provider');
+        if (this.isRunning()) {
+            this.LocationProvider.pause();
+        }
+    };
+    Wikitude.prototype.enableLocationProvider = function () {
+        this.log('Enabling Default Location Provider');
+        if (this.isRunning()) {
+            this.LocationProvider.resume();
+        }
+    };
+    Wikitude.prototype[wikitude_common_1.LicenseProperty.getDefault] = function () {
+        return "";
+    };
+    Wikitude.prototype[wikitude_common_1.LicenseProperty.setNative] = function (license) {
+        this.log('LicenseKey Updated!');
+        this.log(this.isLicensed ? 'But we are already licensed so we are ignoring it!' : 'We are setting the license now!');
+        if (!this.isLicensed && this._android) {
+            this.licenseKey = license;
+            this.config.setLicenseKey(this.licenseKey);
+            this.isLicensed = true;
+        }
+    };
+    Wikitude.prototype[wikitude_common_1.UrlProperty.getDefault] = function () {
+        return "";
+    };
+    Wikitude.prototype[wikitude_common_1.UrlProperty.setNative] = function (url) {
+        this.log('URL Property Changed', url);
+        this.loadUrl(url, this.features);
+    };
+    Wikitude.prototype[wikitude_common_1.FeaturesProperty.getDefault] = function () {
+        return this.features;
+    };
+    Wikitude.prototype[wikitude_common_1.FeaturesProperty.setNative] = function (requiredFeatures) {
+        var features = 0;
+        for (var _i = 0, requiredFeatures_1 = requiredFeatures; _i < requiredFeatures_1.length; _i++) {
+            var feature = requiredFeatures_1[_i];
+            features += feature;
+        }
+        this.config.setFeatures(features);
+        this.features = features;
+    };
+    Wikitude.prototype.registerJSONObjectListener = function () {
+        if (this.jsonObjectListener) {
+            return this.jsonObjectListener;
+        }
+        else {
+            return new JsonObjectListener(this);
+        }
+    };
+    Wikitude.prototype.registerWorldLoadedListener = function () {
+        if (this.worldLoadedListener) {
+            return this.worldLoadedListener;
+        }
+        else {
+            return new WorldLoadedListener(this);
+        }
+    };
+    Wikitude.prototype.registerCameraLifecycleListener = function () {
+        if (this.cameraLifecycleListener) {
+            return this.cameraLifecycleListener;
+        }
+        else {
+            return new CameraLifecycleListener(this);
+        }
+    };
+    Wikitude.prototype.registerSensorAccuracyChangeListener = function () {
+        if (this.sensorAccuracyChangeListener) {
+            return this.sensorAccuracyChangeListener;
+        }
+        else {
+            return new SensorAccuracyChangeListener(this);
+        }
+    };
+    Wikitude.prototype.registerCaptureScreenCallback = function () {
+        if (this.captureScreenCallBack) {
+            return this.captureScreenCallBack;
+        }
+        else {
+            return new CaptureScreenCallback(this);
+        }
+    };
+    return Wikitude;
+}(wikitude_common_1.Common));
+exports.Wikitude = Wikitude;
+var LocationProvider = (function () {
+    function LocationProvider(owner, time, distance) {
+        this.running = false;
+        this.time = 0;
+        this.distance = 0;
+        this.LocationManager = this.context.getSystemService(android.content.Context.LOCATION_SERVICE);
+        this.Listener = {
+            onLocationChanged: function (location) {
+                if (!this.isBetterLocation(location)) {
+                    return;
+                }
+                if (this.Owner) {
+                    this.Owner.onLocationChanged(location);
+                }
+            }.bind(this),
+            onProviderDisabled: function () { },
+            onProviderEnabled: function () { },
+            onStatusChanged: function () { }
+        };
+        this.LocationListener = new android.location.LocationListener(this.Listener);
+        this.owner = new WeakRef(owner);
+        if (time !== 0) {
+            this.Time = time || 1000;
+        }
+        if (distance !== 0) {
+            this.Distance = distance || 1000;
+        }
+    }
+    Object.defineProperty(LocationProvider.prototype, "Owner", {
+        get: function () {
+            return this.owner.get();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(LocationProvider.prototype, "context", {
+        get: function () {
+            return app.android.context;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(LocationProvider.prototype, "Time", {
+        get: function () {
+            return this.time;
+        },
+        set: function (time) {
+            if (this.time === time) {
+                return;
+            }
+            this.time = time;
+            if (this.running) {
+                this.restart();
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(LocationProvider.prototype, "Distance", {
+        get: function () {
+            return this.distance;
+        },
+        set: function (distance) {
+            if (this.distance === distance) {
+                return;
+            }
+            this.distance = distance;
+            if (this.running) {
+                this.restart();
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    LocationProvider.prototype.isBetterLocation = function (location) {
+        if (this.currentLocation === null) {
+            return true;
+        }
+        var timeDelta = location.getTime() - this.currentLocation.getTime();
+        var isSignificantlyNewer = timeDelta < 60000;
+        var isSignificantlyOlder = timeDelta < -60000;
+        var isNewer = timeDelta > 0;
+        if (isSignificantlyNewer) {
+            return true;
+        }
+        else if (isSignificantlyOlder) {
+            return false;
+        }
+        var accuracyDelta = location.getAccuracy() - this.currentLocation.getAccuracy();
+        var isMoreAccurate = accuracyDelta < 0;
+        var isLessAccurate = accuracyDelta > 0;
+        var isSignificantlyLessAccurate = accuracyDelta > 200;
+        var isFromSameProvider = this.isSameProvider(location.getProvider(), this.currentLocation.getProvider());
+        if (isMoreAccurate) {
+            return true;
+        }
+        else if (isLessAccurate) {
+            return false;
+        }
+        return isNewer && isFromSameProvider && !isSignificantlyLessAccurate;
+    };
+    LocationProvider.prototype.isSameProvider = function (currentLocation, oldLocation) {
+        if (currentLocation === null) {
+            return oldLocation === null;
+        }
+        var CurrentLocation = new java.lang.String(currentLocation);
+        var OldLocation = new java.lang.String(oldLocation);
+        return CurrentLocation.equals(OldLocation);
+    };
+    LocationProvider.prototype.setOwner = function (owner) {
+        this.Listener.owner = new WeakRef(owner);
+    };
+    LocationProvider.prototype.restart = function () {
+        if (!this.running) {
+            return;
+        }
+        this.pause();
+        this.resume();
+    };
+    LocationProvider.prototype.pause = function () {
+        if (!this.running) {
+            return;
+        }
+        this.running = false;
+        this.LocationManager.removeUpdates(this.LocationListener);
+    };
+    LocationProvider.prototype.resume = function () {
+        if (this.running) {
+            return;
+        }
+        this.running = true;
+        this.setupEventListener(android.location.LocationManager.GPS_PROVIDER);
+        this.setupEventListener(android.location.LocationManager.NETWORK_PROVIDER);
+    };
+    LocationProvider.prototype.setupEventListener = function (provider) {
+        if (!this.LocationManager.isProviderEnabled(provider)) {
+            return;
+        }
+        var lastKnownPosition = this.LocationManager.getLastKnownLocation(provider);
+        if (lastKnownPosition !== null) {
+            this.LocationListener.onLocationChanged(lastKnownPosition);
+        }
+        if (this.LocationManager.getProvider(provider) !== null) {
+            this.LocationManager.requestLocationUpdates(provider, this.Time, this.Distance, this.LocationListener);
+        }
+    };
+    return LocationProvider;
+}());
+exports.LocationProvider = LocationProvider;
+var WikitudeFeatures;
+(function (WikitudeFeatures) {
+    WikitudeFeatures[WikitudeFeatures["ImageTracking"] = 2] = "ImageTracking";
+    WikitudeFeatures[WikitudeFeatures["InstantTracking"] = 4] = "InstantTracking";
+    WikitudeFeatures[WikitudeFeatures["ObjectTracking"] = 8] = "ObjectTracking";
+    WikitudeFeatures[WikitudeFeatures["GeoTracking"] = 1] = "GeoTracking";
+})(WikitudeFeatures = exports.WikitudeFeatures || (exports.WikitudeFeatures = {}));
+var Features = (function () {
+    function Features() {
+    }
+    return Features;
+}());
+Features.ImageTracking = 2;
+Features.InstantTracking = 4;
+Features.ObjectTracking = 8;
+Features.GeoTracking = 8;
+exports.Features = Features;
+//# sourceMappingURL=wikitude.android.js.map
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__("../node_modules/nativescript-dev-webpack/node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
 /***/ "../node_modules/tns-core-modules/application-settings/application-settings-common.js":
 /***/ (function(module, exports) {
 

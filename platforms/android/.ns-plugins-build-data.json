@@ -35,5 +35,13 @@
 	},
 	"nativescript-gif": {
 		"C:\\native\\vuenativeauidoguide\\node_modules\\nativescript-gif\\platforms\\android\\include.gradle": "5ed86bc5bc983476fb3faeba9e11de33984022f3"
+	},
+	"nativescript-camera": {
+		"C:\\native\\vuenativeauidoguide\\node_modules\\nativescript-camera\\platforms\\android\\nativescript_camera.aar": "076643dd1be5b20235184a9c65703fa02a930b9b"
+	},
+	"nativescript-wikitude": {
+		"C:\\native\\vuenativeauidoguide\\node_modules\\nativescript-wikitude\\platforms\\android\\README.md": "45f2f63427be0a461a7e2dfd5ff0ad5bab64068f",
+		"C:\\native\\vuenativeauidoguide\\node_modules\\nativescript-wikitude\\platforms\\android\\include.gradle": "9148038911eb42e757959596520e01aa5ae69801",
+		"C:\\native\\vuenativeauidoguide\\node_modules\\nativescript-wikitude\\platforms\\android\\nativescript-wikitude.aar": "d2bf42d0e2e575d5777e3983f3bf9ed0105518d5"
 	}
 }

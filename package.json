@@ -17,6 +17,7 @@
     "moment": "^2.22.2",
     "nativescript-audio": "^5.0.1",
     "nativescript-audioplay": "^1.0.1",
+    "nativescript-camera": "^4.5.0",
     "nativescript-geolocation": "4.2.6",
     "nativescript-google-maps-sdk": "^2.7.0",
     "nativescript-local-notifications": "^3.1.2",
@@ -25,6 +26,7 @@
     "nativescript-toast": "^1.4.6",
     "nativescript-ui-sidedrawer": "^4.2.0",
     "nativescript-vue": "^2.0.0-alpha.2",
+    "nativescript-wikitude": "^7.2.1-1.8.5",
     "tns-core-modules": "^4.2.0"
   },
   "devDependencies": {

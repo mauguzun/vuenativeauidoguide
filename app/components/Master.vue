@@ -143,10 +143,13 @@
           </StackLayout>
         </RadSideDrawer>
       </GridLayout>
-
+<Wikitude>
+             
+             
+    </Wikitude>
     
-       <detail  v-if="showPlayer != null" ref="audio" :point="showPlayer" ></detail>   
-      <loader v-if="showLoader"></loader>  
+     <detail  v-if="showPlayer != null" ref="audio" :point="showPlayer" ></detail>   
+      <loader v-if="showLoader"></loader>   
     </GridLayout>
   </Page>
 </template>

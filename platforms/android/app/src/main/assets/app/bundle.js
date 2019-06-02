@@ -360,6 +360,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 
@@ -1227,7 +1230,7 @@ var render = function() {
                     staticStyle: { fontSize: "27", color: "#333" },
                     attrs: { text: _vm.play ? _vm.iconPlay : _vm.iconStop }
                   }),
-                  _vm._v("\\\n      ")
+                  _vm._v("\\\n        ")
                 ],
                 1
               )
@@ -1553,6 +1556,7 @@ var render = function() {
             ],
             1
           ),
+          _c("Wikitude"),
           _vm.showPlayer != null
             ? _c("detail", { ref: "audio", attrs: { point: _vm.showPlayer } })
             : _vm._e(),
@@ -1738,7 +1742,7 @@ var render = function() {
         },
         [
           _c("ActivityIndicator", {
-            attrs: { busy: "true", width: "50%", height: "50%" }
+            attrs: { busy: "true", width: "80%", height: "80%" }
           })
         ],
         1
@@ -2779,6 +2783,8 @@ __webpack_require__("../node_modules/tns-core-modules/ui/frame/activity.js");
 
 
 
+// import { Wikitude } from 'nativescript-wikitude';
+
 nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.registerElement(
   "RadSideDrawer",
   () => __webpack_require__("../node_modules/nativescript-ui-sidedrawer/ui-sidedrawer.js").RadSideDrawer
@@ -2787,8 +2793,11 @@ nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.registerElement(
   "MapView",
   () => __webpack_require__("../node_modules/nativescript-google-maps-sdk/map-view.js").MapView
 );  
-  
-    
+nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.registerElement(
+  "Wikitude",
+  () => __webpack_require__("../node_modules/nativescript-wikitude/wikitude.js").Wikitude
+);
+      
   
   
 // Prints Vue logs when --env.production is *NOT* set while building
