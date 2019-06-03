@@ -268,7 +268,7 @@ export default {
     return {
       iconPlay: "▶",
       iconStop: "◼",
-      hideWiki: false,
+      hideWiki: true,
       showLoader: false,
       circle: null,
       cityTitle: null,
@@ -283,6 +283,7 @@ export default {
       currentComp: null,
       showmap: true,
       debug: true,
+      wiki: null,
       translate: translate.en,
       map: {
         longitude: 7.1827772,
@@ -303,14 +304,13 @@ export default {
 
     wikiLoaded($event) {
       alert("laoded");
-      let wiki = $event.object;
+      this.wiki = $event.object;
 
-      wiki.toggleFlash();
-      wiki.captureScreen()
-     // wiki.enableLocationProvider()
-     wiki.setLocation(56.9501006,24.201796,10,1)
-      wiki.captureScreen()
-    
+      this.wiki.toggleFlash();
+      this.wiki.captureScreen();
+      // wiki.enableLocationProvider()
+
+      this.wiki.captureScreen();
     },
 
     wikiError() {
@@ -390,6 +390,9 @@ export default {
       this.showLoader = false;
       if (this.map.view == null) {
         return;
+      }
+      if (this.wiki != null) {
+        this.wiki.setLocation(lat, lng, 10, 1);
       }
 
       if (this.map.currentLocation == null) {
