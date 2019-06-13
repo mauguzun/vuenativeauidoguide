@@ -154,9 +154,13 @@
         url="~/assets/wi/test.html"
       ></Wikitude>
 
-      <AbsoluteLayout @tap="openDetail()"  v-if="showPlayer != null" marginTop="80%" marginLeft="80%">
-        <StackLayout class="fab-item" backgroundColor="#ff0000">
-          <Label text="title" horizontalAlignment="center"/>
+      <AbsoluteLayout @tap="openDetail()" 
+        v-if="showPlayer != null"
+        marginTop="le0%"
+        marginLeft="80%"
+        >
+        <StackLayout class="fab-item" >
+           <Image :src="showPlayer.img[0]" stretch="aspectFill" class="conImg"/>
         </StackLayout>
       </AbsoluteLayout>  
 

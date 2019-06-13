@@ -134,7 +134,6 @@ export default {
       } catch (e) {}
     },
     hide() {
-      alert(123);
       this.$refs.main.nativeView.height = "0";
     }
   }

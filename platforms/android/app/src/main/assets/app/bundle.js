@@ -375,6 +375,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -1090,7 +1094,6 @@ __webpack_require__.r(__webpack_exports__);
       } catch (e) {}
     },
     hide() {
-      alert(123);
       this.$refs.main.nativeView.height = "0";
     }
   }
@@ -1639,7 +1642,7 @@ var render = function() {
             ? _c(
                 "AbsoluteLayout",
                 {
-                  attrs: { marginTop: "80%", marginLeft: "80%" },
+                  attrs: { marginTop: "le0%", marginLeft: "80%" },
                   on: {
                     tap: function($event) {
                       _vm.openDetail()
@@ -1649,13 +1652,14 @@ var render = function() {
                 [
                   _c(
                     "StackLayout",
-                    {
-                      staticClass: "fab-item",
-                      attrs: { backgroundColor: "#ff0000" }
-                    },
+                    { staticClass: "fab-item" },
                     [
-                      _c("Label", {
-                        attrs: { text: "title", horizontalAlignment: "center" }
+                      _c("Image", {
+                        staticClass: "conImg",
+                        attrs: {
+                          src: _vm.showPlayer.img[0],
+                          stretch: "aspectFill"
+                        }
                       })
                     ],
                     1
