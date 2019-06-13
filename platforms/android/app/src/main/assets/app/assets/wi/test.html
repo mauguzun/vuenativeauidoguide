@@ -27,12 +27,12 @@
 
     <script src="js/marker.js"></script>
     <script src="js/radar.js"></script>
-    <script>
+     <script>
 
         function createCircle() {
             AR.logger.activateDebugMode();
 
- 
+
             var circle = new AR.Circle(2, { style: { fillColor: '#8F45FF' } });
 
             var drawableLocation = new AR.RelativeLocation(null, 10, 0);
@@ -74,6 +74,9 @@
                     onError: World.onError
                 });
                 World.markerDrawableSelected = new AR.ImageResource("https://raw.githubusercontent.com/Wikitude/wikitude-sdk-samples/master/08_PointOfInterest_3_MultiplePois/assets/marker_selected.png", {
+                    onError: World.onError
+                });
+                World.markerDrawableDirectionIndicator = new AR.ImageResource("https://raw.githubusercontent.com/Wikitude/wikitude-sdk-samples/master/10_BrowsingPois_2_AddingRadar/assets/indi.png", {
                     onError: World.onError
                 });
 
@@ -167,20 +170,62 @@
 
             /* Request POI data. */
             requestDataFromLocal: function requestDataFromLocalFn(centerPointLatitude, centerPointLongitude) {
-                var poisToCreate = 20;
-                var poiData = [];
 
-                for (var i = 0; i < poisToCreate; i++) {
-                    poiData.push({
-                        "id": (i + 1),
-                        "longitude": (centerPointLongitude + (Math.random() / 5 - 0.1)),
-                        "latitude": (centerPointLatitude + (Math.random() / 5 - 0.1)),
-                        "description": ("This is the description of POI#" + (i + 1)),
-                        "altitude": "100.0",
-                        "name": ("POI#" + (i + 1))
-                    });
+                const apiAddress = "https://audio.tricypolitain.com/api/points";
+                let data = {
+                    city: 5,
+                    lang: "en"
                 }
-                World.loadPoisFromJsonData(poiData);
+
+
+                let postData = Object.entries(data).map(([key, val]) => `${key}=${val}`).join('&');
+                fetch(apiAddress, {
+                    method: "POST",
+                    body: postData,
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" }
+                }).then(json => {
+                    return json.json()
+
+                }).then(res => {
+
+                    var poiData = [];
+
+                    for (var x = 0; res.points[x]; x++) {
+                        //    alert(x)
+                        let el = res.points[x];
+                        console.log(el);
+
+                        poiData.push({
+                            "id": (x + 1),
+                            "longitude": parseFloat(el.lng),
+                            "latitude": parseFloat(el.lat),
+                            "description": el.text,
+                            "altitude": 7,
+                            "name": el.title
+                        });
+                    }
+                    World.loadPoisFromJsonData(poiData);
+                })
+                    .catch(e => alert(e))
+
+
+
+
+
+                // var poisToCreate = 20;
+                // var poiData = [];
+
+                // for (var i = 0; i < poisToCreate; i++) {
+                //     poiData.push({
+                //         "id": (i + 1),
+                //         "longitude": (centerPointLongitude + (Math.random() / 5 - 0.1)),
+                //         "latitude": (centerPointLatitude + (Math.random() / 5 - 0.1)),
+                //         "description": ("This is the description of POI#" + (i + 1)),
+                //         "altitude": "100.0",
+                //         "name": ("POI#" + (i + 1))
+                //     });
+                // }
+                // World.loadPoisFromJsonData(poiData);
             },
 
             onError: function onErrorFn(error) {

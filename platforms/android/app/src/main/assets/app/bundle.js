@@ -369,6 +369,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -509,6 +515,13 @@ let translate = __webpack_require__("./translate.json");
     };
   },
   methods: {
+
+
+    openDetail(){
+      this.$refs.audio.open();
+    },
+
+    
     switchWiki() {
       this.hideWiki = !this.hideWiki;
       this.showLoader = true;
@@ -518,12 +531,9 @@ let translate = __webpack_require__("./translate.json");
     },
 
     wikiLoaded($event) {
-      alert("laoded");
       this.wiki = $event.object;
-
       this.wiki.captureScreen();
       // wiki.enableLocationProvider()
-
       this.wiki.captureScreen();
     },
 
@@ -1051,9 +1061,13 @@ __webpack_require__.r(__webpack_exports__);
         }
       }
     },
-    setup() {
-      this.isPlaying = true;
+    open() {
       this.$refs.main.nativeView.height = "100%";
+    },
+    setup() { 
+       this.open();
+      this.isPlaying = true;
+    
       this._checkInterval = setInterval(() => {
         this.progress = _Singleton__WEBPACK_IMPORTED_MODULE_2__["Singleton"].progress;
       }, 200);
@@ -1076,7 +1090,8 @@ __webpack_require__.r(__webpack_exports__);
       } catch (e) {}
     },
     hide() {
-      this.$refs.main.nativeView.height = "10%";
+      alert(123);
+      this.$refs.main.nativeView.height = "0";
     }
   }
 });
@@ -1620,6 +1635,35 @@ var render = function() {
               }
             }
           }),
+          _vm.showPlayer != null
+            ? _c(
+                "AbsoluteLayout",
+                {
+                  attrs: { marginTop: "80%", marginLeft: "80%" },
+                  on: {
+                    tap: function($event) {
+                      _vm.openDetail()
+                    }
+                  }
+                },
+                [
+                  _c(
+                    "StackLayout",
+                    {
+                      staticClass: "fab-item",
+                      attrs: { backgroundColor: "#ff0000" }
+                    },
+                    [
+                      _c("Label", {
+                        attrs: { text: "title", horizontalAlignment: "center" }
+                      })
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            : _vm._e(),
           _vm.showPlayer != null
             ? _c("detail", { ref: "audio", attrs: { point: _vm.showPlayer } })
             : _vm._e(),

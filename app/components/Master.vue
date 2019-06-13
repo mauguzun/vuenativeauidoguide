@@ -154,6 +154,12 @@
         url="~/assets/wi/test.html"
       ></Wikitude>
 
+      <AbsoluteLayout @tap="openDetail()"  v-if="showPlayer != null" marginTop="80%" marginLeft="80%">
+        <StackLayout class="fab-item" backgroundColor="#ff0000">
+          <Label text="title" horizontalAlignment="center"/>
+        </StackLayout>
+      </AbsoluteLayout>  
+
       <detail v-if="showPlayer != null" ref="audio" :point="showPlayer"></detail>
       <loader v-if="showLoader"></loader>
     </GridLayout>
@@ -300,6 +306,13 @@ export default {
     };
   },
   methods: {
+
+
+    openDetail(){
+      this.$refs.audio.open();
+    },
+
+    
     switchWiki() {
       this.hideWiki = !this.hideWiki;
       this.showLoader = true;
@@ -309,12 +322,9 @@ export default {
     },
 
     wikiLoaded($event) {
-      alert("laoded");
       this.wiki = $event.object;
-
       this.wiki.captureScreen();
       // wiki.enableLocationProvider()
-
       this.wiki.captureScreen();
     },
 
@@ -887,6 +897,14 @@ function buttonClearTap() {
 
 .mainTab {
   font-size: 30;
+}
+.fab-item {
+  width: 60;
+  height: 60;
+  border-radius: 30;
+  color: #fff;
+  font-weight: bold;
+  vertical-align: center;
 }
 </style>
  

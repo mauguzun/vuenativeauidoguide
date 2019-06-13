@@ -105,9 +105,13 @@ export default {
         }
       }
     },
-    setup() {
-      this.isPlaying = true;
+    open() {
       this.$refs.main.nativeView.height = "100%";
+    },
+    setup() { 
+       this.open();
+      this.isPlaying = true;
+    
       this._checkInterval = setInterval(() => {
         this.progress = Singleton.progress;
       }, 200);
@@ -130,7 +134,8 @@ export default {
       } catch (e) {}
     },
     hide() {
-      this.$refs.main.nativeView.height = "10%";
+      alert(123);
+      this.$refs.main.nativeView.height = "0";
     }
   }
 };
