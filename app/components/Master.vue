@@ -11,7 +11,7 @@
           <Label text="☰" style="font-size:27;color:#333;" class="font-awesome"/>
         </StackLayout>
         <StackLayout class="HMid">
-          <Label @tap="hideWiki = !hideWiki" :text="cityTitle + play "/>
+          <Label @tap="switchWiki()" :text="cityTitle + play "/>
         </StackLayout>
         <StackLayout @tap="switchPlay" class="HRight">
           <Label :text="play ?  iconPlay : iconStop " style="font-size:27;color:#333;"/>\
@@ -146,12 +146,12 @@
 
       <Wikitude
         ref="wiki"
-        v-if="!hideWiki"
+        v-show="!hideWiki"
         @ScreenCaptureFail="wikiError()"
         @WorldLoadFail="wikiError()"
         @JSONReceived="wikiJson()"
         @WorldLoadSuccess="wikiLoaded($event)"
-        url="http://asl.nl.eu.org/wiki/test.html"
+        url="~/assets/wi/test.html"
       ></Wikitude>
 
       <detail v-if="showPlayer != null" ref="audio" :point="showPlayer"></detail>
@@ -300,13 +300,18 @@ export default {
     };
   },
   methods: {
-    ////////
+    switchWiki() {
+      this.hideWiki = !this.hideWiki;
+      this.showLoader = true;
+      setTimeout(() => {
+        this.showLoader = false;
+      }, 2000);
+    },
 
     wikiLoaded($event) {
       alert("laoded");
       this.wiki = $event.object;
 
-      this.wiki.toggleFlash();
       this.wiki.captureScreen();
       // wiki.enableLocationProvider()
 

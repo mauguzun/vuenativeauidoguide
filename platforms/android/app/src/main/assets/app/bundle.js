@@ -509,13 +509,18 @@ let translate = __webpack_require__("./translate.json");
     };
   },
   methods: {
-    ////////
+    switchWiki() {
+      this.hideWiki = !this.hideWiki;
+      this.showLoader = true;
+      setTimeout(() => {
+        this.showLoader = false;
+      }, 2000);
+    },
 
     wikiLoaded($event) {
       alert("laoded");
       this.wiki = $event.object;
 
-      this.wiki.toggleFlash();
       this.wiki.captureScreen();
       // wiki.enableLocationProvider()
 
@@ -1248,7 +1253,7 @@ var render = function() {
                     attrs: { text: _vm.cityTitle + _vm.play },
                     on: {
                       tap: function($event) {
-                        _vm.hideWiki = !_vm.hideWiki
+                        _vm.switchWiki()
                       }
                     }
                   })
@@ -1589,26 +1594,32 @@ var render = function() {
             ],
             1
           ),
-          !_vm.hideWiki
-            ? _c("Wikitude", {
-                ref: "wiki",
-                attrs: { url: "http://asl.nl.eu.org/wiki/test.html" },
-                on: {
-                  ScreenCaptureFail: function($event) {
-                    _vm.wikiError()
-                  },
-                  WorldLoadFail: function($event) {
-                    _vm.wikiError()
-                  },
-                  JSONReceived: function($event) {
-                    _vm.wikiJson()
-                  },
-                  WorldLoadSuccess: function($event) {
-                    _vm.wikiLoaded($event)
-                  }
-                }
-              })
-            : _vm._e(),
+          _c("Wikitude", {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: !_vm.hideWiki,
+                expression: "!hideWiki"
+              }
+            ],
+            ref: "wiki",
+            attrs: { url: "~/assets/wi/test.html" },
+            on: {
+              ScreenCaptureFail: function($event) {
+                _vm.wikiError()
+              },
+              WorldLoadFail: function($event) {
+                _vm.wikiError()
+              },
+              JSONReceived: function($event) {
+                _vm.wikiJson()
+              },
+              WorldLoadSuccess: function($event) {
+                _vm.wikiLoaded($event)
+              }
+            }
+          }),
           _vm.showPlayer != null
             ? _c("detail", { ref: "audio", attrs: { point: _vm.showPlayer } })
             : _vm._e(),
@@ -2860,7 +2871,8 @@ nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.registerElement(
 
 // Prints Vue logs when --env.production is *NOT* set while building
 // Vue.config.silent = (TNS_ENV === 'production');
-nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.config.silent = false;
+nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.config.silent = true;
+// Vue.config.silent = true;
 
 new nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   render: h => h("frame", [h(_components_Master__WEBPACK_IMPORTED_MODULE_1__["default"])])
