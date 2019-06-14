@@ -195,18 +195,49 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tns_core_modules_application__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(tns_core_modules_application__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _pages_Settings__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__("./components/pages/Settings.vue");
 /* harmony import */ var _pages_About__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__("./components/pages/About.vue");
-/* harmony import */ var _pages_Loader__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__("./components/pages/Loader.vue");
-/* harmony import */ var _pages_Detail__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__("./components/pages/Detail.vue");
-/* harmony import */ var tns_core_modules_ui_image__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__("../node_modules/tns-core-modules/ui/image/image.js");
-/* harmony import */ var tns_core_modules_ui_image__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(tns_core_modules_ui_image__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var _Sorting__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__("./components/Sorting.js");
-/* harmony import */ var _beep_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__("./components/beep.js");
-/* harmony import */ var _api_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__("./components/api.js");
-/* harmony import */ var tns_core_modules_application_settings_application_settings__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__("../node_modules/tns-core-modules/application-settings/application-settings.js");
-/* harmony import */ var tns_core_modules_application_settings_application_settings__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(tns_core_modules_application_settings_application_settings__WEBPACK_IMPORTED_MODULE_13__);
-/* harmony import */ var _locationSettings__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__("./components/locationSettings.js");
-/* harmony import */ var tns_core_modules_utils_utils__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__("../node_modules/tns-core-modules/utils/utils.js");
-/* harmony import */ var tns_core_modules_utils_utils__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(tns_core_modules_utils_utils__WEBPACK_IMPORTED_MODULE_15__);
+!(function webpackMissingModule() { var e = new Error("Cannot find module './pages/Onair'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
+/* harmony import */ var _pages_Loader__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__("./components/pages/Loader.vue");
+/* harmony import */ var _pages_Detail__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__("./components/pages/Detail.vue");
+/* harmony import */ var tns_core_modules_ui_image__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__("../node_modules/tns-core-modules/ui/image/image.js");
+/* harmony import */ var tns_core_modules_ui_image__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(tns_core_modules_ui_image__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var _Sorting__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__("./components/Sorting.js");
+/* harmony import */ var _beep_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__("./components/beep.js");
+/* harmony import */ var _api_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__("./components/api.js");
+/* harmony import */ var tns_core_modules_application_settings_application_settings__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__("../node_modules/tns-core-modules/application-settings/application-settings.js");
+/* harmony import */ var tns_core_modules_application_settings_application_settings__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(tns_core_modules_application_settings_application_settings__WEBPACK_IMPORTED_MODULE_14__);
+/* harmony import */ var _locationSettings__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__("./components/locationSettings.js");
+/* harmony import */ var tns_core_modules_utils_utils__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__("../node_modules/tns-core-modules/utils/utils.js");
+/* harmony import */ var tns_core_modules_utils_utils__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(tns_core_modules_utils_utils__WEBPACK_IMPORTED_MODULE_16__);
+/* harmony import */ var nativescript_exit__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__("../node_modules/nativescript-exit/index.js");
+/* harmony import */ var nativescript_exit__WEBPACK_IMPORTED_MODULE_17___default = /*#__PURE__*/__webpack_require__.n(nativescript_exit__WEBPACK_IMPORTED_MODULE_17__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -372,7 +403,8 @@ let locationService = __webpack_require__("./components/backgroundServices.js");
 
 
 
-// import Player from "./pages/Player";
+
+
 
 
 
@@ -434,7 +466,7 @@ let translate = __webpack_require__("./translate.json");
         this.map.markers.find(x => x.userData.id == value.id)
       ) {
         this.map.markers.find(x => x.userData.id == value.id).color =
-          _locationSettings__WEBPACK_IMPORTED_MODULE_14__["locationSettings"].color.visited;
+          _locationSettings__WEBPACK_IMPORTED_MODULE_15__["locationSettings"].color.visited;
       }
     },
 
@@ -459,16 +491,15 @@ let translate = __webpack_require__("./translate.json");
   components: {
     settings: _pages_Settings__WEBPACK_IMPORTED_MODULE_5__["default"],
     about: _pages_About__WEBPACK_IMPORTED_MODULE_6__["default"],
-    // audioplayer: Player,
-    loader: _pages_Loader__WEBPACK_IMPORTED_MODULE_7__["default"],
-    detail: _pages_Detail__WEBPACK_IMPORTED_MODULE_8__["default"]
+    loader: _pages_Loader__WEBPACK_IMPORTED_MODULE_8__["default"],
+    detail: _pages_Detail__WEBPACK_IMPORTED_MODULE_9__["default"]
   },
 
   data() {
     return {
       iconPlay: "▶",
       iconStop: "◼",
-
+      hideWiki: true,
       showLoader: false,
       circle: null,
       cityTitle: null,
@@ -483,6 +514,7 @@ let translate = __webpack_require__("./translate.json");
       currentComp: null,
       showmap: true,
       debug: true,
+      wiki: null,
       translate: translate.en,
       map: {
         longitude: 7.1827772,
@@ -499,7 +531,37 @@ let translate = __webpack_require__("./translate.json");
     };
   },
   methods: {
-    ////////
+    openDetail() {
+      this.$refs.audio.open();
+    },
+
+    switchWiki() {
+      this.hideWiki = !this.hideWiki;
+      this.showLoader = true;
+      setTimeout(() => {
+        this.showLoader = false;
+      }, 2000);
+    },
+
+    exit(){
+      this.stopPlay();
+      
+Object(nativescript_exit__WEBPACK_IMPORTED_MODULE_17__["exit"])();
+    },
+
+    wikiLoaded($event) {
+      this.wiki = $event.object;
+      this.wiki.captureScreen();
+      // wiki.enableLocationProvider()
+      this.wiki.captureScreen();
+    },
+
+    wikiError() {
+      alert("error");
+    },
+    wikiJson() {
+      alert("sjon ");
+    },
 
     setAllAsActive() {
       for (let x in _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points) {
@@ -553,8 +615,8 @@ let translate = __webpack_require__("./translate.json");
         marker.userData = { id: _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points[x].id };
 
         marker.color = _Singleton_js__WEBPACK_IMPORTED_MODULE_0__["Singleton"].points[x].active
-          ? _locationSettings__WEBPACK_IMPORTED_MODULE_14__["locationSettings"].color.active
-          : _locationSettings__WEBPACK_IMPORTED_MODULE_14__["locationSettings"].color.visited;
+          ? _locationSettings__WEBPACK_IMPORTED_MODULE_15__["locationSettings"].color.active
+          : _locationSettings__WEBPACK_IMPORTED_MODULE_15__["locationSettings"].color.visited;
 
         this.map.view.addMarker(marker);
         this.map.markers.push(marker);
@@ -572,6 +634,9 @@ let translate = __webpack_require__("./translate.json");
       if (this.map.view == null) {
         return;
       }
+      if (this.wiki != null) {
+        this.wiki.setLocation(lat, lng, 10, 1);
+      }
 
       if (this.map.currentLocation == null) {
         this.map.currentLocation = new mapsModule.Marker();
@@ -579,7 +644,7 @@ let translate = __webpack_require__("./translate.json");
           lat,
           lng
         );
-        this.map.currentLocation.color = _locationSettings__WEBPACK_IMPORTED_MODULE_14__["locationSettings"].color.user;
+        this.map.currentLocation.color = _locationSettings__WEBPACK_IMPORTED_MODULE_15__["locationSettings"].color.user;
         this.map.currentLocation.title = "You are here";
         this.map.view.addMarker(this.map.currentLocation);
       } else {
@@ -595,7 +660,7 @@ let translate = __webpack_require__("./translate.json");
           lat,
           lng
         );
-        this.circle.radius = _locationSettings__WEBPACK_IMPORTED_MODULE_14__["locationSettings"].pointCanPlaceDistanceKm * 1000;
+        this.circle.radius = _locationSettings__WEBPACK_IMPORTED_MODULE_15__["locationSettings"].pointCanPlaceDistanceKm * 1000;
         this.circle.strokeWidth = 3;
         //  this.circle.strokeColor = "#ff0000"
 
@@ -646,7 +711,7 @@ let translate = __webpack_require__("./translate.json");
       this.translate = translate[appSettings.getString("lang")];
     },
     laodPointsFromApi() {
-      Object(_api_js__WEBPACK_IMPORTED_MODULE_12__["apiCall"])("points", {
+      Object(_api_js__WEBPACK_IMPORTED_MODULE_13__["apiCall"])("points", {
         city: appSettings.getString("city", "5"),
         lang: appSettings.getString("lang", "en")
       })
@@ -1015,9 +1080,13 @@ __webpack_require__.r(__webpack_exports__);
         }
       }
     },
-    setup() {
-      this.isPlaying = true;
+    open() {
       this.$refs.main.nativeView.height = "100%";
+    },
+    setup() { 
+       this.open();
+      this.isPlaying = true;
+    
       this._checkInterval = setInterval(() => {
         this.progress = _Singleton__WEBPACK_IMPORTED_MODULE_2__["Singleton"].progress;
       }, 200);
@@ -1040,7 +1109,7 @@ __webpack_require__.r(__webpack_exports__);
       } catch (e) {}
     },
     hide() {
-      this.$refs.main.nativeView.height = "10%";
+      this.$refs.main.nativeView.height = "0";
     }
   }
 });
@@ -1214,7 +1283,12 @@ var render = function() {
                 { staticClass: "HMid" },
                 [
                   _c("Label", {
-                    attrs: { text: _vm.cityTitle + _vm.play + "ss2" }
+                    attrs: { text: _vm.cityTitle + _vm.play },
+                    on: {
+                      tap: function($event) {
+                        _vm.switchWiki()
+                      }
+                    }
                   })
                 ],
                 1
@@ -1325,6 +1399,20 @@ var render = function() {
                             on: {
                               tap: function($event) {
                                 _vm.go("about")
+                              }
+                            }
+                          }),
+                          _c("Label", {
+                            staticClass: "drawerItemText font-awesome",
+                            attrs: {
+                              text: "Exit",
+                              paddingLeft: "30%",
+                              color: "black",
+                              margin: "10"
+                            },
+                            on: {
+                              tap: function($event) {
+                                _vm.exit()
                               }
                             }
                           })
@@ -1553,6 +1641,56 @@ var render = function() {
             ],
             1
           ),
+          !_vm.hideWiki
+            ? _c("Wikitude", {
+                ref: "wiki",
+                attrs: { url: "~/assets/wi/test.html" },
+                on: {
+                  ScreenCaptureFail: function($event) {
+                    _vm.wikiError()
+                  },
+                  WorldLoadFail: function($event) {
+                    _vm.wikiError()
+                  },
+                  JSONReceived: function($event) {
+                    _vm.wikiJson()
+                  },
+                  WorldLoadSuccess: function($event) {
+                    _vm.wikiLoaded($event)
+                  }
+                }
+              })
+            : _vm._e(),
+          _vm.showPlayer != null
+            ? _c(
+                "AbsoluteLayout",
+                {
+                  attrs: { marginTop: "80%", marginLeft: "80%" },
+                  on: {
+                    tap: function($event) {
+                      _vm.openDetail()
+                    }
+                  }
+                },
+                [
+                  _c(
+                    "StackLayout",
+                    { staticClass: "fab-item" },
+                    [
+                      _c("Image", {
+                        staticClass: "conImg",
+                        attrs: {
+                          src: _vm.showPlayer.img[0],
+                          stretch: "aspectFill"
+                        }
+                      })
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            : _vm._e(),
           _vm.showPlayer != null
             ? _c("detail", { ref: "audio", attrs: { point: _vm.showPlayer } })
             : _vm._e(),
@@ -2760,10 +2898,12 @@ __webpack_require__.r(__webpack_exports__);
 /* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var nativescript_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../node_modules/nativescript-vue/dist/index.js");
 /* harmony import */ var nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(nativescript_vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _components_Master__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("./components/Master.vue");
-/* harmony import */ var _styles_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("./styles.scss");
-/* harmony import */ var _styles_scss__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_styles_scss__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var nativescript_wikitude__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("../node_modules/nativescript-wikitude/wikitude.js");
-/* harmony import */ var nativescript_wikitude__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(nativescript_wikitude__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var nativescript_wikitude__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("../node_modules/nativescript-wikitude/wikitude.js");
+/* harmony import */ var nativescript_wikitude__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(nativescript_wikitude__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _styles_scss__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("./styles.scss");
+/* harmony import */ var _styles_scss__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_styles_scss__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var nativescript_camera__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__("../node_modules/nativescript-camera/camera.js");
+/* harmony import */ var nativescript_camera__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(nativescript_camera__WEBPACK_IMPORTED_MODULE_4__);
 
         if (!global["__snapshot"]) {
             __webpack_require__("../node_modules/tns-core-modules/ui/frame/frame.js");
@@ -2783,6 +2923,9 @@ __webpack_require__("../node_modules/tns-core-modules/ui/frame/activity.js");
 
 
 
+
+nativescript_camera__WEBPACK_IMPORTED_MODULE_4__["requestPermissions"]();
+// import { Wikitude } from 'nativescript-wikitude';
 nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.registerElement(
   "RadSideDrawer",
   () => __webpack_require__("../node_modules/nativescript-ui-sidedrawer/ui-sidedrawer.js").RadSideDrawer
@@ -2791,13 +2934,16 @@ nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.registerElement(
   "MapView",
   () => __webpack_require__("../node_modules/nativescript-google-maps-sdk/map-view.js").MapView
 );  
-  
-    
-  
-  
+nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.registerElement(
+  "Wikitude",
+  () =>nativescript_wikitude__WEBPACK_IMPORTED_MODULE_2__["Wikitude"]
+);    
+      
+
 // Prints Vue logs when --env.production is *NOT* set while building
 // Vue.config.silent = (TNS_ENV === 'production');
-nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.config.silent = false;
+nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a.config.silent = true;
+// Vue.config.silent = true;
 
 new nativescript_vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   render: h => h("frame", [h(_components_Master__WEBPACK_IMPORTED_MODULE_1__["default"])])

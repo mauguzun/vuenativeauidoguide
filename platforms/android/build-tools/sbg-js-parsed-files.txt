@@ -1,3 +1,6 @@
+C:\native\vuenativeauidoguide\platforms\android\app\src\main\assets\app\assets\wi\js\index.js
+C:\native\vuenativeauidoguide\platforms\android\app\src\main\assets\app\assets\wi\js\marker.js
+C:\native\vuenativeauidoguide\platforms\android\app\src\main\assets\app\assets\wi\js\radar.js
 C:\native\vuenativeauidoguide\platforms\android\app\src\main\assets\app\bundle.js
 C:\native\vuenativeauidoguide\platforms\android\app\src\main\assets\app\starter.js
 C:\native\vuenativeauidoguide\platforms\android\app\src\main\assets\app\tns-java-classes.js

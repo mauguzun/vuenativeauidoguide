@@ -64,6 +64,14 @@
                 class="drawerItemText font-awesome"
                 margin="10"
               />
+              <Label
+                text="Exit"
+                @tap="exit()"
+                paddingLeft="30%"
+                color="black"
+                class="drawerItemText font-awesome"
+                margin="10"
+              />
             </StackLayout>
           </StackLayout>
 
@@ -146,7 +154,7 @@
 
       <Wikitude
         ref="wiki"
-        v-show="!hideWiki"
+        v-if="!hideWiki"
         @ScreenCaptureFail="wikiError()"
         @WorldLoadFail="wikiError()"
         @JSONReceived="wikiJson()"
@@ -154,15 +162,16 @@
         url="~/assets/wi/test.html"
       ></Wikitude>
 
-      <AbsoluteLayout @tap="openDetail()" 
+      <AbsoluteLayout
+        @tap="openDetail()"
         v-if="showPlayer != null"
-        marginTop="le0%"
+        marginTop="80%"
         marginLeft="80%"
-        >
-        <StackLayout class="fab-item" >
-           <Image :src="showPlayer.img[0]" stretch="aspectFill" class="conImg"/>
+      >
+        <StackLayout class="fab-item">
+          <Image :src="showPlayer.img[0]" stretch="aspectFill" class="conImg"/>
         </StackLayout>
-      </AbsoluteLayout>  
+      </AbsoluteLayout>
 
       <detail v-if="showPlayer != null" ref="audio" :point="showPlayer"></detail>
       <loader v-if="showLoader"></loader>
@@ -182,7 +191,6 @@ let locationService = require("./backgroundServices");
 
 import Settings from "./pages/Settings";
 import About from "./pages/About";
-// import Player from "./pages/Player";
 import Loader from "./pages/Loader";
 import Detail from "./pages/Detail";
 
@@ -194,6 +202,7 @@ import { apiCall } from "./api.js";
 import { getString } from "tns-core-modules/application-settings/application-settings";
 import { locationSettings } from "./locationSettings";
 import { convertString } from "tns-core-modules/utils/utils";
+import { exit } from "nativescript-exit";
 
 let mapsModule = require("nativescript-google-maps-sdk");
 const appSettings = require("tns-core-modules/application-settings");
@@ -269,7 +278,6 @@ export default {
   components: {
     settings: Settings,
     about: About,
-    // audioplayer: Player,
     loader: Loader,
     detail: Detail
   },
@@ -310,19 +318,22 @@ export default {
     };
   },
   methods: {
-
-
-    openDetail(){
+    openDetail() {
       this.$refs.audio.open();
     },
 
-    
     switchWiki() {
       this.hideWiki = !this.hideWiki;
       this.showLoader = true;
       setTimeout(() => {
         this.showLoader = false;
       }, 2000);
+    },
+
+    exit() {
+      this.stopPlay();
+
+      exit();
     },
 
     wikiLoaded($event) {
@@ -909,6 +920,8 @@ function buttonClearTap() {
   color: #fff;
   font-weight: bold;
   vertical-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 </style>
  

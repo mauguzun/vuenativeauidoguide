@@ -3,6 +3,7 @@
     "nativescript-audio": true,
     "nativescript-audioplay": true,
     "nativescript-camera": true,
+    "nativescript-exit": true,
     "nativescript-geolocation": true,
     "nativescript-google-maps-sdk": true,
     "nativescript-local-notifications": true,

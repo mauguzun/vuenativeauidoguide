@@ -1,10 +1,18 @@
 {
+	"C:\\native\\vuenativeauidoguide\\platforms\\android\\app\\src\\main\\assets\\app\\assets\\wi\\css\\index.css": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
 	"C:\\native\\vuenativeauidoguide\\platforms\\android\\app\\src\\main\\assets\\app\\tns-java-classes.js": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
-	"C:\\native\\vuenativeauidoguide\\platforms\\android\\app\\src\\main\\assets\\app\\app.css": "ab3a9d276c3f657a231828ec6aef4c8d6ac54d06",
 	"C:\\native\\vuenativeauidoguide\\platforms\\android\\app\\src\\main\\assets\\app\\assets\\images\\NativeScript-Vue.png": "31f09bdba72293198ee2e2a83c4fe5aa5744bc3d",
+	"C:\\native\\vuenativeauidoguide\\platforms\\android\\app\\src\\main\\assets\\app\\assets\\wi\\img\\logo.png": "316d06174f952721772fa9f6907e8d294b3050bd",
+	"C:\\native\\vuenativeauidoguide\\platforms\\android\\app\\src\\main\\assets\\app\\assets\\wi\\index.html": "7cd3edfd622f7c39238e3fefad52d3ee110ce2d3",
+	"C:\\native\\vuenativeauidoguide\\platforms\\android\\app\\src\\main\\assets\\app\\assets\\wi\\js\\index.js": "a020aa47d0617cb05f4815d168c2b3621ee347b0",
+	"C:\\native\\vuenativeauidoguide\\platforms\\android\\app\\src\\main\\assets\\app\\assets\\wi\\js\\marker.js": "de9d161bb83aafbabcc9c54a1b20f925fed9d49d",
+	"C:\\native\\vuenativeauidoguide\\platforms\\android\\app\\src\\main\\assets\\app\\assets\\wi\\js\\radar.js": "d0de94c97fb54f88b23e09a7cb15376fe11be35c",
+	"C:\\native\\vuenativeauidoguide\\platforms\\android\\app\\src\\main\\assets\\app\\assets\\wi\\test.html": "92ed72e994ea62cd3ea4607a822d7ad84b398810",
 	"C:\\native\\vuenativeauidoguide\\platforms\\android\\app\\src\\main\\assets\\app\\package.json": "a2c1719374d9181e55fa46bc3b9f2eb33df85ea2",
 	"C:\\native\\vuenativeauidoguide\\platforms\\android\\app\\src\\main\\assets\\app\\starter.js": "dd9362b222c14a4bc62c958735c0ef7929bf0c93",
 	"C:\\native\\vuenativeauidoguide\\platforms\\android\\app\\src\\main\\assets\\app\\vendor.app.css": "082a8bdc42aa8a724754e865ff7c1055b0d9bcfc",
-	"C:\\native\\vuenativeauidoguide\\platforms\\android\\app\\src\\main\\assets\\app\\bundle.js": "9a226fb11bf53e8f06de0d2bc60b38e7da731b5f",
-	"C:\\native\\vuenativeauidoguide\\platforms\\android\\app\\src\\main\\assets\\app\\vendor.js": "7944f9b0938d901aac29aec70b0d6ed0b612cd92"
+	"C:\\native\\vuenativeauidoguide\\platforms\\android\\app\\src\\main\\assets\\app\\wi\\img\\logo.png": "316d06174f952721772fa9f6907e8d294b3050bd",
+	"C:\\native\\vuenativeauidoguide\\platforms\\android\\app\\src\\main\\assets\\app\\app.css": "87a3febc2ae79d5bca421d8c0fdb7ae96e59b4aa",
+	"C:\\native\\vuenativeauidoguide\\platforms\\android\\app\\src\\main\\assets\\app\\bundle.js": "cd9c2eae6eaf929177dd3703a87f0c08e4b66312",
+	"C:\\native\\vuenativeauidoguide\\platforms\\android\\app\\src\\main\\assets\\app\\vendor.js": "6ea9b3fd80d2b2e1cc27639305bfc507086bdba1"
 }

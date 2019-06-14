@@ -1551,6 +1551,19 @@ module.exports = g;
 
 /***/ }),
 
+/***/ "../node_modules/nativescript-exit/index.js":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.exit = function () {
+    android.os.Process.killProcess(android.os.Process.myPid());
+};
+
+
+/***/ }),
+
 /***/ "../node_modules/nativescript-geolocation/geolocation.common.js":
 /***/ (function(module, exports, __webpack_require__) {
 

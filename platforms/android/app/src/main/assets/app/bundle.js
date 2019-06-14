@@ -207,6 +207,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _locationSettings__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__("./components/locationSettings.js");
 /* harmony import */ var tns_core_modules_utils_utils__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__("../node_modules/tns-core-modules/utils/utils.js");
 /* harmony import */ var tns_core_modules_utils_utils__WEBPACK_IMPORTED_MODULE_15___default = /*#__PURE__*/__webpack_require__.n(tns_core_modules_utils_utils__WEBPACK_IMPORTED_MODULE_15__);
+/* harmony import */ var nativescript_exit__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__("../node_modules/nativescript-exit/index.js");
+/* harmony import */ var nativescript_exit__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(nativescript_exit__WEBPACK_IMPORTED_MODULE_16__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -391,7 +402,7 @@ let locationService = __webpack_require__("./components/backgroundServices.js");
 
 
 
-// import Player from "./pages/Player";
+
 
 
 
@@ -478,7 +489,6 @@ let translate = __webpack_require__("./translate.json");
   components: {
     settings: _pages_Settings__WEBPACK_IMPORTED_MODULE_5__["default"],
     about: _pages_About__WEBPACK_IMPORTED_MODULE_6__["default"],
-    // audioplayer: Player,
     loader: _pages_Loader__WEBPACK_IMPORTED_MODULE_7__["default"],
     detail: _pages_Detail__WEBPACK_IMPORTED_MODULE_8__["default"]
   },
@@ -519,19 +529,22 @@ let translate = __webpack_require__("./translate.json");
     };
   },
   methods: {
-
-
-    openDetail(){
+    openDetail() {
       this.$refs.audio.open();
     },
 
-    
     switchWiki() {
       this.hideWiki = !this.hideWiki;
       this.showLoader = true;
       setTimeout(() => {
         this.showLoader = false;
       }, 2000);
+    },
+
+    exit() {
+      this.stopPlay();
+
+      Object(nativescript_exit__WEBPACK_IMPORTED_MODULE_16__["exit"])();
     },
 
     wikiLoaded($event) {
@@ -1386,6 +1399,20 @@ var render = function() {
                                 _vm.go("about")
                               }
                             }
+                          }),
+                          _c("Label", {
+                            staticClass: "drawerItemText font-awesome",
+                            attrs: {
+                              text: "Exit",
+                              paddingLeft: "30%",
+                              color: "black",
+                              margin: "10"
+                            },
+                            on: {
+                              tap: function($event) {
+                                _vm.exit()
+                              }
+                            }
                           })
                         ],
                         1
@@ -1612,37 +1639,31 @@ var render = function() {
             ],
             1
           ),
-          _c("Wikitude", {
-            directives: [
-              {
-                name: "show",
-                rawName: "v-show",
-                value: !_vm.hideWiki,
-                expression: "!hideWiki"
-              }
-            ],
-            ref: "wiki",
-            attrs: { url: "~/assets/wi/test.html" },
-            on: {
-              ScreenCaptureFail: function($event) {
-                _vm.wikiError()
-              },
-              WorldLoadFail: function($event) {
-                _vm.wikiError()
-              },
-              JSONReceived: function($event) {
-                _vm.wikiJson()
-              },
-              WorldLoadSuccess: function($event) {
-                _vm.wikiLoaded($event)
-              }
-            }
-          }),
+          !_vm.hideWiki
+            ? _c("Wikitude", {
+                ref: "wiki",
+                attrs: { url: "~/assets/wi/test.html" },
+                on: {
+                  ScreenCaptureFail: function($event) {
+                    _vm.wikiError()
+                  },
+                  WorldLoadFail: function($event) {
+                    _vm.wikiError()
+                  },
+                  JSONReceived: function($event) {
+                    _vm.wikiJson()
+                  },
+                  WorldLoadSuccess: function($event) {
+                    _vm.wikiLoaded($event)
+                  }
+                }
+              })
+            : _vm._e(),
           _vm.showPlayer != null
             ? _c(
                 "AbsoluteLayout",
                 {
-                  attrs: { marginTop: "le0%", marginLeft: "80%" },
+                  attrs: { marginTop: "80%", marginLeft: "80%" },
                   on: {
                     tap: function($event) {
                       _vm.openDetail()
