@@ -403,7 +403,7 @@ let locationService = __webpack_require__("./components/backgroundServices.js");
 
 
 
-
+ 
 
 
 
@@ -542,8 +542,9 @@ let translate = __webpack_require__("./translate.json");
       this.hideWiki = !this.hideWiki;
       this.showLoader = true;
       
-      if(this.wiki){
+      if(this.wiki && !this.hideWiki){
         this.wiki.url = this.getWikiUrl;
+        this.wiki.reload();
       }
       setTimeout(() => {
         this.showLoader = false;
@@ -556,10 +557,10 @@ let translate = __webpack_require__("./translate.json");
     },
 
     wikiLoaded($event) {
-      if (this.wiki === null) {
+     if (this.wiki === null) {
         this.wiki = $event.object;
         this.wiki.captureScreen();
-      }
+     }
     },
 
     wikiError() {

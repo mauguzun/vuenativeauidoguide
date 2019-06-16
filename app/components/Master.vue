@@ -192,7 +192,7 @@ let locationService = require("./backgroundServices");
 import Settings from "./pages/Settings";
 import About from "./pages/About";
 import Loader from "./pages/Loader";
-import Detail from "./pages/Detail";
+import Detail from "./pages/Detail"; 
 
 import { Image } from "tns-core-modules/ui/image";
 import { Sorting } from "./Sorting";
@@ -331,8 +331,9 @@ export default {
       this.hideWiki = !this.hideWiki;
       this.showLoader = true;
       
-      if(this.wiki){
+      if(this.wiki && !this.hideWiki){
         this.wiki.url = this.getWikiUrl;
+        this.wiki.reload();
       }
       setTimeout(() => {
         this.showLoader = false;
@@ -345,10 +346,10 @@ export default {
     },
 
     wikiLoaded($event) {
-      if (this.wiki === null) {
+     if (this.wiki === null) {
         this.wiki = $event.object;
         this.wiki.captureScreen();
-      }
+     }
     },
 
     wikiError() {
