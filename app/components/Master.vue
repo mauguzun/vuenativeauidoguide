@@ -154,12 +154,12 @@
 
       <Wikitude
         ref="wiki"
-        v-if="!hideWiki"
+        v-show="!hideWiki"
         @ScreenCaptureFail="wikiError()"
         @WorldLoadFail="wikiError()"
         @JSONReceived="wikiJson()"
         @WorldLoadSuccess="wikiLoaded($event)"
-        url="~/assets/wi/test.html"
+        :url="getWikiUrl"
       ></Wikitude>
 
       <AbsoluteLayout
@@ -234,6 +234,11 @@ export default {
     );
 
     // lets continue work
+  },
+  computed: {
+    getWikiUrl(){
+      return  '~/assets/wi/test.html?lang';
+    }
   },
 
   watch: {
@@ -325,6 +330,10 @@ export default {
     switchWiki() {
       this.hideWiki = !this.hideWiki;
       this.showLoader = true;
+      
+      if(this.wiki){
+        this.wiki.url = this.getWikiUrl;
+      }
       setTimeout(() => {
         this.showLoader = false;
       }, 2000);
@@ -332,15 +341,14 @@ export default {
 
     exit() {
       this.stopPlay();
-
       exit();
     },
 
     wikiLoaded($event) {
-      this.wiki = $event.object;
-      this.wiki.captureScreen();
-      // wiki.enableLocationProvider()
-      this.wiki.captureScreen();
+      if (this.wiki === null) {
+        this.wiki = $event.object;
+        this.wiki.captureScreen();
+      }
     },
 
     wikiError() {
@@ -529,6 +537,7 @@ export default {
       this.drawerToggle = true;
     },
     toggleDrawer() {
+      this.hideWiki = true;
       this.showLoader = false;
       this.$refs.drawer.nativeView.toggleDrawerState();
     },

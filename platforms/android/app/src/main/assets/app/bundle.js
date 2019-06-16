@@ -446,6 +446,11 @@ let translate = __webpack_require__("./translate.json");
 
     // lets continue work
   },
+  computed: {
+    getWikiUrl(){
+      return  '~/assets/wi/test.html?lang';
+    }
+  },
 
   watch: {
     showPlayer(value) {
@@ -536,6 +541,10 @@ let translate = __webpack_require__("./translate.json");
     switchWiki() {
       this.hideWiki = !this.hideWiki;
       this.showLoader = true;
+      
+      if(this.wiki){
+        this.wiki.url = this.getWikiUrl;
+      }
       setTimeout(() => {
         this.showLoader = false;
       }, 2000);
@@ -543,15 +552,14 @@ let translate = __webpack_require__("./translate.json");
 
     exit() {
       this.stopPlay();
-
       Object(nativescript_exit__WEBPACK_IMPORTED_MODULE_16__["exit"])();
     },
 
     wikiLoaded($event) {
-      this.wiki = $event.object;
-      this.wiki.captureScreen();
-      // wiki.enableLocationProvider()
-      this.wiki.captureScreen();
+      if (this.wiki === null) {
+        this.wiki = $event.object;
+        this.wiki.captureScreen();
+      }
     },
 
     wikiError() {
@@ -740,6 +748,7 @@ let translate = __webpack_require__("./translate.json");
       this.drawerToggle = true;
     },
     toggleDrawer() {
+      this.hideWiki = true;
       this.showLoader = false;
       this.$refs.drawer.nativeView.toggleDrawerState();
     },
@@ -1639,26 +1648,32 @@ var render = function() {
             ],
             1
           ),
-          !_vm.hideWiki
-            ? _c("Wikitude", {
-                ref: "wiki",
-                attrs: { url: "~/assets/wi/test.html" },
-                on: {
-                  ScreenCaptureFail: function($event) {
-                    _vm.wikiError()
-                  },
-                  WorldLoadFail: function($event) {
-                    _vm.wikiError()
-                  },
-                  JSONReceived: function($event) {
-                    _vm.wikiJson()
-                  },
-                  WorldLoadSuccess: function($event) {
-                    _vm.wikiLoaded($event)
-                  }
-                }
-              })
-            : _vm._e(),
+          _c("Wikitude", {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: !_vm.hideWiki,
+                expression: "!hideWiki"
+              }
+            ],
+            ref: "wiki",
+            attrs: { url: _vm.getWikiUrl },
+            on: {
+              ScreenCaptureFail: function($event) {
+                _vm.wikiError()
+              },
+              WorldLoadFail: function($event) {
+                _vm.wikiError()
+              },
+              JSONReceived: function($event) {
+                _vm.wikiJson()
+              },
+              WorldLoadSuccess: function($event) {
+                _vm.wikiLoaded($event)
+              }
+            }
+          }),
           _vm.showPlayer != null
             ? _c(
                 "AbsoluteLayout",

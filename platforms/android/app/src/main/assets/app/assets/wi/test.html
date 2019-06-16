@@ -28,7 +28,7 @@
     <script src="js/marker.js"></script>
     <script src="js/radar.js"></script>
      <script>
-
+        let firstTime =true;
         function createCircle() {
             AR.logger.activateDebugMode();
 
@@ -98,9 +98,12 @@
                     World.markerList.push(new Marker(singlePoi));
                 }
                 PoiRadar.show();
-                World.updateStatusMessage(currentPlaceNr + ' places loaded');
-            },
+                var urlParams = new URLSearchParams(window.location.search);
+                
 
+                World.updateStatusMessage(currentPlaceNr + ' places loadedss    '   +    urlParams.toString() );
+            },
+  
             /* Updates status message shown in small "i"-button aligned bottom center. */
             updateStatusMessage: function updateStatusMessageFn(message, isWarning) {
 
