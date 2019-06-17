@@ -8,7 +8,7 @@
         class="actionBarContainer"
       >
         <StackLayout class="HLeft" style="margin-top:10;" @tap="toggleDrawer()">
-          <Label text="☰" style="font-size:27;color:#333;" class="font-awesome"/>
+          <Label text="☰" style="font-size:27;color:#333;"/>
         </StackLayout>
         <StackLayout class="HMid">
           <Label @tap="switchWiki()" :text="cityTitle + play "/>
@@ -137,7 +137,7 @@
                           </StackLayout>
                           <StackLayout marginLeft="10" paddingTop="3" width="50%">
                             <Label :text="item.title"/>
-                            <Label :text="item.distance"/>
+                            <Label :text="   parseInt(item.distance * 1000).toFixed()   "/>
                           </StackLayout>
                         </StackLayout>
                       </v-template>
@@ -192,7 +192,7 @@ let locationService = require("./backgroundServices");
 import Settings from "./pages/Settings";
 import About from "./pages/About";
 import Loader from "./pages/Loader";
-import Detail from "./pages/Detail"; 
+import Detail from "./pages/Detail";
 
 import { Image } from "tns-core-modules/ui/image";
 import { Sorting } from "./Sorting";
@@ -236,9 +236,11 @@ export default {
     // lets continue work
   },
   computed: {
-    getWikiUrl(){
-      return  '~/assets/wi/test.html?lang';
-    }
+    getWikiUrl() {
+      return "~/assets/wi/test.html" 
+    },
+
+    
   },
 
   watch: {
@@ -277,6 +279,9 @@ export default {
       } else {
         this.$refs.mapContainer.nativeView.height = "80%";
       }
+
+      // reload wikituted
+
       this.featurePoints = value;
     }
   },
@@ -330,8 +335,8 @@ export default {
     switchWiki() {
       this.hideWiki = !this.hideWiki;
       this.showLoader = true;
-      
-      if(this.wiki && !this.hideWiki){
+
+      if (this.wiki && !this.hideWiki) {
         this.wiki.url = this.getWikiUrl;
         this.wiki.reload();
       }
@@ -346,10 +351,10 @@ export default {
     },
 
     wikiLoaded($event) {
-     if (this.wiki === null) {
+      if (this.wiki === null) {
         this.wiki = $event.object;
         this.wiki.captureScreen();
-     }
+      }
     },
 
     wikiError() {

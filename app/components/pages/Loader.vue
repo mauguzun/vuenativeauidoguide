@@ -5,7 +5,7 @@
     </StackLayout>
   </AbsoluteLayout>
 </template>
-
+  
 <script>
 export default {
   data() {

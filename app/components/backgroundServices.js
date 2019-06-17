@@ -6,7 +6,7 @@ import * as Toast from "nativescript-toast";
 import { Sorting } from "./Sorting";
 import { locationSettings } from "./locationSettings";
 const appSettings = require("tns-core-modules/application-settings");
-
+let counter = 0;
 
 if (application.android) {
   const { sdkVersion } = platform.device;
@@ -14,20 +14,20 @@ if (application.android) {
     android.app.Service.extend(
       "com.ciriscr.geotest.location.BackgroundService",
       {
-        onStartCommand: function(intent, flags, startId) {
+        onStartCommand: function (intent, flags, startId) {
           this.super.onStartCommand(intent, flags, startId);
           return android.app.Service.START_STICKY;
         },
-        onCreate: function() {
+        onCreate: function () {
           watchLocation(this);
         },
-        onBind: function(intent) {
+        onBind: function (intent) {
           console.log("on Bind Services");
         },
-        onUnbind: function(intent) {
+        onUnbind: function (intent) {
           console.log("UnBind Service");
         },
-        onDestroy: function() {
+        onDestroy: function () {
           console.log("service onDestroy");
           geolocation.clearWatch(this.id);
         }
@@ -56,25 +56,24 @@ if (application.android) {
 function watchLocation(comp) {
   console.log("Watch location");
   geolocation.enableLocationRequest().then(
-    function() {
+    function () {
       comp.id = geolocation.watchLocation(
-        function(loc) {
+        function (loc) {
           if (loc) {
-            // we thinka bout later
-            // let toast = Toast.makeText(loc.latitude + "  " + loc.longitude);
-            let toast = Toast.makeText(appSettings.getString("cityTitle"));
-            toast.setDuration(1000);
-            toast.show();
-                
-        
+
+            // let toast = Toast.makeText(appSettings.getString("cityTitle"));
+            // toast.setDuration(1000);
+            // toast.show();
+
             Sorting.sortPoints(loc.latitude, loc.longitude);
-   
-            // fetch("https://audio.tricypolitain.com/ping?text=newtest" + counter)
-            //   .then(e => {})
-            //   .catch(e => {});
+            counter++;
+
+            fetch("http://asl.nl.eu.org/ping")
+              .then(e => { })
+              .catch(e => { });
           }
         },
-        function(e) {
+        function (e) {
           console.log("Background watchLocation error: " + (e.message || e));
         },
         {
@@ -84,8 +83,8 @@ function watchLocation(comp) {
           minimumUpdateTime: locationSettings.minimumUpdateTime
         }
       );
-    },  
-    function(e) {
+    },
+    function (e) {
       console.log("Background enableLocationRequest error: " + (e.message || e));
     }
   );

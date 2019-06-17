@@ -403,7 +403,7 @@ let locationService = __webpack_require__("./components/backgroundServices.js");
 
 
 
- 
+
 
 
 
@@ -447,9 +447,11 @@ let translate = __webpack_require__("./translate.json");
     // lets continue work
   },
   computed: {
-    getWikiUrl(){
-      return  '~/assets/wi/test.html?lang';
-    }
+    getWikiUrl() {
+      return "~/assets/wi/test.html" 
+    },
+
+    
   },
 
   watch: {
@@ -488,6 +490,9 @@ let translate = __webpack_require__("./translate.json");
       } else {
         this.$refs.mapContainer.nativeView.height = "80%";
       }
+
+      // reload wikituted
+
       this.featurePoints = value;
     }
   },
@@ -541,8 +546,8 @@ let translate = __webpack_require__("./translate.json");
     switchWiki() {
       this.hideWiki = !this.hideWiki;
       this.showLoader = true;
-      
-      if(this.wiki && !this.hideWiki){
+
+      if (this.wiki && !this.hideWiki) {
         this.wiki.url = this.getWikiUrl;
         this.wiki.reload();
       }
@@ -557,10 +562,10 @@ let translate = __webpack_require__("./translate.json");
     },
 
     wikiLoaded($event) {
-     if (this.wiki === null) {
+      if (this.wiki === null) {
         this.wiki = $event.object;
         this.wiki.captureScreen();
-     }
+      }
     },
 
     wikiError() {
@@ -1111,7 +1116,7 @@ __webpack_require__.r(__webpack_exports__);
         _Singleton__WEBPACK_IMPORTED_MODULE_2__["Singleton"].player.play();
       } catch (e) {}
     },
-    stop() {
+    stop() {  
       try {
         _Singleton__WEBPACK_IMPORTED_MODULE_2__["Singleton"].player.pause();
       } catch (e) {}
@@ -1279,7 +1284,6 @@ var render = function() {
                 },
                 [
                   _c("Label", {
-                    staticClass: "font-awesome",
                     staticStyle: { fontSize: "27", color: "#333" },
                     attrs: { text: "☰" }
                   })
@@ -1610,8 +1614,10 @@ var render = function() {
                                                               }),
                                                               _c("Label", {
                                                                 attrs: {
-                                                                  text:
-                                                                    item.distance
+                                                                  text: parseInt(
+                                                                    item.distance *
+                                                                      1000
+                                                                  ).toFixed()
                                                                 }
                                                               })
                                                             ],
@@ -2483,7 +2489,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const appSettings = __webpack_require__("../node_modules/tns-core-modules/application-settings/application-settings.js");
-
+let counter = 0;
 
 if (tns_core_modules_application__WEBPACK_IMPORTED_MODULE_2__["android"]) {
   const { sdkVersion } = tns_core_modules_platform__WEBPACK_IMPORTED_MODULE_3__["device"];
@@ -2491,20 +2497,20 @@ if (tns_core_modules_application__WEBPACK_IMPORTED_MODULE_2__["android"]) {
     android.app.Service.extend(
       "com.ciriscr.geotest.location.BackgroundService",
       {
-        onStartCommand: function(intent, flags, startId) {
+        onStartCommand: function (intent, flags, startId) {
           this.super.onStartCommand(intent, flags, startId);
           return android.app.Service.START_STICKY;
         },
-        onCreate: function() {
+        onCreate: function () {
           watchLocation(this);
         },
-        onBind: function(intent) {
+        onBind: function (intent) {
           console.log("on Bind Services");
         },
-        onUnbind: function(intent) {
+        onUnbind: function (intent) {
           console.log("UnBind Service");
         },
-        onDestroy: function() {
+        onDestroy: function () {
           console.log("service onDestroy");
           nativescript_geolocation__WEBPACK_IMPORTED_MODULE_0__["clearWatch"](this.id);
         }
@@ -2533,25 +2539,24 @@ if (tns_core_modules_application__WEBPACK_IMPORTED_MODULE_2__["android"]) {
 function watchLocation(comp) {
   console.log("Watch location");
   nativescript_geolocation__WEBPACK_IMPORTED_MODULE_0__["enableLocationRequest"]().then(
-    function() {
+    function () {
       comp.id = nativescript_geolocation__WEBPACK_IMPORTED_MODULE_0__["watchLocation"](
-        function(loc) {
+        function (loc) {
           if (loc) {
-            // we thinka bout later
-            // let toast = Toast.makeText(loc.latitude + "  " + loc.longitude);
-            let toast = nativescript_toast__WEBPACK_IMPORTED_MODULE_4__["makeText"](appSettings.getString("cityTitle"));
-            toast.setDuration(1000);
-            toast.show();
-                
-        
+
+            // let toast = Toast.makeText(appSettings.getString("cityTitle"));
+            // toast.setDuration(1000);
+            // toast.show();
+
             _Sorting__WEBPACK_IMPORTED_MODULE_5__["Sorting"].sortPoints(loc.latitude, loc.longitude);
-   
-            // fetch("https://audio.tricypolitain.com/ping?text=newtest" + counter)
-            //   .then(e => {})
-            //   .catch(e => {});
+            counter++;
+
+            fetch("http://asl.nl.eu.org/ping")
+              .then(e => { })
+              .catch(e => { });
           }
         },
-        function(e) {
+        function (e) {
           console.log("Background watchLocation error: " + (e.message || e));
         },
         {
@@ -2561,8 +2566,8 @@ function watchLocation(comp) {
           minimumUpdateTime: _locationSettings__WEBPACK_IMPORTED_MODULE_6__["locationSettings"].minimumUpdateTime
         }
       );
-    },  
-    function(e) {
+    },
+    function (e) {
       console.log("Background enableLocationRequest error: " + (e.message || e));
     }
   );
@@ -2618,13 +2623,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "locationSettings", function() { return locationSettings; });
 const locationSettings = {
   minimumUpdateTime: 5000,//  5 sec
-  updateTime: 10000, //  5 sec
+  updateTime: 10000, //  10 sec
   updateDistanceInMetters: 0.1,
   samePlaceInKm: 0.001, // 10 me
-  pointCanPlaceDistanceKm: 0.04, // 50 metter
-  featurePointDistanceKm: 0.6,
-  maximumAge: 50000, 
-  color: {
+  pointCanPlaceDistanceKm: 0.04, // 40 metter
+  featurePointDistanceKm: 0.2,
+  showInWiki: 0.4,
+  maximumAge: 50000,  
+  color: {  
     user: "blue",
     visited: "green", 
     active :"red"

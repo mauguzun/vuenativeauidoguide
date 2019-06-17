@@ -128,7 +128,7 @@ export default {
         Singleton.player.play();
       } catch (e) {}
     },
-    stop() {
+    stop() {  
       try {
         Singleton.player.pause();
       } catch (e) {}

@@ -27,8 +27,8 @@
 
     <script src="js/marker.js"></script>
     <script src="js/radar.js"></script>
-     <script>
-        let firstTime =true;
+    <script>
+
         function createCircle() {
             AR.logger.activateDebugMode();
 
@@ -48,6 +48,9 @@
 
         function setup() {
             AR.context.onLocationChanged = World.locationChanged;
+           
+                // update radar's maxDistance so radius of radar is updated too
+            //    PoiRadar.setMaxDistance(Math.max(maxRangeMeters, 1));
         }
 
         var World = {
@@ -57,6 +60,7 @@
             /* Different POI-Marker assets. */
             markerDrawableIdle: null,
             markerDrawableSelected: null,
+            maxRangeMeters:500,
 
             /* List of AR.GeoObjects that are currently shown in the scene / World. */
             markerList: [],
@@ -98,12 +102,19 @@
                     World.markerList.push(new Marker(singlePoi));
                 }
                 PoiRadar.show();
-                var urlParams = new URLSearchParams(window.location.search);
-                
-
-                World.updateStatusMessage(currentPlaceNr + ' places loadedss    '   +    urlParams.toString() );
+                World.updateDistanceToUserValues();
+                World.updateStatusMessage(currentPlaceNr + ' places loaded');
             },
-  
+            updateDistanceToUserValues: function updateDistanceToUserValuesFn() {
+                for (var i = 0; i < World.markerList.length; i++) {
+                    World.markerList[i].distanceToUser = World.markerList[i].markerObject.locations[0].distanceToUser();
+                    World.markerList[i].title += World.markerList[i].distanceToUser
+                }
+               
+                AR.context.scene.cullingDistance = Math.max(this.maxRangeMeters, 1);
+                PoiRadar.setMaxDistance(Math.max(this.maxRangeMeters, 1));
+            },
+
             /* Updates status message shown in small "i"-button aligned bottom center. */
             updateStatusMessage: function updateStatusMessageFn(message, isWarning) {
 
@@ -134,6 +145,7 @@
                     World.requestDataFromLocal(lat, lon);
                     World.initiallyLoadedData = true;
                 }
+                World.updateDistanceToUserValues();
             },
 
             /* Fired when user pressed maker in cam. */
@@ -156,7 +168,8 @@
                     (Math.round(marker.distanceToUser) + " m");
 
 
-                alert(marker.poiData.title + marker.poiData.description)
+
+                alert(marker.poiData.title + marker.distanceToUser)
 
 
                 /* Highlight current one. */
